@@ -20,13 +20,13 @@ public class MemberVo {
     /* 나이 : required */
     private int age;
 
-    @Column(name = "gender_code", nullable = false)
-    private String genderCode = "";
+//    @Column(name = "gender_code", nullable = false)
+//    private String genderCode = "";
 
-//    @OneToOne
-//    @JoinColumn(name = "gender_code", referencedColumnName = "gender_code")
-//    /* 성별 : required */
-//    private GenderVo gender;
+    @OneToOne
+    @JoinColumn(name = "gender_code", referencedColumnName = "gender_code")
+    /* 성별 : required */
+    private GenderVo gender;
 
     @Column(length = 50, nullable = false, unique = true)
     /* email : required */
@@ -80,13 +80,13 @@ public class MemberVo {
         this.age = age;
     }
 
-//    public GenderVo getGender() {
-//        return gender;
-//    }
-//
-//    public void setGender(GenderVo gender) {
-//        this.gender = gender;
-//    }
+    public GenderVo getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderVo gender) {
+        this.gender = gender;
+    }
 
     public String getEmail() {
         return email;
@@ -144,11 +144,11 @@ public class MemberVo {
         this.clientToken = clientToken;
     }
 
-    public String getGenderCode() {
-        return genderCode;
-    }
-
-    public void setGenderCode(String genderCode) {
-        this.genderCode = genderCode;
-    }
+//    public String getGenderCode() {
+//        return genderCode;
+//    }
+//
+//    public void setGenderCode(String genderCode) {
+//        this.genderCode = genderCode;
+//    }
 }
