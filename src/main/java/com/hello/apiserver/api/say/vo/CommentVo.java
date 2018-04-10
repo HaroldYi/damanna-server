@@ -1,5 +1,7 @@
 package com.hello.apiserver.api.say.vo;
 
+import com.hello.apiserver.api.member.vo.MemberVo;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +20,9 @@ public class CommentVo {
     @Column(nullable = false)
     private String comment = "";
 
-    @Column(nullable = false, length = 28)
-    private String memberId = "";
+    @ManyToOne(targetEntity=MemberVo.class)
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private MemberVo member;
 
     @Column
     private Date regDt;
@@ -55,12 +58,12 @@ public class CommentVo {
         this.comment = comment;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public MemberVo getMember() {
+        return member;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setMember(MemberVo member) {
+        this.member = member;
     }
 
     public Date getRegDt() {
