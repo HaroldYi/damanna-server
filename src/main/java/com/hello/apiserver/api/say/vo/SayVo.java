@@ -1,6 +1,6 @@
 package com.hello.apiserver.api.say.vo;
 
-import org.springframework.data.geo.Point;
+import com.hello.apiserver.api.member.vo.MemberVo;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,11 +20,15 @@ public class SayVo {
 //    @Column(nullable = false, columnDefinition = "POINT")
 //    private Point location;
 
-    @Column(nullable = false, length = 28)
-    private String memberId = "";
+//    @Column(name = "member_id", nullable = false, length = 28)
+//    private String memberId = "";
 
     @Column(nullable = false)
     private Date regDt;
+
+    @ManyToOne(targetEntity=MemberVo.class)
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private MemberVo member;
 
     @OneToMany
     @JoinColumn(name = "say_id", referencedColumnName = "id")
@@ -36,6 +40,14 @@ public class SayVo {
 
     @Column(nullable = false)
     private String useYn = "Y";
+
+    public MemberVo getMember() {
+        return member;
+    }
+
+    public void setMember(MemberVo member) {
+        this.member = member;
+    }
 
     public long getId() {
         return id;
@@ -61,13 +73,13 @@ public class SayVo {
 //        this.location = location;
 //    }
 
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
+//    public String getMemberId() {
+//        return memberId;
+//    }
+//
+//    public void setMemberId(String memberId) {
+//        this.memberId = memberId;
+//    }
 
     public Date getRegDt() {
         return regDt;

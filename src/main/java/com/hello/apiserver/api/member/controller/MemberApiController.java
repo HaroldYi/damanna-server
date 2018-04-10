@@ -71,6 +71,59 @@ public class MemberApiController {
         return "";
     }
 
+    @RequestMapping(value = "/changeProfile/{memberId}/{flag}", method = RequestMethod.PUT)
+    public String changeProfile (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestBody(required = false)String args,
+            @PathVariable String memberId,
+            @PathVariable String flag
+    ) throws IOException {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+        apiToken = gson.fromJson(apiToken, String.class);
+        MemberVo memberVo = gson.fromJson(args, MemberVo.class);
+
+        if(!ObjectUtils.isEmpty(apiToken)) {
+            if (Auth.checkToken(apiToken)) {
+
+                if (ObjectUtils.isEmpty(args)) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value());
+                } else {
+
+                    if(flag.equals("nickName")) {
+                        if (ObjectUtils.isEmpty(memberVo.getName())) {
+                            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'name' parameter must not be null or empty");
+                        } else {
+                            response.setStatus(HttpStatus.OK.value());
+                            MemberVo member = memberRepository.findById(memberId);
+                            member.setName(memberVo.getName());
+                            memberRepository.save(member);
+                            return "OK";
+                        }
+                    } else if(flag.equals("age")) {
+                        if (ObjectUtils.isEmpty(memberVo.getAge())) {
+                            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
+                        } else {
+                            response.setStatus(HttpStatus.OK.value());
+                            MemberVo member = memberRepository.findById(memberId);
+                            member.setAge(memberVo.getAge());
+                            memberRepository.save(member);
+                            return "OK";
+                        }
+                    }
+                }
+            } else {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+            }
+        } else {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiToken' parameter must not be null or empty");
+        }
+
+        return "";
+    }
+
     @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT)
     public String changeNickName (
             HttpServletResponse response,
@@ -175,7 +228,7 @@ public class MemberApiController {
     }
 
     @RequestMapping(value = {"/getMemberInfo/{memberId}/", "/getMemberInfo/{memberId}"}, method = RequestMethod.GET)
-    public MemberVo getMemberList (
+    public MemberVo getMemberInfo (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable("memberId")String memberId

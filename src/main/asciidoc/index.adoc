@@ -1,0 +1,115 @@
+= Hello studio RESTful Notes API Guide
+Harold J. Yi;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PUT`
+| Used to update an existing resource, including partial updates
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `401 Unauthorized`
+| Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided. The response must include a WWW-Authenticate header field containing a challenge applicable to the requested resource. See Basic access authentication and Digest access authentication.[34] 401 semantically means "unauthenticated",[35] i.e. the user does not have the necessary credentials.
+
+| `404 Not Found`
+| The requested resource did not exist
+
+| `500 Internal Server Error`
+| A generic error message, given when an unexpected condition was encountered and no more specific message is suitable
+
+reference
+https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C
+
+|===
+
+
+== 사용자 리스트 조회 [getMemberList]
+
+include::{snippets}/getMemberList/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/getMemberList/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/getMemberList/http-response.adoc[]
+
+== 사용자 조회 [getMemberInfo]
+
+include::{snippets}/getMemberInfo/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/getMemberInfo/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/getMemberInfo/http-response.adoc[]
+
+
+== 사용자 입력 [post]
+
+사용자를조회
+
+include::{snippets}/index-example/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/index-example/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/index-example/http-response.adoc[]
