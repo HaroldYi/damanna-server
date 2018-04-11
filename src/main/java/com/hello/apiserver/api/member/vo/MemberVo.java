@@ -50,6 +50,9 @@ public class MemberVo {
     /* last_signIn : optional */
     private Date lastSignIn;
 
+    @Column
+    private Date lastAttendance;
+
     @Column(columnDefinition = "POINT")
     /* location : optional */
     private Point location;
@@ -135,6 +138,14 @@ public class MemberVo {
         this.lastSignIn = lastSignIn;
     }
 
+    public Date getLastAttendance() {
+        return lastAttendance;
+    }
+
+    public void setLastAttendance(Date lastAttendance) {
+        this.lastAttendance = lastAttendance;
+    }
+
     public Point getLocation() {
         return location;
     }
@@ -159,7 +170,7 @@ public class MemberVo {
         this.clientToken = clientToken;
     }
 
-//    public String getGenderCode() {
+    //    public String getGenderCode() {
 //        return genderCode;
 //    }
 //

@@ -32,6 +32,9 @@ public class PointApiController {
     @Autowired
     private PointRepository pointRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @RequestMapping(value = "/updatePoint", method = RequestMethod.POST)
     public String newSay (
             HttpServletResponse response,
@@ -53,6 +56,11 @@ public class PointApiController {
                 pointVo.setRegDt(new Date());
 
                 pointRepository.save(pointVo);
+                if(pointVo.getSource().equals("attendance")) {
+                    MemberVo memberVo = memberRepository.findById(pointVo.getMemberId());
+                    memberVo.setLastAttendance(new Date());
+                    memberRepository.save(memberVo);
+                }
 
                 return "OK";
             }
