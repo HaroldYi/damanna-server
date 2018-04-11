@@ -1,5 +1,6 @@
 package com.hello.apiserver.api.member.vo;
 
+import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.vividsolutions.jts.geom.Point;
 
 import javax.persistence.*;
@@ -51,6 +52,11 @@ public class MemberVo {
     @Column(columnDefinition = "POINT")
     /* location : optional */
     private Point location;
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "member_id")
+    /* location : optional */
+    private PhotoVo photo;
 
     @Column(nullable = false)
     /* clientToken : required */
@@ -134,6 +140,14 @@ public class MemberVo {
 
     public void setLocation(Point location) {
         this.location = location;
+    }
+
+    public PhotoVo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(PhotoVo photo) {
+        this.photo = photo;
     }
 
     public String getClientToken() {
