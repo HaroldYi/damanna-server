@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -53,10 +54,10 @@ public class MemberVo {
     /* location : optional */
     private Point location;
 
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "member_id")
+    @OneToMany
+    @JoinColumn(name = "id", referencedColumnName = "id")
     /* location : optional */
-    private PhotoVo photo;
+    private List<PhotoVo> photo;
 
     @Column(nullable = false)
     /* clientToken : required */
@@ -142,11 +143,11 @@ public class MemberVo {
         this.location = location;
     }
 
-    public PhotoVo getPhoto() {
+    public List<PhotoVo> getPhoto() {
         return photo;
     }
 
-    public void setPhoto(PhotoVo photo) {
+    public void setPhoto(List<PhotoVo> photo) {
         this.photo = photo;
     }
 
