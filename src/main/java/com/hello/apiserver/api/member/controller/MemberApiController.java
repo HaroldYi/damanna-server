@@ -71,7 +71,7 @@ public class MemberApiController {
         return "";
     }
 
-    @RequestMapping(value = "/changeProfile/{memberId}/{flag}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/changeProfile/{memberId}/{flag}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeProfile (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
@@ -124,7 +124,7 @@ public class MemberApiController {
         return "";
     }
 
-    @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeNickName (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
@@ -163,7 +163,7 @@ public class MemberApiController {
         return "";
     }
 
-    @RequestMapping(value = "/changeAge/{memberId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/changeAge/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeAge (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,

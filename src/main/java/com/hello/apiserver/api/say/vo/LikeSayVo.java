@@ -12,8 +12,8 @@ public class LikeSayVo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @Column(nullable = false)
-//    private String sayId = "";
+    @Column(name = "say_id", nullable = false)
+    private long sayId;
 
     @ManyToOne(targetEntity=MemberVo.class)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -25,6 +25,9 @@ public class LikeSayVo {
     @Column(nullable = false)
     private Date regDt;
 
+    @Column(nullable = false)
+    private Date updateDt;
+
     public long getId() {
         return id;
     }
@@ -33,14 +36,13 @@ public class LikeSayVo {
         this.id = id;
     }
 
-    //    public String getSayId() {
-//        return sayId;
-//    }
-//
-//    public void setSayId(String sayId) {
-//        this.sayId = sayId;
-//    }
+    public long getSayId() {
+        return sayId;
+    }
 
+    public void setSayId(long sayId) {
+        this.sayId = sayId;
+    }
 
     public MemberVo getMember() {
         return member;
@@ -64,5 +66,13 @@ public class LikeSayVo {
 
     public void setRegDt(Date regDt) {
         this.regDt = regDt;
+    }
+
+    public Date getUpdateDt() {
+        return updateDt;
+    }
+
+    public void setUpdateDt(Date updateDt) {
+        this.updateDt = updateDt;
     }
 }
