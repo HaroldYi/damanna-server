@@ -38,8 +38,8 @@ public class MemberApiController {
         apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
 
-        Point point = new GeometryFactory().createPoint(new Coordinate(37.73, 60.45));
-        memberVo.setLocation(point);
+//        Point point = new GeometryFactory().createPoint(new Coordinate(37.73, 60.45));
+//        memberVo.setLocation(point);
 
         if(Auth.checkToken(apiToken)) {
 

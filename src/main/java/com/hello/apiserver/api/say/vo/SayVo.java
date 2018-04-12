@@ -1,6 +1,8 @@
 package com.hello.apiserver.api.say.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
+import org.hibernate.annotations.FilterJoinTable;
+import org.hibernate.annotations.WhereJoinTable;
 
 import javax.persistence.*;
 import java.util.Date;

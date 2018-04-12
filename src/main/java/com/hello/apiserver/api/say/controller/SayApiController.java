@@ -14,6 +14,8 @@ import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -129,6 +131,9 @@ public class SayApiController {
 
         apiToken = gson.fromJson(apiToken, String.class);
         CommentVo commentVo = gson.fromJson(body, CommentVo.class);
+        MemberVo memberVo = new MemberVo();
+        memberVo.setId(commentVo.getMemberId());
+        commentVo.setMember(memberVo);
 
         if(Auth.checkToken(apiToken)) {
             if (body == null || body.isEmpty()) {
@@ -228,6 +233,34 @@ public class SayApiController {
 
                     return "OK";
                 }
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return "";
+    }
+
+    @RequestMapping(value = "/deleteSay/{sayId}", method = RequestMethod.DELETE)
+    public String deleteSay (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @PathVariable long sayId,
+            @RequestBody(required = false)String body
+    ) throws IOException {
+        Gson gson = new Gson();
+
+        apiToken = gson.fromJson(apiToken, String.class);
+
+        if(Auth.checkToken(apiToken)) {
+            if(ObjectUtils.isEmpty(sayId)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
+            } else {
+                response.setStatus(HttpStatus.OK.value());
+                SayVo sayVo = sayRepository.findById(sayId);
+                sayRepository.delete(sayVo);
+
+                return "OK";
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

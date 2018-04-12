@@ -1,6 +1,8 @@
 package com.hello.apiserver.api.photo.controller;
 
 import com.google.gson.Gson;
+import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.photo.service.PhotoRepository;
 import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.hello.apiserver.api.util.Auth;
@@ -22,6 +24,40 @@ public class PhotoController {
 
     @Autowired
     PhotoRepository photoRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @RequestMapping(value = {"/uploadPhoto", "/uploadPhoto/"}, method = RequestMethod.POST)
+    public String uploadPhoto (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestBody String photoInfo
+    ) throws IOException {
+
+        if(Auth.checkToken(apiToken)) {
+
+            if(ObjectUtils.isEmpty(photoInfo)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value());
+            } else {
+                if(ObjectUtils.isEmpty(photoInfo)) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'photoInfo' parameter must not be null or empty");
+                } else {
+                    response.setStatus(HttpStatus.OK.value());
+
+                    PhotoVo photoVo = new Gson().fromJson(photoInfo, PhotoVo.class);
+                    photoVo.setRegDt(new Date());
+                    photoRepository.save(photoVo);
+
+                    return HttpStatus.OK.toString();
+                }
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return null;
+    }
 
     @RequestMapping(value = {"/findPhotoVoByMemberId/{memberId}/{page}", "/findPhotoVoByMemberId/{memberId}/{page}/"}, method = RequestMethod.GET)
     public List<PhotoVo> findPhotoVoByMemberId (
@@ -91,7 +127,7 @@ public class PhotoController {
                         }
 
                         photoRepository.save(photoVo);
-                        return "OK";
+                        return HttpStatus.OK.toString();
                     }
                 }
             } else {
@@ -100,6 +136,65 @@ public class PhotoController {
                 photoRepository.save(photoVo);
                 return "OK";
             }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return "";
+    }
+
+    @RequestMapping(value = {"/updateProfilePhoto", "/updateProfilePhoto/"}, method = RequestMethod.PUT)
+    @Transactional
+    public String updateProfilePhoto (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestBody String profileFileInfo
+    ) throws IOException {
+
+        if(Auth.checkToken(apiToken)) {
+
+            MemberVo memberVo = new Gson().fromJson(profileFileInfo, MemberVo.class);
+            if(ObjectUtils.isEmpty(memberVo)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+            } else {
+
+//                if(ObjectUtils.isEmpty(photo.getMemberId())) {
+//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
+//                } else if(ObjectUtils.isEmpty(photo.getFileName())) {
+//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
+//                } else if(ObjectUtils.isEmpty(photo.getOriginalImg())) {
+//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");
+//                } else if(ObjectUtils.isEmpty(photo.getThumbnailImg())) {
+//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'thumbnailImg' request body must not be null or empty");
+//                } else {
+//                    response.setStatus(HttpStatus.OK.value());
+//
+////                    PhotoVo photoVo = photoRepository.findById(photo.getId()).get();
+//
+                    memberRepository.save(memberVo);
+                    return HttpStatus.OK.toString();
+//                }
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return "";
+    }
+
+    @RequestMapping(value = {"/deletePhoto/{id}", "/deletePhoto/{id}/"}, method = RequestMethod.DELETE)
+    @Transactional
+    public String deletePhoto (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @PathVariable String id
+    ) throws IOException {
+
+        if(Auth.checkToken(apiToken)) {
+            PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
+            this.photoRepository.delete(photoVo);
+
+            return HttpStatus.OK.toString();
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
         }

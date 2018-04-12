@@ -1,6 +1,8 @@
 package com.hello.apiserver.api.say.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.WhereJoinTable;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,6 +22,7 @@ public class LikeSayVo {
     private MemberVo member;
 
     @Column(nullable = false)
+    @Filter(name = "use_yn", condition = "use_yn = 'Y'")
     private String useYn = "Y";
 
     @Column(nullable = false)

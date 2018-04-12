@@ -53,9 +53,14 @@ public class MemberVo {
     @Column
     private Date lastAttendance;
 
-    @Column(columnDefinition = "POINT")
-    /* location : optional */
-    private Point location;
+//    @Column(columnDefinition = "POINT")
+//    /* location : optional */
+//    private Point location;
+    @Column
+    private double locationLat;
+
+    @Column
+    private double locationLon;
 
     @OneToMany
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -146,12 +151,20 @@ public class MemberVo {
         this.lastAttendance = lastAttendance;
     }
 
-    public Point getLocation() {
-        return location;
+    public double getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation(Point location) {
-        this.location = location;
+    public void setLocationLat(double locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public double getLocationLon() {
+        return locationLon;
+    }
+
+    public void setLocationLon(double locationLon) {
+        this.locationLon = locationLon;
     }
 
     public List<PhotoVo> getPhoto() {
@@ -170,7 +183,7 @@ public class MemberVo {
         this.clientToken = clientToken;
     }
 
-    //    public String getGenderCode() {
+//    public String getGenderCode() {
 //        return genderCode;
 //    }
 //

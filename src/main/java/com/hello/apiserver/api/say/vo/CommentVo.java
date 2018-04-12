@@ -12,13 +12,16 @@ public class CommentVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private String id;
 
     @Column(name = "say_id", nullable = false)
     private String sayId = "";
 
     @Column(nullable = false)
     private String comment = "";
+
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
+    private String memberId = "";
 
     @ManyToOne(targetEntity=MemberVo.class)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -34,11 +37,11 @@ public class CommentVo {
     @Column
     private String useYn = "Y";
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -56,6 +59,14 @@ public class CommentVo {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     public MemberVo getMember() {
