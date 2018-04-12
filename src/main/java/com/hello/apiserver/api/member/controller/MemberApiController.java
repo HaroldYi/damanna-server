@@ -41,11 +41,6 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
         memberVo.setLastSignIn(new Date());
 
-        GenderVo genderVo = new GenderVo();
-        genderVo.setGenderCode(memberVo.getGenderCode());
-
-        memberVo.setGender(genderVo);
-
 //        Point point = new GeometryFactory().createPoint(new Coordinate(37.73, 60.45));
 //        memberVo.setLocation(point);
 

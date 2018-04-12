@@ -22,11 +22,11 @@ public class MemberVo {
     /* 나이 : required */
     private int age;
 
-    @Column(name = "gender_code", nullable = false, insertable = false, updatable = false)
+    @Column(name = "gender_code", nullable = false)
     private String genderCode = "";
 
     @OneToOne
-    @JoinColumn(name = "gender_code", referencedColumnName = "gender_code")
+    @JoinColumn(name = "gender_code", referencedColumnName = "gender_code", insertable = false, updatable = false)
     /* 성별 : required */
     private GenderVo gender;
 

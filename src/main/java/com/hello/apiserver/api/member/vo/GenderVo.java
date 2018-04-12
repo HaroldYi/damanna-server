@@ -10,6 +10,8 @@ import javax.persistence.Table;
 public class GenderVo {
 
     @Id
+    private long id;
+
     @Column(name = "gender_code")
     private String genderCode = "";
 
@@ -18,6 +20,14 @@ public class GenderVo {
 
     @Column
     private String genderKr = "";
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getGenderCode() {
         return genderCode;
