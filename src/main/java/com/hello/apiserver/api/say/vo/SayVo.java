@@ -13,7 +13,6 @@ import java.util.List;
 public class SayVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private String id;
 
     @Column(nullable = false, length = 1000)

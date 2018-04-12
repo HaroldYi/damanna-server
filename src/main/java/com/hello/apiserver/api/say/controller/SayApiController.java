@@ -61,9 +61,10 @@ public class SayApiController {
 
                 SayVo sayVo = new Gson().fromJson(body, SayVo.class);
                 sayVo.setRegDt(new Date());
+                sayVo.setUseYn("Y");
 
                 sayRepository.save(sayVo);
-                return "OK";
+                return HttpStatus.OK.toString();
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -151,7 +152,7 @@ public class SayApiController {
                     response.setStatus(HttpStatus.OK.value());
                     commentVo.setRegDt(new Date());
                     commentRepository.save(commentVo);
-                    return "OK";
+                    return HttpStatus.OK.toString();
                 }
             }
         } else {
@@ -185,7 +186,7 @@ public class SayApiController {
                     response.setStatus(HttpStatus.OK.value());
                     commentReplyVo.setRegDt(new Date());
                     commentReplyRepository.save(commentReplyVo);
-                    return "OK";
+                    return HttpStatus.OK.toString();
                 }
             }
         } else {
@@ -235,7 +236,7 @@ public class SayApiController {
 
                     likeSayRepository.save(likeSayVo);
 
-                    return "OK";
+                    return HttpStatus.OK.toString();
                 }
             }
         } else {
@@ -264,7 +265,7 @@ public class SayApiController {
                 SayVo sayVo = sayRepository.findById(sayId);
                 sayRepository.delete(sayVo);
 
-                return "OK";
+                return HttpStatus.OK.toString();
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
