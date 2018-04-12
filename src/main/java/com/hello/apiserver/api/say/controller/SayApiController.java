@@ -48,17 +48,21 @@ public class SayApiController {
     public String newSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
-            @RequestBody(required = false)String msg
+            @RequestBody(required = false)String body
     ) throws IOException {
 
         apiToken = new Gson().fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
-            if (msg == null || msg.isEmpty()) {
+            if (ObjectUtils.isEmpty(body)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
-//                sayRepository.save();
+
+                SayVo sayVo = new Gson().fromJson(body, SayVo.class);
+                sayVo.setRegDt(new Date());
+
+                sayRepository.save(sayVo);
                 return "OK";
             }
         } else {

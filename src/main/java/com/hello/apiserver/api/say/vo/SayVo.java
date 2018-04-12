@@ -14,7 +14,7 @@ public class SayVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private String id;
 
     @Column(nullable = false, length = 1000)
     private String message = "";
@@ -22,14 +22,14 @@ public class SayVo {
 //    @Column(nullable = false, columnDefinition = "POINT")
 //    private Point location;
 
-//    @Column(name = "member_id", nullable = false, length = 28)
-//    private String memberId = "";
+    @Column(name = "member_id", nullable = false, length = 28)
+    private String memberId = "";
 
     @Column(nullable = false)
     private Date regDt;
 
     @ManyToOne(targetEntity=MemberVo.class)
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MemberVo member;
 
     @OneToMany
@@ -51,11 +51,11 @@ public class SayVo {
         this.member = member;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

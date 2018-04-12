@@ -12,10 +12,10 @@ import java.util.Date;
 public class LikeSayVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
 
     @Column(name = "say_id", nullable = false)
-    private long sayId;
+    private String sayId;
 
     @ManyToOne(targetEntity=MemberVo.class)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -31,19 +31,19 @@ public class LikeSayVo {
     @Column(nullable = false)
     private Date updateDt;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getSayId() {
+    public String getSayId() {
         return sayId;
     }
 
-    public void setSayId(long sayId) {
+    public void setSayId(String sayId) {
         this.sayId = sayId;
     }
 
