@@ -22,8 +22,8 @@ public class MemberVo {
     /* 나이 : required */
     private int age;
 
-//    @Column(name = "gender_code", nullable = false)
-//    private String genderCode = "";
+    @Column(name = "gender_code", nullable = false, insertable = false, updatable = false)
+    private String genderCode = "";
 
     @OneToOne
     @JoinColumn(name = "gender_code", referencedColumnName = "gender_code")
@@ -183,11 +183,11 @@ public class MemberVo {
         this.clientToken = clientToken;
     }
 
-//    public String getGenderCode() {
-//        return genderCode;
-//    }
-//
-//    public void setGenderCode(String genderCode) {
-//        this.genderCode = genderCode;
-//    }
+    public String getGenderCode() {
+        return genderCode;
+    }
+
+    public void setGenderCode(String genderCode) {
+        this.genderCode = genderCode;
+    }
 }

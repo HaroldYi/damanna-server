@@ -3,6 +3,7 @@ package com.hello.apiserver.api.member.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.vo.GenderVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.util.Auth;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,6 +39,12 @@ public class MemberApiController {
 
         apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
+        memberVo.setLastSignIn(new Date());
+
+        GenderVo genderVo = new GenderVo();
+        genderVo.setGenderCode(memberVo.getGenderCode());
+
+        memberVo.setGender(genderVo);
 
 //        Point point = new GeometryFactory().createPoint(new Coordinate(37.73, 60.45));
 //        memberVo.setLocation(point);
