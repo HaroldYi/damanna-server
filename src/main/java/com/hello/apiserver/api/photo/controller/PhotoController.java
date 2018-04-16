@@ -79,7 +79,7 @@ public class PhotoController {
 
                     PageRequest pr = new PageRequest(page, 15);
 
-                    return photoRepository.findPhotoVoByMemberIdAndUseYn(memberId, "Y", pr).getContent();
+                    return photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent();
                 }
             }
         } else {

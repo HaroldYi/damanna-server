@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface PhotoRepository extends CrudRepository<PhotoVo, String> {
     Page<PhotoVo> findAll(Pageable pageable);
 
-    Page<PhotoVo> findPhotoVoByMemberIdAndUseYn(String memberId, String useYn,Pageable pageable);
+    Page<PhotoVo> findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(String memberId, String useYn,Pageable pageable);
 
     PhotoVo findByIdAndUseYn(String id, String useYn);
 }
