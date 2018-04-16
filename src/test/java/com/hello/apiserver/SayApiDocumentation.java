@@ -88,6 +88,7 @@ public class SayApiDocumentation {
 //                                fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
 //    }
 
+    /*
     @Test
     public void newMember() throws Exception {
         this.mockMvc.perform(get("/member/newMember/{page}", "{page}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -138,4 +139,5 @@ public class SayApiDocumentation {
                 .andDo(document("getMemberInfo"));
 
     }
+    */
 }

@@ -91,6 +91,7 @@ public class MemberApiDocumentation {
 //                                fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
 //    }
 
+    /*
     @Test
     public void newMember() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/member/newMember/{page}", "{page}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -159,4 +160,6 @@ public class MemberApiDocumentation {
                 .andExpect(status().isOk());
 
     }
+
+    */
 }

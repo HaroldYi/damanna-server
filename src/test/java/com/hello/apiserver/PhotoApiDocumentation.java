@@ -87,6 +87,7 @@ public class PhotoApiDocumentation {
 //                                fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
 //    }
 
+    /*
     @Test
     public void findPhotoVoByMemberId() throws Exception {
         this.mockMvc.perform(get("/photo/findPhotoVoByMemberId/{memberId}/{page}", "{memberId}", "{page}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -137,4 +138,5 @@ public class PhotoApiDocumentation {
                 .andDo(document("getMemberInfo"));
 
     }
+    */
 }
