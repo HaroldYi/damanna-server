@@ -71,6 +71,9 @@ public class MemberVo {
     /* clientToken : required */
     private String clientToken = "";
 
+    @Column
+    private int point;
+
     public String getId() {
         return id;
     }
@@ -189,5 +192,13 @@ public class MemberVo {
 
     public void setGenderCode(String genderCode) {
         this.genderCode = genderCode;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }

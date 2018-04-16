@@ -56,11 +56,15 @@ public class PointApiController {
                 pointVo.setRegDt(new Date());
 
                 pointRepository.save(pointVo);
+                MemberVo memberVo = memberRepository.findById(pointVo.getMemberId());
+
                 if(pointVo.getSource().equals("attendance")) {
-                    MemberVo memberVo = memberRepository.findById(pointVo.getMemberId());
                     memberVo.setLastAttendance(new Date());
                     memberRepository.save(memberVo);
                 }
+
+                memberVo.setPoint(memberVo.getPoint() + pointVo.getPoint());
+                memberRepository.save(memberVo);
 
                 return "OK";
             }
