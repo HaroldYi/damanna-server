@@ -210,7 +210,7 @@ public class SayApiController {
         apiToken = gson.fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
-            if (body == null || body.isEmpty()) {
+            if (ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
                 if(ObjectUtils.isEmpty(sayId)) {
