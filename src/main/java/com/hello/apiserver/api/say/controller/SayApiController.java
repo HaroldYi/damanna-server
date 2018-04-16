@@ -224,17 +224,19 @@ public class SayApiController {
                     SayVo sayVo = sayRepository.findById(sayId);
                     LikeSayVo likeSayVo = likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     if(likeSayVo != null) {
-                        likeSayVo.setUseYn("N");
-                        likeSayVo.setUpdateDt(new Date());
+//                        likeSayVo.setUseYn("N");
+//                        likeSayVo.setUpdateDt(new Date());
+                        likeSayRepository.delete(likeSayVo);
                     } else {
                         likeSayVo = new LikeSayVo();
                         likeSayVo.setSayId(sayVo.getId());
                         likeSayVo.setMember(memberVo);
                         likeSayVo.setRegDt(new Date());
                         likeSayVo.setUpdateDt(new Date());
+                        likeSayRepository.save(likeSayVo);
                     }
 
-                    likeSayRepository.save(likeSayVo);
+//                    likeSayRepository.save(likeSayVo);
 
                     return HttpStatus.OK.toString();
                 }
