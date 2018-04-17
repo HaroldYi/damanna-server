@@ -201,7 +201,7 @@ public class MemberApiController {
 
                     PageRequest pr = new PageRequest(page, 15);
 
-                    Page<MemberVo> memberList = memberRepository.findAll(pr);
+                    Page<MemberVo> memberList = memberRepository.findAllByOrderByLastSignInDesc(pr);
                     response.setStatus(HttpStatus.OK.value());
 
                     return memberList.getContent();
