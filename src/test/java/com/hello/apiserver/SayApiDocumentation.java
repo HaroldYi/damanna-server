@@ -24,7 +24,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.RestDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SayApiDocumentation {
 
     @Rule
-    public final RestDocumentation restDocumentation = new RestDocumentation("target/generated-snippets");
+    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
 
 //    @Autowired
 //    private NoteRepository noteRepository;
@@ -62,7 +64,9 @@ public class SayApiDocumentation {
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-                .apply(documentationConfiguration(this.restDocumentation)).build();
+//                .alwaysDo(document("{class-name}/{method-name}/"))
+//                .alwaysDo(this.document)
+                .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation)).build();
     }
 
 //    @Test
@@ -88,56 +92,54 @@ public class SayApiDocumentation {
 //                                fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
 //    }
 
-    /*
     @Test
     public void newMember() throws Exception {
-        this.mockMvc.perform(get("/member/newMember/{page}", "{page}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andExpect(jsonPath("", is()))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("getMemberList"));
+//        this.mockMvc.perform(get("/member/newMember/{page}", "{page}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andExpect(jsonPath("", is()))
+////                .andDo(print())
+////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andDo(document("getMemberList"));
 
     }
 
-    @Test
-    public void changeNickName() throws Exception {
-        this.mockMvc.perform(get("/member/changeNickName/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("getMemberList"));
-
-    }
-
-    @Test
-    public void changeAge() throws Exception {
-        this.mockMvc.perform(get("/member/changeAge/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("getMemberList"));
-
-    }
-
-    @Test
-    public void getMemberList() throws Exception {
-        this.mockMvc.perform(get("/say/getSayList/{page}", "0").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andDo(MockMvcResultHandlers.print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("getSayList"));
-
-    }
-
-    @Test
-    public void getMemberInfo() throws Exception {
-        this.mockMvc.perform(get("/member/getMemberInfo/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("getMemberInfo"));
-
-    }
-    */
+//    @Test
+//    public void changeNickName() throws Exception {
+//        this.mockMvc.perform(get("/member/changeNickName/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andDo(print())
+////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andDo(document("getMemberList"));
+//
+//    }
+//
+//    @Test
+//    public void changeAge() throws Exception {
+//        this.mockMvc.perform(get("/member/changeAge/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andDo(print())
+////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andDo(document("getMemberList"));
+//
+//    }
+//
+//    @Test
+//    public void getMemberList() throws Exception {
+//        this.mockMvc.perform(get("/say/getSayList/{page}", "0").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andDo(MockMvcResultHandlers.print())
+////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andDo(document("getSayList"));
+//
+//    }
+//
+//    @Test
+//    public void getMemberInfo() throws Exception {
+//        this.mockMvc.perform(get("/member/getMemberInfo/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+////                .andDo(print())
+////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andDo(document("getMemberInfo"));
+//
+//    }
 }
