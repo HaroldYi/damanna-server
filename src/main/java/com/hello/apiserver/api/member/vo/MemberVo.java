@@ -63,7 +63,7 @@ public class MemberVo {
     private double locationLon;
 
     @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "member_id")
     /* location : optional */
     private List<PhotoVo> photo;
 

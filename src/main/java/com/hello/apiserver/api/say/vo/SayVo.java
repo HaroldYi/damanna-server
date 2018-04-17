@@ -13,7 +13,7 @@ import java.util.List;
 public class SayVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
 
     @Column(nullable = false, length = 1000)
     private String message = "";
@@ -50,11 +50,11 @@ public class SayVo {
         this.member = member;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

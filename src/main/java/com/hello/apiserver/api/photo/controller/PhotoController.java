@@ -104,9 +104,7 @@ public class PhotoController {
                 if(ObjectUtils.isEmpty(photo)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
                 } else {
-                    if(ObjectUtils.isEmpty(photo.getMemberId())) {
-                        response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
-                    } else if(ObjectUtils.isEmpty(photo.getFileName())) {
+                    if(ObjectUtils.isEmpty(photo.getFileName())) {
                         response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
                     } else if(ObjectUtils.isEmpty(photo.getOriginalImg())) {
                         response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");

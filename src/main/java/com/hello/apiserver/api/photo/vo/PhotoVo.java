@@ -1,5 +1,6 @@
 package com.hello.apiserver.api.photo.vo;
 
+import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -17,8 +18,12 @@ public class PhotoVo {
     @Column(nullable = false)
     private String fileName = "";
 
-    @Column(nullable = false, length = 28)
-    private String memberId = "";
+//    @Column(nullable = false, length = 28)
+//    private String memberId = "";
+
+    @ManyToOne(targetEntity=MemberVo.class)
+    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private MemberVo member;
 
     @Column(nullable = false)
     private String originalImg = "";
@@ -48,13 +53,13 @@ public class PhotoVo {
         this.fileName = fileName;
     }
 
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
+//    public String getMemberId() {
+//        return memberId;
+//    }
+//
+//    public void setMemberId(String memberId) {
+//        this.memberId = memberId;
+//    }
 
     public String getOriginalImg() {
         return originalImg;
