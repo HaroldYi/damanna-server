@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.net.www.http.HttpClient;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -71,6 +72,30 @@ public class SayApiController {
         }
 
         return "";
+    }
+
+    @RequestMapping(value = {"/getSay/{sayId}", "/getSayList/{sayId}/"}, method = RequestMethod.GET)
+    public SayVo getSay (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiToken")String apiToken,
+            @PathVariable("sayId")String sayId
+    ) throws IOException {
+
+        apiToken = new Gson().fromJson(apiToken, String.class);
+
+        if(Auth.checkToken(apiToken)) {
+            if (ObjectUtils.isEmpty(sayId)) {
+//                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+            } else {
+                response.setStatus(HttpStatus.OK.value());
+
+                return sayRepository.findByIdAndUseYn(sayId, "Y");
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return null;
     }
 
     @RequestMapping(value = {"/getSayList/{page}", "/getSayList/{page}/"}, method = RequestMethod.GET)
@@ -221,7 +246,7 @@ public class SayApiController {
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(memberId);
 
-                    SayVo sayVo = sayRepository.findById(sayId);
+                    SayVo sayVo = sayRepository.findByIdAndUseYn(sayId, "Y");
                     LikeSayVo likeSayVo = likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     if(likeSayVo != null) {
 //                        likeSayVo.setUseYn("N");
@@ -234,6 +259,21 @@ public class SayApiController {
                         likeSayVo.setRegDt(new Date());
                         likeSayVo.setUpdateDt(new Date());
                         likeSayRepository.save(likeSayVo);
+
+//                        HttpClient httpclient = new DefaultHttpClient();
+//                        org.apache.http.client.methods.HttpPost httppost = new HttpPost("https://us-central1-noryangjin-18dfb.cloudfunctions.net/sendPushMsg");
+//
+//                        try {
+//                            // 아래처럼 적절히 응용해서 데이터형식을 넣으시고
+//                            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs[0], "utf-8"));
+//
+//                            //HTTP Post 요청 실행
+//                            HttpResponse response = httpclient.execute(httppost);
+//                        } catch (ClientProtocolException e) {
+//                            Crashlytics.logException(e);
+//                        } catch (IOException e) {
+//                            Crashlytics.logException(e);
+//                        }
                     }
 
 //                    likeSayRepository.save(likeSayVo);
@@ -265,7 +305,7 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                SayVo sayVo = sayRepository.findById(sayId);
+                SayVo sayVo = sayRepository.findByIdAndUseYn(sayId, "Y");
                 sayVo.setUseYn("N");
                 sayRepository.save(sayVo);
 
