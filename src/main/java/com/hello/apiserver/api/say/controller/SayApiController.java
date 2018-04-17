@@ -200,7 +200,7 @@ public class SayApiController {
     public String likeSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
-            @PathVariable long sayId,
+            @PathVariable String sayId,
             @PathVariable String memberId,
             @RequestBody(required = false)String body
     ) throws IOException {
@@ -252,7 +252,7 @@ public class SayApiController {
     public String deleteSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
-            @PathVariable long sayId,
+            @PathVariable String sayId,
             @RequestBody(required = false)String body
     ) throws IOException {
         Gson gson = new Gson();
@@ -264,8 +264,10 @@ public class SayApiController {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
+
                 SayVo sayVo = sayRepository.findById(sayId);
-                sayRepository.delete(sayVo);
+                sayVo.setUseYn("N");
+                sayRepository.save(sayVo);
 
                 return HttpStatus.OK.toString();
             }

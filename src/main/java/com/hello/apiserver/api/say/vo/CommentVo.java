@@ -1,6 +1,7 @@
 package com.hello.apiserver.api.say.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 public interface LikeSayRepository extends CrudRepository<LikeSayVo, Long> {
-    LikeSayVo findBySayIdAndMemberAndUseYn(long sayId, MemberVo memberVo, String useYn);
+    LikeSayVo findBySayIdAndMemberAndUseYn(String sayId, MemberVo memberVo, String useYn);
 }

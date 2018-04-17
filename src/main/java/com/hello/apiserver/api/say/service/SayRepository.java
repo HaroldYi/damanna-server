@@ -10,5 +10,5 @@ public interface SayRepository extends CrudRepository<SayVo, Long> {
 
     Page<SayVo> findByMemberIdAndUseYn(String memberId, String useYn, Pageable pageable);
 
-    SayVo findById(long sayId);
+    SayVo findById(String sayId);
 }
