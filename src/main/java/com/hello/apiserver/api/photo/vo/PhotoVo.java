@@ -21,9 +21,9 @@ public class PhotoVo {
     @Column(name = "member_id", nullable = false, length = 28)
     private String memberId = "";
 
-    @ManyToOne(targetEntity=MemberVo.class)
-    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private MemberVo member;
+//    @ManyToOne(targetEntity=MemberVo.class)
+//    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    private MemberVo member;
 
     @Column(nullable = false)
     private String originalImg = "";
@@ -93,11 +93,11 @@ public class PhotoVo {
         this.useYn = useYn;
     }
 
-    public MemberVo getMember() {
-        return member;
-    }
-
-    public void setMember(MemberVo member) {
-        this.member = member;
-    }
+//    public MemberVo getMember() {
+//        return member;
+//    }
+//
+//    public void setMember(MemberVo member) {
+//        this.member = member;
+//    }
 }
