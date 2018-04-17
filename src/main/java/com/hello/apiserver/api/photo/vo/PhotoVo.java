@@ -18,8 +18,8 @@ public class PhotoVo {
     @Column(nullable = false)
     private String fileName = "";
 
-//    @Column(nullable = false, length = 28)
-//    private String memberId = "";
+    @Column(name = "member_id", nullable = false, length = 28)
+    private String memberId = "";
 
     @ManyToOne(targetEntity=MemberVo.class)
     @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -53,13 +53,13 @@ public class PhotoVo {
         this.fileName = fileName;
     }
 
-//    public String getMemberId() {
-//        return memberId;
-//    }
-//
-//    public void setMemberId(String memberId) {
-//        this.memberId = memberId;
-//    }
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
+    }
 
     public String getOriginalImg() {
         return originalImg;
@@ -91,5 +91,13 @@ public class PhotoVo {
 
     public void setUseYn(String useYn) {
         this.useYn = useYn;
+    }
+
+    public MemberVo getMember() {
+        return member;
+    }
+
+    public void setMember(MemberVo member) {
+        this.member = member;
     }
 }
