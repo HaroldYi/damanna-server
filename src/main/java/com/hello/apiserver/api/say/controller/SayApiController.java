@@ -52,7 +52,7 @@ public class SayApiController {
             @RequestBody(required = false)String body
     ) throws IOException {
 
-        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiToken = new Gson().fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (ObjectUtils.isEmpty(body)) {
@@ -81,7 +81,7 @@ public class SayApiController {
             @PathVariable("sayId")String sayId
     ) throws IOException {
 
-        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiToken = new Gson().fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (ObjectUtils.isEmpty(sayId)) {
@@ -105,7 +105,7 @@ public class SayApiController {
             @PathVariable("page")int page
     ) throws IOException {
 
-        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiToken = new Gson().fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (ObjectUtils.isEmpty(page)) {
@@ -131,7 +131,7 @@ public class SayApiController {
             @PathVariable int page
     ) throws IOException {
 
-        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiToken = new Gson().fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (ObjectUtils.isEmpty(page)) {
@@ -159,7 +159,7 @@ public class SayApiController {
 
         Gson gson = new Gson();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
         CommentVo commentVo = gson.fromJson(body, CommentVo.class);
         MemberVo memberVo = new MemberVo();
         memberVo.setId(commentVo.getMemberId());
@@ -196,7 +196,7 @@ public class SayApiController {
 
         Gson gson = new Gson();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
         CommentReplyVo commentReplyVo = gson.fromJson(body, CommentReplyVo.class);
 
         if(Auth.checkToken(apiToken)) {
@@ -226,13 +226,12 @@ public class SayApiController {
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable String sayId,
-            @PathVariable String memberId,
-            @RequestBody(required = false)String body
+            @PathVariable String memberId
     ) throws IOException {
 
         Gson gson = new Gson();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (ObjectUtils.isEmpty(sayId)) {
@@ -292,12 +291,11 @@ public class SayApiController {
     public String deleteSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
-            @PathVariable String sayId,
-            @RequestBody(required = false)String body
+            @PathVariable String sayId
     ) throws IOException {
         Gson gson = new Gson();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if(ObjectUtils.isEmpty(sayId)) {
@@ -306,8 +304,10 @@ public class SayApiController {
                 response.setStatus(HttpStatus.OK.value());
 
                 SayVo sayVo = sayRepository.findByIdAndUseYn(sayId, "Y");
-                sayVo.setUseYn("N");
-                sayRepository.save(sayVo);
+                if(sayVo != null) {
+                    sayVo.setUseYn("N");
+                    sayRepository.save(sayVo);
+                }
 
                 return HttpStatus.OK.toString();
             }

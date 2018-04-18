@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/photo", "/photo/"})
-public class PhotoController {
+public class PhotoApiController {
 
     @Autowired
     PhotoRepository photoRepository;
@@ -114,7 +114,7 @@ public class PhotoController {
 
                         PhotoVo photoVo;
                         if(!ObjectUtils.isEmpty(photo.getId())) {
-                            photoVo = photoRepository.findById(photo.getId()).get();
+                            photoVo = photoRepository.findByIdAndUseYn(photo.getId(), "Y");
                             photoVo.setFileName(photo.getFileName());
                             photoVo.setOriginalImg(photo.getOriginalImg());
                             photoVo.setThumbnailImg(photo.getThumbnailImg());
@@ -128,7 +128,7 @@ public class PhotoController {
                     }
                 }
             } else {
-                PhotoVo photoVo = photoRepository.findById(photo.getId()).get();
+                PhotoVo photoVo = photoRepository.findByIdAndUseYn(photo.getId(), "Y");
                 photo.setUseYn("N");
                 photoRepository.save(photoVo);
                 return "OK";
@@ -155,22 +155,23 @@ public class PhotoController {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
 
-//                if(ObjectUtils.isEmpty(photo.getMemberId())) {
-//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
-//                } else if(ObjectUtils.isEmpty(photo.getFileName())) {
-//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
-//                } else if(ObjectUtils.isEmpty(photo.getOriginalImg())) {
-//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");
-//                } else if(ObjectUtils.isEmpty(photo.getThumbnailImg())) {
-//                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'thumbnailImg' request body must not be null or empty");
-//                } else {
-//                    response.setStatus(HttpStatus.OK.value());
-//
-////                    PhotoVo photoVo = photoRepository.findById(photo.getId()).get();
-//
-                    memberRepository.save(memberVo);
+                if(ObjectUtils.isEmpty(memberVo.getId())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
+                } else if(ObjectUtils.isEmpty(memberVo.getProfileFile())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
+                } else if(ObjectUtils.isEmpty(memberVo.getProfileUrlOrg())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");
+                } else if(ObjectUtils.isEmpty(memberVo.getProfileUrl())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'thumbnailImg' request body must not be null or empty");
+                } else {
+                    response.setStatus(HttpStatus.OK.value());
+                    MemberVo newMemberVo = memberRepository.findById(memberVo.getId());
+                    newMemberVo.setProfileFile(memberVo.getProfileFile());
+                    newMemberVo.setProfileUrl(memberVo.getProfileUrl());
+                    newMemberVo.setProfileUrlOrg(memberVo.getProfileUrlOrg());
+                    memberRepository.save(newMemberVo);
                     return HttpStatus.OK.toString();
-//                }
+                }
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -189,7 +190,9 @@ public class PhotoController {
 
         if(Auth.checkToken(apiToken)) {
             PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
-            this.photoRepository.delete(photoVo);
+            if(photoVo != null) {
+                this.photoRepository.delete(photoVo);
+            }
 
             return HttpStatus.OK.toString();
         } else {

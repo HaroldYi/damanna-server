@@ -18,8 +18,11 @@ public class CommentReplyVo {
     @Column(name = "comment_id", nullable = false)
     private String commentId = "";
 
+    @Column(name = "member_id")
+    private String memberId = "";
+
     @ManyToOne(targetEntity=MemberVo.class)
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MemberVo member;
 
     @Column(nullable = false)
@@ -47,6 +50,14 @@ public class CommentReplyVo {
 
     public void setCommentId(String commentId) {
         this.commentId = commentId;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     public MemberVo getMember() {

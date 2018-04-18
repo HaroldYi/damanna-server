@@ -35,7 +35,7 @@ public class PointApiController {
     @Autowired
     private MemberRepository memberRepository;
 
-    @RequestMapping(value = "/updatePoint", method = RequestMethod.POST)
+    @RequestMapping(value = "/updatePoint", method = RequestMethod.PUT)
     public String newSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
@@ -44,7 +44,7 @@ public class PointApiController {
 
         Gson gson = new Gson();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
 
         if(Auth.checkToken(apiToken)) {
             if (msg == null || msg.isEmpty()) {
@@ -66,7 +66,7 @@ public class PointApiController {
                 memberVo.setPoint(memberVo.getPoint() + pointVo.getPoint());
                 memberRepository.save(memberVo);
 
-                return "OK";
+                return HttpStatus.OK.toString();
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

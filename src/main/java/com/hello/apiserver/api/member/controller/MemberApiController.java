@@ -37,7 +37,7 @@ public class MemberApiController {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
         memberVo.setLastSignIn(new Date());
 
@@ -121,7 +121,7 @@ public class MemberApiController {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(nickName, MemberVo.class);
 
         if(!ObjectUtils.isEmpty(apiToken)) {

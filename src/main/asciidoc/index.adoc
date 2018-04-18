@@ -56,22 +56,19 @@ use of HTTP status codes.
 | `500 Internal Server Error`
 | A generic error message, given when an unexpected condition was encountered and no more specific message is suitable
 
-reference
+|===
+
+==== reference
 https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C
 
-|===
-
-
 == 사용자 리스트 조회 [getMemberList]
 
-include::{snippets}/getMemberList/curl-request.adoc[]
-
-=== 요청 구조
-
-==== 요청 파라미터들
-
-include::{snippets}/getMemberList/http-request.adoc[]
+==== HTTP request
+----
+GET /member/getMemberList/{page} HTTP/1.1
+----
+include::{snippets}/getMemberList/path-parameters.adoc[]
 
 === 응답 구조
 
@@ -81,13 +78,11 @@ include::{snippets}/getMemberList/http-response.adoc[]
 
 == 사용자 조회 [getMemberInfo]
 
-include::{snippets}/getMemberInfo/curl-request.adoc[]
-
-=== 요청 구조
-
-==== 요청 파라미터들
-
-include::{snippets}/getMemberInfo/http-request.adoc[]
+==== HTTP request
+----
+GET /member/getMemberInfo/{memberId} HTTP/1.1
+----
+include::{snippets}/getMemberInfo/path-parameters.adoc[]
 
 === 응답 구조
 
@@ -96,20 +91,300 @@ include::{snippets}/getMemberInfo/http-request.adoc[]
 include::{snippets}/getMemberInfo/http-response.adoc[]
 
 
-== 사용자 입력 [post]
+== 사용자 입력 [newMember]
+==== HTTP request
+----
+POST /member/newMember HTTP/1.1
+----
+|===
+|Parameter|Description
 
-사용자를조회
+|`id`
+|The identifier of member
+|`age`
+|The age of member
+|`clientToken`
+|The client token of member
+|`email`
+|The email address of member
+|`genderCode`
+|Gender code(Male : M, Female : F)
+|`locationLon`
+|The longtitude of location
+|`locationLat`
+|The latitude of lation
+|`name`
+|The name of member
+|`profileFile`
+|The name of profile name
+|`profileUrl`
+|The Thumbnail url of profile
+|`profileUrlOrg`
+|The original photo url of profile
+|`point`
+|point
 
-include::{snippets}/index-example/curl-request.adoc[]
+|===
+
+==== Request body example
+----
+{
+    "id" : "test ID1524019303883",
+    "age" : "22",
+    "clientToken" : "test token",
+    "email" : "test email1524019303883",
+    "genderCode" : "M",
+    "locationLon" : "10",
+    "locationLat" : "10",
+    "name" : "test name",
+    "profileFile" : "https://",
+    "profileUrl" : "https://",
+    "profileUrlOrg" : "https://",
+    "point" : "10"
+}
+----
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/newMember/http-response.adoc[]
+
+== 닉네임 변경 [changeNickName]
+
+include::{snippets}/changeNickName/curl-request.adoc[]
 
 === 요청 구조
 
 ==== 요청 파라미터들
 
-include::{snippets}/index-example/http-request.adoc[]
+include::{snippets}/changeNickName/http-request.adoc[]
 
 === 응답 구조
 
 ==== 응답 파라미터들
 
-include::{snippets}/index-example/http-response.adoc[]
+include::{snippets}/changeNickName/http-response.adoc[]
+
+== 나이 변경 [changeAge]
+
+include::{snippets}/changeAge/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/changeAge/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/changeAge/http-response.adoc[]
+
+== 사진업로드 [uploadPhoto]
+
+include::{snippets}/uploadPhoto/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/uploadPhoto/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/uploadPhoto/http-response.adoc[]
+
+== 사진목록조회 by 회원ID [findPhotoVoByMemberId]
+
+include::{snippets}/findPhotoVoByMemberId/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/findPhotoVoByMemberId/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/findPhotoVoByMemberId/http-response.adoc[]
+
+== 프로필사진 변경 [updateProfilePhoto]
+
+include::{snippets}/updateProfilePhoto/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/updateProfilePhoto/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/updateProfilePhoto/http-response.adoc[]
+
+== 사진삭제 [deletePhoto]
+
+include::{snippets}/deletePhoto/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/deletePhoto/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/deletePhoto/http-response.adoc[]
+
+== 포인트수정 [updatePoint]
+
+include::{snippets}/updatePoint/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/updatePoint/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/updatePoint/http-response.adoc[]
+
+== say 글쓰기 [newSay]
+
+include::{snippets}/newSay/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/newSay/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/newSay/http-response.adoc[]
+
+== say 조회(단건) [getSay]
+
+include::{snippets}/getSay/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/getSay/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/getSay/http-response.adoc[]
+
+== say 조회(목록) [getSayList]
+
+include::{snippets}/getSayList/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/getSayList/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/getSayList/http-response.adoc[]
+
+== say 조회 by 회원ID [getSayListByUid]
+
+include::{snippets}/getSayListByUid/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/getSayListByUid/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/getSayListByUid/http-response.adoc[]
+
+== say 댓글달기 [newComment]
+
+include::{snippets}/newComment/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/newComment/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/newComment/http-response.adoc[]
+
+== say 대댓글달기 [newCommentReply]
+
+include::{snippets}/newCommentReply/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/newCommentReply/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/newCommentReply/http-response.adoc[]
+
+== say 좋아요 [likeSay]
+
+include::{snippets}/likeSay/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/likeSay/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/likeSay/http-response.adoc[]
+
+== say 삭제 [deleteSay]
+
+include::{snippets}/deleteSay/curl-request.adoc[]
+
+=== 요청 구조
+
+==== 요청 파라미터들
+
+include::{snippets}/deleteSay/http-request.adoc[]
+
+=== 응답 구조
+
+==== 응답 파라미터들
+
+include::{snippets}/deleteSay/http-response.adoc[]

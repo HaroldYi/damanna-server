@@ -17,6 +17,7 @@
 package com.hello.apiserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,9 +29,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.hypermedia.HypermediaDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +41,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,11 +74,11 @@ public class MemberApiDocumentation {
     @Before
     public void setUp() {
 
-        this.document = MockMvcRestDocumentation.document("{class-name}/{method-name}/", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint()));
+//        this.document = MockMvcRestDocumentation.document("{class-name}/{method-name}/", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint()));
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
 //                .alwaysDo(document("{class-name}/{method-name}/"))
 //                .alwaysDo(this.document)
-                .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation)).build();
+                .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation).uris().withHost("Helloapi.ap-northeast-2.elasticbeanstalk.com")).build();
     }
 
 //    @Test
@@ -98,36 +104,42 @@ public class MemberApiDocumentation {
 //                                fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
 //    }
 
-//    @Test
-//    public void newMember() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.post("/member/newMember").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-////                .andExpect(jsonPath("", is()))
-////                .andDo(print())
-////                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-//                .andExpect(status().isOk());
-////                .andDo(document("newMember"));
-////                .andDo(document("newMember", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())));
-//
-////        .andDo(document("index-example",
-////                        links(
-////                                linkWithRel("notes").description("The <<resources-notes,Notes resource>>"),
-////                                linkWithRel("tags").description("The <<resources-tags,Tags resource>>"),
-////                                linkWithRel("profile").description("The ALPS profile for the service")),
-////                        responseFields(
-////                                fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"))));
-//
-//    }
-//
-//    @Test
-//    public void changeNickName() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/member/changeNickName/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(MockMvcResultHandlers.print())
-//                .andDo(MockMvcRestDocumentation.document("changeAge", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-//                .andExpect(status().isOk());
-////                .andDo(document("changeNickName"));
-//
-//    }
-//
+    @Test
+    public void newMember() throws Exception {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("id", "test ID"+System.currentTimeMillis());
+        map.put("name", "test name");
+        map.put("email", "test email" + System.currentTimeMillis());
+        map.put("age", "22");
+        map.put("profileUrl", "https://");
+        map.put("profileUrlOrg", "https://");
+        map.put("profileFile", "https://");
+        map.put("clientToken", "test token");
+        map.put("genderCode", "M");
+        map.put("locationLat", "10");
+        map.put("locationLon", "10");
+        map.put("point", "10");
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/member/newMember").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("newMember", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void changeNickName() throws Exception {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("apiToken", "{apiToken}");
+        httpHeaders.add("Content-type", "application/json; charset=utf8");
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/changeNickName/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content("{\"name\" : \"Harolddd\"}"))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("changeNickName", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+                .andExpect(status().isOk());
+    }
+
     @Test
     public void changeAge() throws Exception {
 
@@ -152,21 +164,21 @@ public class MemberApiDocumentation {
 //                        PayloadDocumentation.fieldWithPath("title").description("The title of the note"),
 //                        PayloadDocumentation.fieldWithPath("body").description("The body of the note"),
 //                        PayloadDocumentation.fieldWithPath("_links").description("<<resources-note-links,Links>> to other resources")));
-//
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/member/getMemberList/{page}", 0).header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(MockMvcResultHandlers.print())
-////                .andDo(MockMvcRestDocumentation.document("getMemberList", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-//                .andExpect(status().isOk());
-////                .andDo(document("getMemberList"));
+
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberList/{page}", 0).header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("getMemberList", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("page").description("The page of List"))))
+                .andExpect(status().isOk());
+//                .andDo(document("getMemberList"));
 
     }
 
-//    @Test
-//    public void getMemberInfo() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/member/getMemberInfo/{memberId}", "{memberId}").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(MockMvcResultHandlers.print())
-//                .andDo(MockMvcRestDocumentation.document("getMemberInfo", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-//                .andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void getMemberInfo() throws Exception {
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberInfo/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("getMemberInfo", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("memberId").description("The identifier of Member"))))
+                .andExpect(status().isOk());
+
+    }
 }
