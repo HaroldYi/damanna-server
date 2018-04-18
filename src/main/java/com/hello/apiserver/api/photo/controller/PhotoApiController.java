@@ -1,6 +1,7 @@
 package com.hello.apiserver.api.photo.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.photo.service.PhotoRepository;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/photo", "/photo/"})
@@ -59,7 +59,7 @@ public class PhotoApiController {
     }
 
     @RequestMapping(value = {"/findPhotoVoByMemberId/{memberId}/{page}", "/findPhotoVoByMemberId/{memberId}/{page}/"}, method = RequestMethod.GET)
-    public List<PhotoVo> findPhotoVoByMemberId (
+    public String findPhotoVoByMemberId (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable("memberId")String memberId,
@@ -77,8 +77,8 @@ public class PhotoApiController {
                     response.setStatus(HttpStatus.OK.value());
 
                     PageRequest pr = new PageRequest(page, 15);
-
-                    return photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    return gson.toJson(photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
                 }
             }
         } else {

@@ -1,6 +1,7 @@
 package com.hello.apiserver.api.say.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.CommentReplyRepository;
@@ -74,8 +75,8 @@ public class SayApiController {
         return "";
     }
 
-    @RequestMapping(value = {"/getSay/{sayId}", "/getSayList/{sayId}/"}, method = RequestMethod.GET)
-    public SayVo getSay (
+    @RequestMapping(value = {"/getSay/{sayId}", "/getSay/{sayId}/"}, method = RequestMethod.GET)
+    public String getSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable("sayId")String sayId
@@ -88,8 +89,8 @@ public class SayApiController {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
-
-                return sayRepository.findByIdAndUseYn(sayId, "Y");
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                return gson.toJson(sayRepository.findByIdAndUseYn(sayId, "Y"));
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -99,7 +100,7 @@ public class SayApiController {
     }
 
     @RequestMapping(value = {"/getSayList/{page}", "/getSayList/{page}/"}, method = RequestMethod.GET)
-    public List<SayVo> getSayList (
+    public String getSayList (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable("page")int page
@@ -114,7 +115,8 @@ public class SayApiController {
                 PageRequest pr = new PageRequest(page, 15);
                 response.setStatus(HttpStatus.OK.value());
 
-                return sayRepository.findAllByUseYn("Y", pr).getContent();
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                return gson.toJson(sayRepository.findAllByUseYn("Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -124,7 +126,7 @@ public class SayApiController {
     }
 
     @RequestMapping(value = {"/getSayListByUid/{memberId}/{page}", "/getSayListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
-    public List<SayVo> getSayListByUid (
+    public String getSayListByUid (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable String memberId,
@@ -141,7 +143,8 @@ public class SayApiController {
 
                 PageRequest pr = new PageRequest(page, 15);
 
-                return sayRepository.findByMemberIdAndUseYn(memberId, "Y", pr).getContent();
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                return gson.toJson(sayRepository.findByMemberIdAndUseYn(memberId, "Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

@@ -184,7 +184,7 @@ public class MemberApiController {
     }
 
     @RequestMapping(value = "/getMemberList/{page}", method = RequestMethod.GET)
-    public List<MemberVo> getMemberList (
+    public String getMemberList (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable int page
@@ -204,7 +204,8 @@ public class MemberApiController {
                     Page<MemberVo> memberList = memberRepository.findAllByOrderByLastSignInDesc(pr);
                     response.setStatus(HttpStatus.OK.value());
 
-                    return memberList.getContent();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    return gson.toJson(memberList.getContent());
                 }
             }
         } else {
@@ -215,7 +216,7 @@ public class MemberApiController {
     }
 
     @RequestMapping(value = {"/getMemberInfo/{memberId}/", "/getMemberInfo/{memberId}"}, method = RequestMethod.GET)
-    public MemberVo getMemberInfo (
+    public String getMemberInfo (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @PathVariable("memberId")String memberId
@@ -230,7 +231,9 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    return memberRepository.findById(memberId);
+
+                    MemberVo memberVo = memberRepository.findById(memberId);
+                    return new Gson().toJson(memberVo);
                 }
             }
         } else {
