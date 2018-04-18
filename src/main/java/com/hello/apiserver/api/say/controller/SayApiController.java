@@ -116,7 +116,7 @@ public class SayApiController {
                 response.setStatus(HttpStatus.OK.value());
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(sayRepository.findAllByUseYn("Y", pr).getContent());
+                return gson.toJson(sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -144,7 +144,7 @@ public class SayApiController {
                 PageRequest pr = new PageRequest(page, 15);
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(sayRepository.findByMemberIdAndUseYn(memberId, "Y", pr).getContent());
+                return gson.toJson(sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

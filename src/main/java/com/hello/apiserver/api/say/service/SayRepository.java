@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 public interface SayRepository extends CrudRepository<SayVo, Long> {
-    Page<SayVo> findAllByUseYn(String useYn, Pageable pageable);
+    Page<SayVo> findAllByUseYnOrderByRegDtDesc(String useYn, Pageable pageable);
 
-    Page<SayVo> findByMemberIdAndUseYn(String memberId, String useYn, Pageable pageable);
+    Page<SayVo> findByMemberIdAndUseYnOrderByRegDtDesc(String memberId, String useYn, Pageable pageable);
 
     SayVo findByIdAndUseYn(String sayId, String useYn);
 }
