@@ -29,7 +29,7 @@ public class PhotoApiController {
     MemberRepository memberRepository;
 
     @RequestMapping(value = {"/uploadPhoto", "/uploadPhoto/"}, method = RequestMethod.POST)
-    public PhotoVo uploadPhoto (
+    public String uploadPhoto (
             HttpServletResponse response,
             @RequestHeader(value = "apiToken")String apiToken,
             @RequestBody String photoInfo
@@ -45,10 +45,11 @@ public class PhotoApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
 
-                    PhotoVo photoVo = new Gson().fromJson(photoInfo, PhotoVo.class);
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    PhotoVo photoVo = gson.fromJson(photoInfo, PhotoVo.class);
                     photoVo.setRegDt(new Date());
 
-                    return photoRepository.save(photoVo);
+                    return gson.toJson(photoRepository.save(photoVo));
                 }
             }
         } else {
