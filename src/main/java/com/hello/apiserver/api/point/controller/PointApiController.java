@@ -55,16 +55,16 @@ public class PointApiController {
                 PointVo pointVo = gson.fromJson(msg, PointVo.class);
                 pointVo.setRegDt(new Date());
 
-                pointRepository.save(pointVo);
+                this.pointRepository.save(pointVo);
                 MemberVo memberVo = memberRepository.findById(pointVo.getMemberId());
 
                 if(pointVo.getSource().equals("attendance")) {
                     memberVo.setLastAttendance(new Date());
-                    memberRepository.save(memberVo);
+                    this.memberRepository.save(memberVo);
                 }
 
                 memberVo.setPoint(memberVo.getPoint() + pointVo.getPoint());
-                memberRepository.save(memberVo);
+                this.memberRepository.save(memberVo);
 
                 return HttpStatus.OK.toString();
             }

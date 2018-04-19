@@ -28,9 +28,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -97,56 +99,50 @@ public class PhotoApiDocumentation {
 
     @Test
     public void uploadPhoto() throws Exception {
-        Map<String, String> map = new HashMap<>();
-        map.put("memberId", "444");
-        map.put("fileName", "333");
-        map.put("originalImg", "222");
-        map.put("thumbnailImg", "111");
-
-        this.mockMvc.perform(post("/photo/uploadPhoto").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
-//                .andExpect(jsonPath("", is()))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("uploadPhoto"));
+//        Map<String, String> map = new HashMap<>();
+//        map.put("memberId", "test ID1524027973814");
+//        map.put("fileName", "333");
+//        map.put("originalImg", "222");
+//        map.put("thumbnailImg", "111");
+//
+//        this.mockMvc.perform(post("/photo/uploadPhoto").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andExpect(status().isOk())
+//                .andDo(document("uploadPhoto"));
 
     }
 
     @Test
     public void findPhotoVoByMemberId() throws Exception {
-        this.mockMvc.perform(get("/photo/findPhotoVoByMemberId/{memberId}/{page}", "r3gYviSRclWSfjvHCvRHd2gqdkj1", "0").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andExpect(jsonPath("", is()))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("findPhotoVoByMemberId"));
+//        this.mockMvc.perform(get("/photo/findPhotoVoByMemberId/{memberId}/{page}", "r3gYviSRclWSfjvHCvRHd2gqdkj1", "0").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andExpect(status().isOk())
+//                .andDo(document("findPhotoVoByMemberId"));
 
     }
 
     @Test
     public void updateProfilePhoto() throws Exception {
 
-        Map<String, String> map = new HashMap<>();
-        map.put("id", "bqIDXpsVzlTL5X2cPMFROPHjtZn2");
-        map.put("profileFile", "333");
-        map.put("profileUrl", "222");
-        map.put("profileUrlOrg", "111");
-
-        this.mockMvc.perform(put("/photo/updateProfilePhoto").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("updateProfilePhoto"));
+//        Map<String, String> map = new HashMap<>();
+//        map.put("id", "test ID1524027973814");
+//        map.put("profileFile", "333");
+//        map.put("profileUrl", "222");
+//        map.put("profileUrlOrg", "111");
+//
+//        this.mockMvc.perform(put("/photo/updateProfilePhoto").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andExpect(status().isOk())
+//                .andDo(document("updateProfilePhoto"));
 
     }
 
     @Test
     public void deletePhoto() throws Exception {
-        this.mockMvc.perform(delete("/photo/deletePhoto/{id}", "1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//                .andDo(print())
-//                .andDo(document("/users", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(document("deletePhoto"));
+//        this.mockMvc.perform(delete("/photo/deletePhoto/{id}", "1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andExpect(status().isOk())
+//                .andDo(document("deletePhoto"));
 
     }
 }

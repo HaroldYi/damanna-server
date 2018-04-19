@@ -1,11 +1,11 @@
 package com.hello.apiserver.api.say.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.FilterJoinTable;
-import org.hibernate.annotations.WhereJoinTable;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -75,13 +75,13 @@ public class SayVo {
 //        this.location = location;
 //    }
 
-//    public String getMemberId() {
-//        return memberId;
-//    }
-//
-//    public void setMemberId(String memberId) {
-//        this.memberId = memberId;
-//    }
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
+    }
 
     public Date getRegDt() {
         return regDt;

@@ -49,7 +49,7 @@ public class PhotoApiController {
                     PhotoVo photoVo = gson.fromJson(photoInfo, PhotoVo.class);
                     photoVo.setRegDt(new Date());
 
-                    return gson.toJson(photoRepository.save(photoVo));
+                    return gson.toJson(this.photoRepository.save(photoVo));
                 }
             }
         } else {
@@ -79,7 +79,7 @@ public class PhotoApiController {
 
                     PageRequest pr = new PageRequest(page, 15);
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                    return gson.toJson(photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
+                    return gson.toJson(this.photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
                 }
             }
         } else {
@@ -115,7 +115,7 @@ public class PhotoApiController {
 
                         PhotoVo photoVo;
                         if(!ObjectUtils.isEmpty(photo.getId())) {
-                            photoVo = photoRepository.findByIdAndUseYn(photo.getId(), "Y");
+                            photoVo = this.photoRepository.findByIdAndUseYn(photo.getId(), "Y");
                             photoVo.setFileName(photo.getFileName());
                             photoVo.setOriginalImg(photo.getOriginalImg());
                             photoVo.setThumbnailImg(photo.getThumbnailImg());
@@ -124,14 +124,14 @@ public class PhotoApiController {
                             photoVo = photo;
                         }
 
-                        photoRepository.save(photoVo);
+                        this.photoRepository.save(photoVo);
                         return HttpStatus.OK.toString();
                     }
                 }
             } else {
                 PhotoVo photoVo = photoRepository.findByIdAndUseYn(photo.getId(), "Y");
                 photo.setUseYn("N");
-                photoRepository.save(photoVo);
+                this.photoRepository.save(photoVo);
                 return "OK";
             }
         } else {
@@ -170,7 +170,7 @@ public class PhotoApiController {
                     newMemberVo.setProfileFile(memberVo.getProfileFile());
                     newMemberVo.setProfileUrl(memberVo.getProfileUrl());
                     newMemberVo.setProfileUrlOrg(memberVo.getProfileUrlOrg());
-                    memberRepository.save(newMemberVo);
+                    this.memberRepository.save(newMemberVo);
                     return HttpStatus.OK.toString();
                 }
             }

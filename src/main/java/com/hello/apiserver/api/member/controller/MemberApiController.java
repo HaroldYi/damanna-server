@@ -3,12 +3,10 @@ package com.hello.apiserver.api.member.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
-import com.hello.apiserver.api.member.vo.GenderVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
+import com.hello.apiserver.api.say.service.SayRepository;
+import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/member", "/member/"})
@@ -27,6 +24,9 @@ public class MemberApiController {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private SayRepository sayRepository;
 
     @RequestMapping(value = {"/newMember", "/newMember/"}, method = RequestMethod.POST)
     public String newMember (
@@ -63,7 +63,16 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'clientToken' parameter must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    memberRepository.save(memberVo);
+                    this.memberRepository.save(memberVo);
+
+                    SayVo sayVo = new SayVo();
+                    sayVo.setMessage(String.format("%s님이 가입하셨습니다.", memberVo.getName()));
+                    sayVo.setMemberId(memberVo.getId());
+                    sayVo.setRegDt(new Date());
+                    sayVo.setUseYn("Y");
+
+                    this.sayRepository.save(sayVo);
+
                     return "OK";
                 }
             }
@@ -93,13 +102,13 @@ public class MemberApiController {
                 if (ObjectUtils.isEmpty(args)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
                 } else {
-                    MemberVo newMemberVo = memberRepository.findById(memberId);
+                    MemberVo newMemberVo = this.memberRepository.findById(memberId);
                     newMemberVo.setId(memberId);
                     newMemberVo.setLastSignIn(new Date());
                     newMemberVo.setClientToken(memberVo.getClientToken());
                     newMemberVo.setLocationLon(memberVo.getLocationLon());
                     newMemberVo.setLocationLat(memberVo.getLocationLat());
-                    memberRepository.save(newMemberVo);
+                    this.memberRepository.save(newMemberVo);
                 }
             } else {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -134,9 +143,9 @@ public class MemberApiController {
                         response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'name' parameter must not be null or empty");
                     } else {
                         response.setStatus(HttpStatus.OK.value());
-                        MemberVo member = memberRepository.findById(memberId);
+                        MemberVo member = this.memberRepository.findById(memberId);
                         member.setName(memberVo.getName());
-                        memberRepository.save(member);
+                        this.memberRepository.save(member);
                         return "OK";
                     }
                 }
@@ -170,9 +179,9 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    MemberVo member = memberRepository.findById(memberId);
+                    MemberVo member = this.memberRepository.findById(memberId);
                     member.setAge(memberVo.getAge());
-                    memberRepository.save(member);
+                    this.memberRepository.save(member);
                     return "OK";
                 }
             }
@@ -201,7 +210,7 @@ public class MemberApiController {
 
                     PageRequest pr = new PageRequest(page, 15);
 
-                    Page<MemberVo> memberList = memberRepository.findAllByOrderByLastSignInDesc(pr);
+                    Page<MemberVo> memberList = this.memberRepository.findAllByOrderByLastSignInDesc(pr);
                     response.setStatus(HttpStatus.OK.value());
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -232,7 +241,7 @@ public class MemberApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
 
-                    MemberVo memberVo = memberRepository.findById(memberId);
+                    MemberVo memberVo = this.memberRepository.findById(memberId);
                     return new Gson().toJson(memberVo);
                 }
             }

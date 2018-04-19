@@ -65,7 +65,7 @@ public class SayApiController {
                 sayVo.setRegDt(new Date());
                 sayVo.setUseYn("Y");
 
-                sayRepository.save(sayVo);
+                this.sayRepository.save(sayVo);
                 return HttpStatus.OK.toString();
             }
         } else {
@@ -90,7 +90,7 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(sayRepository.findByIdAndUseYn(sayId, "Y"));
+                return gson.toJson(this.sayRepository.findByIdAndUseYn(sayId, "Y"));
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -116,7 +116,7 @@ public class SayApiController {
                 response.setStatus(HttpStatus.OK.value());
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent());
+                return gson.toJson(this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -144,7 +144,7 @@ public class SayApiController {
                 PageRequest pr = new PageRequest(page, 15);
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
+                return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
@@ -160,7 +160,7 @@ public class SayApiController {
             @RequestBody(required = false)String body
     ) throws IOException {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
 //        apiToken = gson.fromJson(apiToken, String.class);
         CommentVo commentVo = gson.fromJson(body, CommentVo.class);
@@ -179,8 +179,8 @@ public class SayApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
                     commentVo.setRegDt(new Date());
-                    commentRepository.save(commentVo);
-                    return HttpStatus.OK.toString();
+
+                    return gson.toJson(this.commentRepository.save(commentVo));
                 }
             }
         } else {
@@ -213,7 +213,7 @@ public class SayApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
                     commentReplyVo.setRegDt(new Date());
-                    commentReplyRepository.save(commentReplyVo);
+                    this.commentReplyRepository.save(commentReplyVo);
                     return HttpStatus.OK.toString();
                 }
             }
@@ -248,8 +248,8 @@ public class SayApiController {
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(memberId);
 
-                    SayVo sayVo = sayRepository.findByIdAndUseYn(sayId, "Y");
-                    LikeSayVo likeSayVo = likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
+                    SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
+                    LikeSayVo likeSayVo = this.likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     if(likeSayVo != null) {
 //                        likeSayVo.setUseYn("N");
 //                        likeSayVo.setUpdateDt(new Date());
@@ -260,7 +260,7 @@ public class SayApiController {
                         likeSayVo.setMember(memberVo);
                         likeSayVo.setRegDt(new Date());
                         likeSayVo.setUpdateDt(new Date());
-                        likeSayRepository.save(likeSayVo);
+                        this.likeSayRepository.save(likeSayVo);
 
 //                        HttpClient httpclient = new DefaultHttpClient();
 //                        org.apache.http.client.methods.HttpPost httppost = new HttpPost("https://us-central1-noryangjin-18dfb.cloudfunctions.net/sendPushMsg");
@@ -306,10 +306,10 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                SayVo sayVo = sayRepository.findByIdAndUseYn(sayId, "Y");
+                SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
                 if(sayVo != null) {
                     sayVo.setUseYn("N");
-                    sayRepository.save(sayVo);
+                    this.sayRepository.save(sayVo);
                 }
 
                 return HttpStatus.OK.toString();

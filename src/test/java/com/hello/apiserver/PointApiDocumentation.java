@@ -105,15 +105,15 @@ public class PointApiDocumentation {
     @Test
     public void updatePoint() throws Exception {
 
-        Map<String, String> map = new HashMap<>();
-        map.put("memberId", "bqIDXpsVzlTL5X2cPMFROPHjtZn2");
-        map.put("point", "10");
-        map.put("source", "test");
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/point/updatePoint", "r3gYviSRclWSfjvHCvRHd2gqdkj1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("point/updatePoint", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-                .andExpect(status().isOk());
+//        Map<String, String> map = new HashMap<>();
+//        map.put("memberId", "ntAIdenCIAbY9iKtl57f83FlltI3");
+//        map.put("point", "10");
+//        map.put("source", "test");
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.put("/point/updatePoint").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("updatePoint", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+//                .andExpect(status().isOk());
 
     }
 }

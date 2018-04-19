@@ -64,32 +64,100 @@ https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C
 
 == 사용자 리스트 조회 [getMemberList]
 
-==== HTTP request
+==== HTTP Request
 ----
 GET /member/getMemberList/{page} HTTP/1.1
 ----
 include::{snippets}/getMemberList/path-parameters.adoc[]
 
-=== 응답 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 5701
 
-==== 응답 파라미터들
-
-include::{snippets}/getMemberList/http-response.adoc[]
-
+[
+    {
+        "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "name": "하이",
+        "age": 29,
+        "genderCode": "M",
+        "gender": {
+            "id": 2,
+            "genderCode": "M",
+            "genderEn": "male",
+            "genderKr": "남성"
+        },
+        "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+        "profileUrl": "https://~~~~",
+        "profileUrlOrg": "",
+        "profileFile": "",
+        "lastSignIn": "2018-04-18 20:25:57",
+        "locationLat": 33.4909741,
+        "locationLon": 126.907639,
+        "photo": [],
+        "clientToken": "~~~~",
+        "point": 10
+    },
+    {
+        "id": "5IWZKoZyA9e5G1kgzUZ9OVmPnzy1",
+        "name": "미이친",
+        "age": 30,
+        "genderCode": "M",
+        "gender": {
+            "id": 2,
+            "genderCode": "M",
+            "genderEn": "male",
+            "genderKr": "남성"
+        },
+        "email": "d0f3d5ec98ad3608925f18755b761d5e@gmail.com",
+        "profileUrl": "https://~~~~~",
+        "profileUrlOrg": "",
+        "profileFile": "",
+        "lastSignIn": "2018-04-18 13:21:08",
+        "locationLat": 33.490997204443104,
+        "locationLon": 126.90743475805958,
+        "photo": [],
+        "clientToken": "~~~~",
+        "point": 10
+    }
+]
+----
 == 사용자 조회 [getMemberInfo]
 
 ==== HTTP request
 ----
 GET /member/getMemberInfo/{memberId} HTTP/1.1
 ----
-include::{snippets}/getMemberInfo/path-parameters.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1234
 
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/getMemberInfo/http-response.adoc[]
-
+{
+    "id": "5IWZKoZyA9e5G1kgzUZ9OVmPnzy1",
+    "name": "미이친",
+    "age": 30,
+    "genderCode": "M",
+    "gender": {
+        "id": 2,
+        "genderCode": "M",
+        "genderEn": "male",
+        "genderKr": "남성"
+    },
+    "email": "d0f3d5ec98ad3608925f18755b761d5e@gmail.com",
+    "profileUrl": "https://~~~~~",
+    "profileUrlOrg": "",
+    "profileFile": "",
+    "lastSignIn": "2018-04-18 13:21:08",
+    "locationLat": 33.490997204443104,
+    "locationLon": 126.90743475805958,
+    "photo": [],
+    "clientToken": "~~~~",
+    "point": 10
+}
+----
 
 == 사용자 입력 [newMember]
 ==== HTTP request
@@ -143,248 +211,887 @@ POST /member/newMember HTTP/1.1
     "point" : "10"
 }
 ----
-=== 응답 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2
 
-==== 응답 파라미터들
-
-include::{snippets}/newMember/http-response.adoc[]
+OK
+----
 
 == 닉네임 변경 [changeNickName]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeNickName/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "name" : "Harolddd"
+}'
+----
 
-include::{snippets}/changeNickName/curl-request.adoc[]
+==== HTTP request
+----
+POST /member/changeNickName/{memberId} HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`name`
+|The nickName of member
 
-==== 요청 파라미터들
+|===
 
-include::{snippets}/changeNickName/http-request.adoc[]
+==== Request body example
+----
+{
+    "name" : "Harolddd"
+}
+----
 
-=== 응답 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2
 
-==== 응답 파라미터들
-
-include::{snippets}/changeNickName/http-response.adoc[]
+OK
+----
 
 == 나이 변경 [changeAge]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeAge/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "age" : "29"
+}'
+----
+=== HTTP request
+----
+POST /member/changeAge/{memberId} HTTP/1.1
+----
+|===
+|Parameter|Description
 
-include::{snippets}/changeAge/curl-request.adoc[]
+|`name`
+|The nickName of member
 
-=== 요청 구조
+|===
 
-==== 요청 파라미터들
+==== Request body example
+----
+{
+    "age" : "29"
+}
+----
 
-include::{snippets}/changeAge/http-request.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2
 
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/changeAge/http-response.adoc[]
-
+OK
+----
 == 사진업로드 [uploadPhoto]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/uploadPhoto' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "fileName":"333",
+    "originalImg":"222",
+    "thumbnailImg":"111",
+    "memberId":"444"
+}'
+----
 
-include::{snippets}/uploadPhoto/curl-request.adoc[]
+=== HTTP request
+----
+POST /photo/uploadPhoto HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`profileFile`
+|The file name of photo
+|`thumbnailImg`
+|The url of Thumbnail file
+|`originalImg`
+|The url of original file
+|`memberId`
+|The identifier of member
 
-==== 요청 파라미터들
+|===
 
-include::{snippets}/uploadPhoto/http-request.adoc[]
+==== Request body example
+----
+{
+    "fileName":"333",
+    "originalImg":"222",
+    "thumbnailImg":"111",
+    "memberId":"444"
+}
+----
 
-=== 응답 구조
+=== HTTP Reponse
+----
 
-==== 응답 파라미터들
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 120
 
-include::{snippets}/uploadPhoto/http-response.adoc[]
-
+{
+    "id":"64",
+    "fileName":"333",
+    "memberId":"444",
+    "originalImg":"222",
+    "thumbnailImg":"111",
+    "regDt":1524029704994,
+    "useYn":"Y"
+}
+----
 == 사진목록조회 by 회원ID [findPhotoVoByMemberId]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/findPhotoVoByMemberId/{memberId}/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/findPhotoVoByMemberId/curl-request.adoc[]
+=== HTTP request
+----
+GET /photo/findPhotoVoByMemberId/{memberId}/{page} HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`memberId`
+|The identifier of member
+|`page`
+|The page of photo list
 
-==== 요청 파라미터들
+|===
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
 
-include::{snippets}/findPhotoVoByMemberId/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/findPhotoVoByMemberId/http-response.adoc[]
+[
+    {
+        "id":"5",
+        "fileName":"1523858062515",
+        "memberId":"r3gYviSRclWSfjvHCvRHd2gqdkj1",
+        "originalImg":"https://~~~",
+        "thumbnailImg":"https://~~~",
+        "regDt":"2018-04-16 05:54:33",
+        "useYn":"Y"
+    }
+]
+----
 
 == 프로필사진 변경 [updateProfilePhoto]
 
-include::{snippets}/updateProfilePhoto/curl-request.adoc[]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/updateProfilePhoto' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "profileUrl":"222",
+    "profileFile":"333",
+    "id":"bqIDXpsVzlTL5X2cPMFROPHjtZn2",
+    "profileUrlOrg":"111"
+}'
+----
 
-=== 요청 구조
+=== HTTP request
+----
+PUT /photo/updateProfilePhoto HTTP/1.1
+----
+|===
+|Parameter|Description
 
-==== 요청 파라미터들
+|`id`
+|The identifier of member
+|`profileUrl`
+|The url of thumbnail file of profile of member
+|`profileUrlOrg`
+|The url of original file of profile of member
+|`profileFile`
+|The file name of profile file of member
 
-include::{snippets}/updateProfilePhoto/http-request.adoc[]
+|===
 
-=== 응답 구조
+==== Request body example
+----
+{
+    "id":"bqIDXpsVzlTL5X2cPMFROPHjtZn2",
+    "profileUrl":"222",
+    "profileUrlOrg":"111",
+    "profileFile":"333"
+}
+----
 
-==== 응답 파라미터들
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-include::{snippets}/updateProfilePhoto/http-response.adoc[]
-
+200
+----
 == 사진삭제 [deletePhoto]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/deletePhoto/{photoId}' -i -X DELETE -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/deletePhoto/curl-request.adoc[]
+=== HTTP request
+DELETE /photo/deletePhoto/{id} HTTP/1.1
 
-=== 요청 구조
+|===
+|Parameter|Description
 
-==== 요청 파라미터들
+|`photoId`
+|The identifier of photo
+|===
 
-include::{snippets}/deletePhoto/http-request.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/deletePhoto/http-response.adoc[]
+200
+----
 
 == 포인트수정 [updatePoint]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/point/updatePoint' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "source" : "test",
+    "point" : "10",
+    "memberId" : "ntAIdenCIAbY9iKtl57f83FlltI3"
+}'
+----
 
-include::{snippets}/updatePoint/curl-request.adoc[]
+=== HTTP request
+----
+PUT /point/updatePoint HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`source`
+|The source of point(ex. chat, signup, reload ...)
+|`point`
+|point
+|`memberId`
+|The identifier of member
+|===
 
-==== 요청 파라미터들
+==== Request body example
+----
+{
+    "source" : "test",
+    "point" : "10",
+    "memberId" : "ntAIdenCIAbY9iKtl57f83FlltI3"
+}
+----
 
-include::{snippets}/updatePoint/http-request.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-=== 응답 구조
+200
+----
 
-==== 응답 파라미터들
-
-include::{snippets}/updatePoint/http-response.adoc[]
 
 == say 글쓰기 [newSay]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newSay' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "message" : "test message",
+    "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+}'
+----
+=== HTTP request
+----
+POST /say/newSay HTTP/1.1
+----
+|===
+|Parameter|Description
+|`message`
+|Message
+|`memberId`
+|The identifier of member
+|===
 
-include::{snippets}/newSay/curl-request.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-=== 요청 구조
-
-==== 요청 파라미터들
-
-include::{snippets}/newSay/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/newSay/http-response.adoc[]
+200
+----
 
 == say 조회(단건) [getSay]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSay/{sayId}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/getSay/curl-request.adoc[]
+=== HTTP request
+----
+GET /say/getSay/{sayId} HTTP/1.1
+----
 
-=== 요청 구조
+|===
+|Parameter|Description
 
-==== 요청 파라미터들
+|`sayId`
+|The identifier of say
+|===
 
-include::{snippets}/getSay/http-request.adoc[]
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
 
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/getSay/http-response.adoc[]
+{
+    "id": "1",
+    "message": "테스트요",
+    "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+    "regDt": "2018-04-18 20:26:37",
+    "member": {
+        "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "name": "하이",
+        "age": 29,
+        "genderCode": "M",
+        "gender": {
+            "id": 2,
+            "genderCode": "M",
+            "genderEn": "male",
+            "genderKr": "남성"
+        },
+        "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+        "profileUrl": "https://~~~~",
+        "profileUrlOrg": "",
+        "profileFile": "",
+        "lastSignIn": "2018-04-18 20:25:57",
+        "locationLat": 33.4909741,
+        "locationLon": 126.907639,
+        "photo": [],
+        "clientToken": "~~~~",
+        "point": 10
+    },
+    "comment": [
+        {
+            "id": "1",
+            "sayId": "1",
+            "comment": "ㅎㅇ",
+            "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "member": {
+                "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "name": "하이",
+                "age": 29,
+                "genderCode": "M",
+                "gender": {
+                    "id": 2,
+                    "genderCode": "M",
+                    "genderEn": "male",
+                    "genderKr": "남성"
+                },
+                "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                "profileUrl": "https://~~~",
+                "profileUrlOrg": "",
+                "profileFile": "",
+                "lastSignIn": "2018-04-18 20:25:57",
+                "locationLat": 33.4909741,
+                "locationLon": 126.907639,
+                "photo": [],
+                "clientToken": "~~~~",
+                "point": 10
+            },
+            "regDt": "2018-04-19 13:07:20",
+            "commentReply": [
+                {
+                    "id": "1",
+                    "comment": "  ㅋㅋ",
+                    "commentId": "1",
+                    "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "member": {
+                        "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                        "name": "하이",
+                        "age": 29,
+                        "genderCode": "M",
+                        "gender": {
+                            "id": 2,
+                            "genderCode": "M",
+                            "genderEn": "male",
+                            "genderKr": "남성"
+                        },
+                        "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                        "profileUrl": "https://~~~~",
+                        "profileUrlOrg": "",
+                        "profileFile": "",
+                        "lastSignIn": "2018-04-18 20:25:57",
+                        "locationLat": 33.4909741,
+                        "locationLon": 126.907639,
+                        "photo": [],
+                        "clientToken": "~~~~",
+                        "point": 10
+                    },
+                    "regDt": "2018-04-19 13:07:35"
+                }
+            ],
+            "useYn": "Y"
+        }
+    ],
+    "likeSay": [
+        {
+            "id": "1",
+            "sayId": "1",
+            "member": {
+                "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "name": "하이",
+                "age": 29,
+                "genderCode": "M",
+                "gender": {
+                    "id": 2,
+                    "genderCode": "M",
+                    "genderEn": "male",
+                    "genderKr": "남성"
+                },
+                "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                "profileUrl": "https://~~~~",
+                "profileUrlOrg": "",
+                "profileFile": "",
+                "lastSignIn": "2018-04-18 20:25:57",
+                "locationLat": 33.4909741,
+                "locationLon": 126.907639,
+                "photo": [],
+                "clientToken": "~~~~",
+                "point": 10
+            },
+            "useYn": "Y",
+            "regDt": "2018-04-18 20:31:15",
+            "updateDt": "2018-04-18 20:31:15"
+        }
+    ],
+    "useYn": "Y"
+}
+----
 
 == say 조회(목록) [getSayList]
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayList/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
 
-include::{snippets}/getSayList/curl-request.adoc[]
+=== HTTP request
+----
+GET /say/getSayList/{page} HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`page`
+|The page of say list
+|===
 
-==== 요청 파라미터들
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
 
-include::{snippets}/getSayList/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/getSayList/http-response.adoc[]
-
+[
+    {
+        "id": "1",
+        "message": "테스트요",
+        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "regDt": "2018-04-18 20:26:37",
+        "member": {
+            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "name": "하이",
+            "age": 29,
+            "genderCode": "M",
+            "gender": {
+                "id": 2,
+                "genderCode": "M",
+                "genderEn": "male",
+                "genderKr": "남성"
+            },
+            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+            "profileUrl": "https://~~~~",
+            "profileUrlOrg": "",
+            "profileFile": "",
+            "lastSignIn": "2018-04-18 20:25:57",
+            "locationLat": 33.4909741,
+            "locationLon": 126.907639,
+            "photo": [],
+            "clientToken": "~~~~",
+            "point": 10
+        },
+        "comment": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "comment": "ㅎㅇ",
+                "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "regDt": "2018-04-19 13:07:20",
+                "commentReply": [
+                    {
+                        "id": "1",
+                        "comment": "  ㅋㅋ",
+                        "commentId": "1",
+                        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                        "member": {
+                            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                            "name": "하이",
+                            "age": 29,
+                            "genderCode": "M",
+                            "gender": {
+                                "id": 2,
+                                "genderCode": "M",
+                                "genderEn": "male",
+                                "genderKr": "남성"
+                            },
+                            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                            "profileUrl": "https://~~~~",
+                            "profileUrlOrg": "",
+                            "profileFile": "",
+                            "lastSignIn": "2018-04-18 20:25:57",
+                            "locationLat": 33.4909741,
+                            "locationLon": 126.907639,
+                            "photo": [],
+                            "clientToken": "~~~~",
+                            "point": 10
+                        },
+                        "regDt": "2018-04-19 13:07:35"
+                    }
+                ],
+                "useYn": "Y"
+            }
+        ],
+        "likeSay": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "useYn": "Y",
+                "regDt": "2018-04-18 20:31:15",
+                "updateDt": "2018-04-18 20:31:15"
+            }
+        ],
+        "useYn": "Y"
+    }
+]
+----
 == say 조회 by 회원ID [getSayListByUid]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayListByUid/{memberId}/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/getSayListByUid/curl-request.adoc[]
+=== HTTP request
+----
+GET /say/getSayListByUid/{memberId}/{page} HTTP/1.1
+----
+|===
+|Parameter|Description
+|`memberId`
+|The identifier of member
+|`page`
+|The page of say list
+|===
 
-=== 요청 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
 
-==== 요청 파라미터들
-
-include::{snippets}/getSayListByUid/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/getSayListByUid/http-response.adoc[]
-
+[
+    {
+        "id": "1",
+        "message": "테스트요",
+        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "regDt": "2018-04-18 20:26:37",
+        "member": {
+            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "name": "하이",
+            "age": 29,
+            "genderCode": "M",
+            "gender": {
+                "id": 2,
+                "genderCode": "M",
+                "genderEn": "male",
+                "genderKr": "남성"
+            },
+            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+            "profileUrl": "https://~~~~",
+            "profileUrlOrg": "",
+            "profileFile": "",
+            "lastSignIn": "2018-04-18 20:25:57",
+            "locationLat": 33.4909741,
+            "locationLon": 126.907639,
+            "photo": [],
+            "clientToken": "~~~~",
+            "point": 10
+        },
+        "comment": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "comment": "ㅎㅇ",
+                "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "regDt": "2018-04-19 13:07:20",
+                "commentReply": [
+                    {
+                        "id": "1",
+                        "comment": "  ㅋㅋ",
+                        "commentId": "1",
+                        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                        "member": {
+                            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                            "name": "하이",
+                            "age": 29,
+                            "genderCode": "M",
+                            "gender": {
+                                "id": 2,
+                                "genderCode": "M",
+                                "genderEn": "male",
+                                "genderKr": "남성"
+                            },
+                            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                            "profileUrl": "https://~~~~",
+                            "profileUrlOrg": "",
+                            "profileFile": "",
+                            "lastSignIn": "2018-04-18 20:25:57",
+                            "locationLat": 33.4909741,
+                            "locationLon": 126.907639,
+                            "photo": [],
+                            "clientToken": "~~~~",
+                            "point": 10
+                        },
+                        "regDt": "2018-04-19 13:07:35"
+                    }
+                ],
+                "useYn": "Y"
+            }
+        ],
+        "likeSay": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "useYn": "Y",
+                "regDt": "2018-04-18 20:31:15",
+                "updateDt": "2018-04-18 20:31:15"
+            }
+        ],
+        "useYn": "Y"
+    }
+]
+----
 == say 댓글달기 [newComment]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newComment' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "sayId" : "4",
+    "comment" : "test message",
+    "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+}'
+----
 
-include::{snippets}/newComment/curl-request.adoc[]
+=== HTTP request
+----
+POST /say/newComment HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`sayId`
+|The identifier of say
+|`comment`
+|comment
+|`memberId`
+|The identifier of member
 
-==== 요청 파라미터들
+|===
 
-include::{snippets}/newComment/http-request.adoc[]
+==== Request body example
+----
+{
+  "sayId" : "4",
+  "comment" : "test message",
+  "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+}
+----
 
-=== 응답 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-==== 응답 파라미터들
-
-include::{snippets}/newComment/http-response.adoc[]
+200
+----
 
 == say 대댓글달기 [newCommentReply]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newCommentReply' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "commentId" : "4",
+    "comment" : "test message",
+    "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+}'
+----
 
-include::{snippets}/newCommentReply/curl-request.adoc[]
+=== HTTP request
+----
+POST /say/newCommentReply HTTP/1.1
+----
+|===
+|Parameter|Description
 
-=== 요청 구조
+|`commentId`
+|The identifier of comment
+|`comment`
+|comment
+|`memberId`
+|The identifier of member
 
-==== 요청 파라미터들
+|===
 
-include::{snippets}/newCommentReply/http-request.adoc[]
+==== Request body example
+----
+{
+    "commentId" : "4",
+    "comment" : "test message",
+    "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+}
+----
 
-=== 응답 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-==== 응답 파라미터들
-
-include::{snippets}/newCommentReply/http-response.adoc[]
+200
+----
 
 == say 좋아요 [likeSay]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/likeSay/{sayId}/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/likeSay/curl-request.adoc[]
+=== HTTP request
+----
+PUT /say/likeSay/{sayId}/{memberId} HTTP/1.1
+----
 
-=== 요청 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-==== 요청 파라미터들
-
-include::{snippets}/likeSay/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/likeSay/http-response.adoc[]
+200
+----
 
 == say 삭제 [deleteSay]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/deleteSay/{sayId}' -i -X DELETE -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
 
-include::{snippets}/deleteSay/curl-request.adoc[]
+=== HTTP request
+----
+DELETE /say/deleteSay/{sayId} HTTP/1.1
+----
 
-=== 요청 구조
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
 
-==== 요청 파라미터들
-
-include::{snippets}/deleteSay/http-request.adoc[]
-
-=== 응답 구조
-
-==== 응답 파라미터들
-
-include::{snippets}/deleteSay/http-response.adoc[]
+200
+----

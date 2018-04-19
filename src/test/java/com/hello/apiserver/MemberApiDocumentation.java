@@ -107,78 +107,67 @@ public class MemberApiDocumentation {
     @Test
     public void newMember() throws Exception {
 
-        Map<String, String> map = new HashMap<>();
-        map.put("id", "test ID"+System.currentTimeMillis());
-        map.put("name", "test name");
-        map.put("email", "test email" + System.currentTimeMillis());
-        map.put("age", "22");
-        map.put("profileUrl", "https://");
-        map.put("profileUrlOrg", "https://");
-        map.put("profileFile", "https://");
-        map.put("clientToken", "test token");
-        map.put("genderCode", "M");
-        map.put("locationLat", "10");
-        map.put("locationLon", "10");
-        map.put("point", "10");
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/member/newMember").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("newMember", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-                .andExpect(status().isOk());
+//        Map<String, String> map = new HashMap<>();
+//        map.put("id", "test ID"+System.currentTimeMillis());
+//        map.put("name", "test name");
+//        map.put("email", "test email" + System.currentTimeMillis());
+//        map.put("age", "22");
+//        map.put("profileUrl", "https://");
+//        map.put("profileUrlOrg", "https://");
+//        map.put("profileFile", "https://");
+//        map.put("clientToken", "test token");
+//        map.put("genderCode", "M");
+//        map.put("locationLat", "10");
+//        map.put("locationLon", "10");
+//        map.put("point", "10");
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.post("/member/newMember").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("newMember", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+//                .andExpect(status().isOk());
     }
 
     @Test
     public void changeNickName() throws Exception {
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("apiToken", "{apiToken}");
-        httpHeaders.add("Content-type", "application/json; charset=utf8");
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/changeNickName/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content("{\"name\" : \"Harolddd\"}"))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("changeNickName", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-                .andExpect(status().isOk());
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("apiToken", "{apiToken}");
+//        httpHeaders.add("Content-type", "application/json; charset=utf8");
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/changeNickName/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content("{\"name\" : \"Harolddd\"}"))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("changeNickName", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+//                .andExpect(status().isOk());
     }
 
     @Test
     public void changeAge() throws Exception {
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("apiToken", "{apiToken}");
-        httpHeaders.add("Content-type", "application/json; charset=utf8");
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/changeAge/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content("{\"age\" : \"29\"}"))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("changeAge", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
-                .andExpect(status().isOk());
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("apiToken", "{apiToken}");
+//        httpHeaders.add("Content-type", "application/json; charset=utf8");
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/changeAge/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content("{\"age\" : \"29\"}"))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("changeAge", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+//                .andExpect(status().isOk());
     }
 
     @Test
     public void getMemberList() throws Exception {
 
-//        this.document.snippets(
-//                HypermediaDocumentation.links(
-//                        HypermediaDocumentation.linkWithRel("self").description("This <<resources-note,note>>"),
-//                        HypermediaDocumentation.linkWithRel("note-tags").description("This note's <<resources-note-tags,tags>>")),
-//                PayloadDocumentation.responseFields(
-//                        PayloadDocumentation.fieldWithPath("title").description("The title of the note"),
-//                        PayloadDocumentation.fieldWithPath("body").description("The body of the note"),
-//                        PayloadDocumentation.fieldWithPath("_links").description("<<resources-note-links,Links>> to other resources")));
-
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberList/{page}", 0).header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("getMemberList", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("page").description("The page of List"))))
-                .andExpect(status().isOk());
-//                .andDo(document("getMemberList"));
-
+//        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberList/{page}", 0).header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("getMemberList", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("page").description("The page of List"))))
+//                .andExpect(status().isOk());
     }
 
     @Test
     public void getMemberInfo() throws Exception {
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberInfo/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("getMemberInfo", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("memberId").description("The identifier of Member"))))
-                .andExpect(status().isOk());
+//        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/member/getMemberInfo/{memberId}", "r3gYviSRclWSfjvHCvRHd2gqdkj1").header("apiToken", "{apiToken}").accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("getMemberInfo", RequestDocumentation.pathParameters(RequestDocumentation.parameterWithName("memberId").description("The identifier of Member"))))
+//                .andExpect(status().isOk());
 
     }
 }
