@@ -93,7 +93,7 @@ public class MemberApiController {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-        apiToken = gson.fromJson(apiToken, String.class);
+//        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(args, MemberVo.class);
 
         if(!ObjectUtils.isEmpty(apiToken)) {
@@ -103,12 +103,12 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
                 } else {
                     MemberVo newMemberVo = this.memberRepository.findById(memberId);
-                    newMemberVo.setId(memberId);
                     newMemberVo.setLastSignIn(new Date());
                     newMemberVo.setClientToken(memberVo.getClientToken());
                     newMemberVo.setLocationLon(memberVo.getLocationLon());
                     newMemberVo.setLocationLat(memberVo.getLocationLat());
                     this.memberRepository.save(newMemberVo);
+                    return HttpStatus.OK.toString();
                 }
             } else {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

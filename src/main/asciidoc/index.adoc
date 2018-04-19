@@ -220,6 +220,44 @@ Content-Length: 2
 OK
 ----
 
+== 정보변경 [updateMemberInfo]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getMemberInfo/{memberId}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+----
+
+==== HTTP request
+----
+GET /member/getMemberInfo/{memberId} HTTP/1.1
+----
+|===
+|Parameter|Description
+
+|`memberId`
+|The identifier of member
+|`clientToken`
+|The client token of member
+|`locationLon`
+|The longtitude of location
+|`locationLat`
+|The latitude of lation
+|===
+
+==== Request body example
+----
+{
+    "id" : "test ID1524019303883",
+    "clientToken" : "test token",
+    "locationLon" : "10",
+    "locationLat" : "10",
+}
+----
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1234
+----
+
 == 닉네임 변경 [changeNickName]
 ----
 $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeNickName/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d

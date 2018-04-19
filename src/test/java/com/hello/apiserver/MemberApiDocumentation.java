@@ -128,6 +128,24 @@ public class MemberApiDocumentation {
     }
 
     @Test
+    public void updateMemberInfo() throws Exception {
+
+//        Map<String, String> map = new HashMap<>();
+//        map.put("clientToken", "test token");
+//        map.put("locationLat", "10");
+//        map.put("locationLon", "10");
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("apiToken", "{apiToken}");
+//        httpHeaders.add("Content-type", "application/json; charset=utf8");
+//
+//        this.mockMvc.perform(MockMvcRequestBuilders.put("/member/updateMemberInfo/{memberId}", "ntAIdenCIAbY9iKtl57f83FlltI3").headers(httpHeaders).accept(MediaType.APPLICATION_JSON_UTF8_VALUE).content(new Gson().toJson(map)))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("newMember", Preprocessors.preprocessRequest(Preprocessors.prettyPrint()), Preprocessors.preprocessResponse(Preprocessors.prettyPrint())))
+//                .andExpect(status().isOk());
+    }
+
+    @Test
     public void changeNickName() throws Exception {
 
 //        HttpHeaders httpHeaders = new HttpHeaders();
