@@ -37,7 +37,7 @@ public class MemberApiController {
     @RequestMapping(value = {"/newMember", "/newMember/"}, method = RequestMethod.POST)
     public String newMember (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String userInfo
     ) throws IOException {
 
@@ -52,7 +52,7 @@ public class MemberApiController {
 //
 //        memberVo.setLocationHash(geohashString);
 
-        if(Auth.checkApiKey(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(userInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -81,7 +81,7 @@ public class MemberApiController {
 
                     this.sayRepository.save(sayVo);
 
-                    return "OK";
+                    return HttpStatus.OK.toString();
                 }
             }
         } else {
@@ -94,7 +94,7 @@ public class MemberApiController {
     @RequestMapping(value = "/updateMemberInfo/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String updateMemberInfo (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String args,
             @PathVariable String memberId
     ) throws IOException {
@@ -104,8 +104,8 @@ public class MemberApiController {
 //        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(args, MemberVo.class);
 
-        if(!ObjectUtils.isEmpty(apiToken)) {
-            if (Auth.checkApiKey(apiToken)) {
+        if(!ObjectUtils.isEmpty(apiKey)) {
+            if (Auth.checkApiKey(apiKey)) {
 
                 if (ObjectUtils.isEmpty(args)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -128,7 +128,7 @@ public class MemberApiController {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
             }
         } else {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiToken' parameter must not be null or empty");
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiKey' parameter must not be null or empty");
         }
 
         return "";
@@ -137,7 +137,7 @@ public class MemberApiController {
     @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeNickName (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String nickName,
             @PathVariable String memberId
     ) throws IOException {
@@ -147,8 +147,8 @@ public class MemberApiController {
 //        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(nickName, MemberVo.class);
 
-        if(!ObjectUtils.isEmpty(apiToken)) {
-            if (Auth.checkApiKey(apiToken)) {
+        if(!ObjectUtils.isEmpty(apiKey)) {
+            if (Auth.checkApiKey(apiKey)) {
 
                 if (ObjectUtils.isEmpty(nickName)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -160,14 +160,14 @@ public class MemberApiController {
                         MemberVo member = this.memberRepository.findById(memberId);
                         member.setName(memberVo.getName());
                         this.memberRepository.save(member);
-                        return "OK";
+                        return HttpStatus.OK.toString();
                     }
                 }
             } else {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
             }
         } else {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiToken' parameter must not be null or empty");
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiKey' parameter must not be null or empty");
         }
 
         return "";
@@ -176,7 +176,7 @@ public class MemberApiController {
     @RequestMapping(value = "/changeAge/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeAge (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String age,
             @PathVariable String memberId
     ) throws IOException {
@@ -184,7 +184,7 @@ public class MemberApiController {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = gson.fromJson(age, MemberVo.class);
 
-        if(Auth.checkApiKey(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(age)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -196,7 +196,7 @@ public class MemberApiController {
                     MemberVo member = this.memberRepository.findById(memberId);
                     member.setAge(memberVo.getAge());
                     this.memberRepository.save(member);
-                    return "OK";
+                    return HttpStatus.OK.toString();
                 }
             }
         } else {
@@ -209,11 +209,11 @@ public class MemberApiController {
     @RequestMapping(value = "/getMemberList/{page}", method = RequestMethod.GET)
     public String getMemberList (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable int page
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(page)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -241,11 +241,11 @@ public class MemberApiController {
     @RequestMapping(value = {"/getMemberInfo/{memberId}/", "/getMemberInfo/{memberId}"}, method = RequestMethod.GET)
     public String getMemberInfo (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable("memberId")String memberId
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -278,11 +278,15 @@ public class MemberApiController {
         return null;
     }
 
-    @RequestMapping(value = {"/getNearMemberList", "/getNearMemberList/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getNearMemberList/{memberId}", "/getNearMemberList/{memberId}/"}, method = RequestMethod.GET)
     public String getNearMemberList (
             HttpServletResponse response,
-            @RequestBody String reqBody,
-            @RequestHeader(value = "apiKey")String apiKey
+            @PathVariable(value = "memberId") String memberId,
+            @RequestParam(value = "latitude") double latitude,
+            @RequestParam(value = "longitude") double longitude,
+            @RequestParam(value = "distanceMetres") int distanceMetres,
+            @RequestParam(value = "page") int page,
+            @RequestHeader(value = "apiKey") String apiKey
     ) throws IOException {
 
         if(Auth.checkApiKey(apiKey)) {
@@ -290,38 +294,31 @@ public class MemberApiController {
 
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-            DistanceFilterVo distanceFilterVo = gson.fromJson(reqBody, DistanceFilterVo.class);
-            if(ObjectUtils.isEmpty(reqBody)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value());
+            if (ObjectUtils.isEmpty(memberId)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(latitude)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(longitude)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'longitude' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(distanceMetres)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'distanceMetres' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(page)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
             } else {
-                if (ObjectUtils.isEmpty(distanceFilterVo.getMemberId())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'getMemberId' of request body must not be null or empty");
-                } else if (ObjectUtils.isEmpty(distanceFilterVo.getLatitude())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' of request body must not be null or empty");
-                } else if (ObjectUtils.isEmpty(distanceFilterVo.getLongitude())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'longitude' of request body must not be null or empty");
-                } else if (ObjectUtils.isEmpty(distanceFilterVo.getDistanceMetres())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'distanceMetres' of request body must not be null or empty");
-                } else if (ObjectUtils.isEmpty(distanceFilterVo.getPage())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' of request body must not be null or empty");
-                } else {
 
-                    distanceFilterVo.setDistanceMetres(distanceFilterVo.getDistanceMetres() * 1.414);
+                distanceMetres *= (1.414 * 1000);
 
-                    PageRequest pr = new PageRequest(distanceFilterVo.getPage(), 15);
+                PageRequest pr = new PageRequest(page, 15);
 
-                    WGS84Point startPoint = new WGS84Point(distanceFilterVo.getLatitude(), distanceFilterVo.getLongitude());
+                WGS84Point startPoint = new WGS84Point(latitude, longitude);
 
-                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300,
-                            distanceFilterVo.getDistanceMetres());
+                WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
 
-                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120,
-                            distanceFilterVo.getDistanceMetres());
+                WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
 
-                    List<MemberVo> memberVo = this.memberRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
+                List<MemberVo> memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
 
-                    return gson.toJson(memberVo);
-                }
+                return gson.toJson(memberVoList);
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");

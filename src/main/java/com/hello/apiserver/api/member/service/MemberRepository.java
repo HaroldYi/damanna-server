@@ -13,5 +13,5 @@ public interface MemberRepository extends CrudRepository<MemberVo, Long> {
 
     Page<MemberVo> findByLocationHashContaining(String hash, Pageable pageable);
 
-    Page<MemberVo> findByLocationLatBetweenAndLocationLonBetween(double slat, double elat, double slon, double elon, Pageable pageable);
+    Page<MemberVo> findByLocationLatBetweenAndLocationLonBetweenAndIdNot(double slat, double elat, double slon, double elon, String memberId, Pageable pageable);
 }
