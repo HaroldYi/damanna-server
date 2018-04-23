@@ -3,11 +3,11 @@ package com.hello.apiserver.api.util;
 import org.springframework.util.ObjectUtils;
 
 public class Auth {
-    public static boolean checkToken(String token) {
-        if(ObjectUtils.isEmpty(token)) {
+    public static boolean checkApiKey(String apiKey) {
+        if(ObjectUtils.isEmpty(apiKey)) {
             return false;
         } else {
-            // TODO Api token 체크
+            // TODO Api apiKey 체크
             return true;
         }
     }

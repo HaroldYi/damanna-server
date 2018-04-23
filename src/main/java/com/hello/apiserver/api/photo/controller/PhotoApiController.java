@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping(value = {"/photo", "/photo/"})
@@ -31,11 +33,11 @@ public class PhotoApiController {
     @RequestMapping(value = {"/uploadPhoto", "/uploadPhoto/"}, method = RequestMethod.POST)
     public String uploadPhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody String photoInfo
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(photoInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -47,7 +49,7 @@ public class PhotoApiController {
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                     PhotoVo photoVo = gson.fromJson(photoInfo, PhotoVo.class);
-                    photoVo.setRegDt(new Date());
+                    photoVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
                     return gson.toJson(this.photoRepository.save(photoVo));
                 }
@@ -62,12 +64,12 @@ public class PhotoApiController {
     @RequestMapping(value = {"/findPhotoVoByMemberId/{memberId}/{page}", "/findPhotoVoByMemberId/{memberId}/{page}/"}, method = RequestMethod.GET)
     public String findPhotoVoByMemberId (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable("memberId")String memberId,
             @PathVariable int page
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -93,11 +95,11 @@ public class PhotoApiController {
     @Transactional
     public String changeProfilePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             PhotoVo photo = new Gson().fromJson(profileFileInfo, PhotoVo.class);
             if(photo.getUseYn().equals("Y")) {
@@ -120,7 +122,7 @@ public class PhotoApiController {
                             photoVo.setOriginalImg(photo.getOriginalImg());
                             photoVo.setThumbnailImg(photo.getThumbnailImg());
                         } else {
-                            photo.setRegDt(new Date());
+                            photo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                             photoVo = photo;
                         }
 
@@ -145,11 +147,11 @@ public class PhotoApiController {
     @Transactional
     public String updateProfilePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             MemberVo memberVo = new Gson().fromJson(profileFileInfo, MemberVo.class);
             if(ObjectUtils.isEmpty(memberVo)) {
@@ -185,11 +187,11 @@ public class PhotoApiController {
     @Transactional
     public String deletePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable String id
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
             if(photoVo != null) {
                 this.photoRepository.delete(photoVo);

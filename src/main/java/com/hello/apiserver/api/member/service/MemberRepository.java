@@ -10,4 +10,8 @@ public interface MemberRepository extends CrudRepository<MemberVo, Long> {
     Page<MemberVo> findAllByOrderByLastSignInDesc(Pageable pageable);
 
     MemberVo findById(String id);
+
+    Page<MemberVo> findByLocationHashContaining(String hash, Pageable pageable);
+
+    Page<MemberVo> findByLocationLatBetweenAndLocationLonBetween(double slat, double elat, double slon, double elon, Pageable pageable);
 }

@@ -15,17 +15,15 @@ import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.net.www.http.HttpClient;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping(value = {"/say", "/say/"})
@@ -49,22 +47,21 @@ public class SayApiController {
     @RequestMapping(value = "/newSay", method = RequestMethod.POST)
     public String newSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
-//        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
                 SayVo sayVo = new Gson().fromJson(body, SayVo.class);
-                sayVo.setRegDt(new Date());
+                sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 sayVo.setUseYn("Y");
-
                 this.sayRepository.save(sayVo);
                 return HttpStatus.OK.toString();
             }
@@ -78,13 +75,13 @@ public class SayApiController {
     @RequestMapping(value = {"/getSay/{sayId}", "/getSay/{sayId}/"}, method = RequestMethod.GET)
     public String getSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable("sayId")String sayId
     ) throws IOException {
 
-//        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -102,13 +99,13 @@ public class SayApiController {
     @RequestMapping(value = {"/getSayList/{page}", "/getSayList/{page}/"}, method = RequestMethod.GET)
     public String getSayList (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable("page")int page
     ) throws IOException {
 
-//        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -128,14 +125,14 @@ public class SayApiController {
     @RequestMapping(value = {"/getSayListByUid/{memberId}/{page}", "/getSayListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
     public String getSayListByUid (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable String memberId,
             @PathVariable int page
     ) throws IOException {
 
-//        apiToken = new Gson().fromJson(apiToken, String.class);
+//        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -156,19 +153,19 @@ public class SayApiController {
     @RequestMapping(value = "/newComment", method = RequestMethod.POST)
     public String newComment (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-//        apiToken = gson.fromJson(apiToken, String.class);
+//        apiKey = gson.fromJson(apiKey, String.class);
         CommentVo commentVo = gson.fromJson(body, CommentVo.class);
         MemberVo memberVo = new MemberVo();
         memberVo.setId(commentVo.getMemberId());
         commentVo.setMember(memberVo);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -178,7 +175,7 @@ public class SayApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'comment' request body must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    commentVo.setRegDt(new Date());
+                    commentVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
                     return gson.toJson(this.commentRepository.save(commentVo));
                 }
@@ -193,16 +190,16 @@ public class SayApiController {
     @RequestMapping(value = "/newCommentReply", method = RequestMethod.POST)
     public String newCommentReply (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
         Gson gson = new Gson();
 
-//        apiToken = gson.fromJson(apiToken, String.class);
+//        apiKey = gson.fromJson(apiKey, String.class);
         CommentReplyVo commentReplyVo = gson.fromJson(body, CommentReplyVo.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -212,7 +209,7 @@ public class SayApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'message' request body must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    commentReplyVo.setRegDt(new Date());
+                    commentReplyVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                     this.commentReplyRepository.save(commentReplyVo);
                     return HttpStatus.OK.toString();
                 }
@@ -227,16 +224,16 @@ public class SayApiController {
     @RequestMapping(value = "/likeSay/{sayId}/{memberId}", method = RequestMethod.PUT)
     public String likeSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable String sayId,
             @PathVariable String memberId
     ) throws IOException {
 
         Gson gson = new Gson();
 
-//        apiToken = gson.fromJson(apiToken, String.class);
+//        apiKey = gson.fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -252,14 +249,14 @@ public class SayApiController {
                     LikeSayVo likeSayVo = this.likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     if(likeSayVo != null) {
 //                        likeSayVo.setUseYn("N");
-//                        likeSayVo.setUpdateDt(new Date());
+//                        likeSayVo.setUpdateDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul")).getTimeInMillis()));
                         likeSayRepository.delete(likeSayVo);
                     } else {
                         likeSayVo = new LikeSayVo();
                         likeSayVo.setSayId(sayVo.getId());
                         likeSayVo.setMember(memberVo);
-                        likeSayVo.setRegDt(new Date());
-                        likeSayVo.setUpdateDt(new Date());
+                        likeSayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+                        likeSayVo.setUpdateDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         this.likeSayRepository.save(likeSayVo);
 
 //                        HttpClient httpclient = new DefaultHttpClient();
@@ -293,14 +290,14 @@ public class SayApiController {
     @RequestMapping(value = "/deleteSay/{sayId}", method = RequestMethod.DELETE)
     public String deleteSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiToken")String apiToken,
+            @RequestHeader(value = "apiKey")String apiKey,
             @PathVariable String sayId
     ) throws IOException {
         Gson gson = new Gson();
 
-//        apiToken = gson.fromJson(apiToken, String.class);
+//        apiKey = gson.fromJson(apiKey, String.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
             } else {

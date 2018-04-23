@@ -2,6 +2,8 @@ package com.hello.apiserver.api.member.vo;
 
 import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.vividsolutions.jts.geom.Point;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -62,6 +64,9 @@ public class MemberVo {
     @Column
     private double locationLon;
 
+    @Column
+    private String locationHash;
+
     @OneToMany
     @JoinColumn(name = "member_id")
     /* location : optional */
@@ -96,6 +101,14 @@ public class MemberVo {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getGenderCode() {
+        return genderCode;
+    }
+
+    public void setGenderCode(String genderCode) {
+        this.genderCode = genderCode;
     }
 
     public GenderVo getGender() {
@@ -170,6 +183,14 @@ public class MemberVo {
         this.locationLon = locationLon;
     }
 
+    public String getLocationHash() {
+        return locationHash;
+    }
+
+    public void setLocationHash(String locationHash) {
+        this.locationHash = locationHash;
+    }
+
     public List<PhotoVo> getPhoto() {
         return photo;
     }
@@ -184,14 +205,6 @@ public class MemberVo {
 
     public void setClientToken(String clientToken) {
         this.clientToken = clientToken;
-    }
-
-    public String getGenderCode() {
-        return genderCode;
-    }
-
-    public void setGenderCode(String genderCode) {
-        this.genderCode = genderCode;
     }
 
     public int getPoint() {

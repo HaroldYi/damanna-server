@@ -1,8 +1,11 @@
 package com.hello.apiserver.api.member.controller;
 
+import ch.hsr.geohash.WGS84Point;
+import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.vo.DistanceFilterVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.say.vo.SayVo;
@@ -16,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping(value = {"/member", "/member/"})
@@ -39,12 +45,14 @@ public class MemberApiController {
 
 //        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
-        memberVo.setLastSignIn(new Date());
+        memberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
-//        Point point = new GeometryFactory().createPoint(new Coordinate(37.73, 60.45));
-//        memberVo.setLocation(point);
+//        GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
+//        String geohashString = geohash.toBase32();
+//
+//        memberVo.setLocationHash(geohashString);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiToken)) {
 
             if(ObjectUtils.isEmpty(userInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -68,7 +76,7 @@ public class MemberApiController {
                     SayVo sayVo = new SayVo();
                     sayVo.setMessage(String.format("%s님이 가입하셨습니다.", memberVo.getName()));
                     sayVo.setMemberId(memberVo.getId());
-                    sayVo.setRegDt(new Date());
+                    sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                     sayVo.setUseYn("Y");
 
                     this.sayRepository.save(sayVo);
@@ -97,16 +105,22 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(args, MemberVo.class);
 
         if(!ObjectUtils.isEmpty(apiToken)) {
-            if (Auth.checkToken(apiToken)) {
+            if (Auth.checkApiKey(apiToken)) {
 
                 if (ObjectUtils.isEmpty(args)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
                 } else {
                     MemberVo newMemberVo = this.memberRepository.findById(memberId);
-                    newMemberVo.setLastSignIn(new Date());
+                    newMemberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                     newMemberVo.setClientToken(memberVo.getClientToken());
                     newMemberVo.setLocationLon(memberVo.getLocationLon());
                     newMemberVo.setLocationLat(memberVo.getLocationLat());
+
+//                    GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
+//                    String geohashString = geohash.toBase32();
+//
+//                    newMemberVo.setLocationHash(geohashString);
+
                     this.memberRepository.save(newMemberVo);
                     return HttpStatus.OK.toString();
                 }
@@ -134,7 +148,7 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(nickName, MemberVo.class);
 
         if(!ObjectUtils.isEmpty(apiToken)) {
-            if (Auth.checkToken(apiToken)) {
+            if (Auth.checkApiKey(apiToken)) {
 
                 if (ObjectUtils.isEmpty(nickName)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -170,7 +184,7 @@ public class MemberApiController {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = gson.fromJson(age, MemberVo.class);
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiToken)) {
 
             if(ObjectUtils.isEmpty(age)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -199,7 +213,7 @@ public class MemberApiController {
             @PathVariable int page
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiToken)) {
 
             if(ObjectUtils.isEmpty(page)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -231,18 +245,82 @@ public class MemberApiController {
             @PathVariable("memberId")String memberId
     ) throws IOException {
 
-        if(Auth.checkToken(apiToken)) {
+        if(Auth.checkApiKey(apiToken)) {
 
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
             } else {
                 if(ObjectUtils.isEmpty(memberId)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' parameter must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
 
                     MemberVo memberVo = this.memberRepository.findById(memberId);
+//                    GeoHashCircleQuery d = new GeoHashCircleQuery(new WGS84Point(33.5002516, 126.5298658), 15000);
+//                    List<GeoHash> geoHashes = d.getSearchHashes();
+//
+//                    WGS84Point test1 = new WGS84Point(33.4909935, 126.90762);
+//                    boolean test = d.contains(test1);
+
+//                    String geohash = GeoHashExtensions.encode(33.5002516, 126.5298658);
+//                    Map adjacentAreas = GeoHashExtensions.getAllAdjacentAreasMap(geohash);
+//
+//                    double [] decoded = GeoHashExtensions.decode(geohash);
+//                    List aa = GeoHashExtensions.getAllAdjacentAreasList(geohash);
+
                     return new Gson().toJson(memberVo);
+                }
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+        }
+
+        return null;
+    }
+
+    @RequestMapping(value = {"/getNearMemberList", "/getNearMemberList/"}, method = RequestMethod.GET)
+    public String getNearMemberList (
+            HttpServletResponse response,
+            @RequestBody String reqBody,
+            @RequestHeader(value = "apiKey")String apiKey
+    ) throws IOException {
+
+        if(Auth.checkApiKey(apiKey)) {
+            response.setStatus(HttpStatus.OK.value());
+
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+            DistanceFilterVo distanceFilterVo = gson.fromJson(reqBody, DistanceFilterVo.class);
+            if(ObjectUtils.isEmpty(reqBody)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value());
+            } else {
+                if (ObjectUtils.isEmpty(distanceFilterVo.getMemberId())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'getMemberId' of request body must not be null or empty");
+                } else if (ObjectUtils.isEmpty(distanceFilterVo.getLatitude())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' of request body must not be null or empty");
+                } else if (ObjectUtils.isEmpty(distanceFilterVo.getLongitude())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'longitude' of request body must not be null or empty");
+                } else if (ObjectUtils.isEmpty(distanceFilterVo.getDistanceMetres())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'distanceMetres' of request body must not be null or empty");
+                } else if (ObjectUtils.isEmpty(distanceFilterVo.getPage())) {
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' of request body must not be null or empty");
+                } else {
+
+                    distanceFilterVo.setDistanceMetres(distanceFilterVo.getDistanceMetres() * 1.414);
+
+                    PageRequest pr = new PageRequest(distanceFilterVo.getPage(), 15);
+
+                    WGS84Point startPoint = new WGS84Point(distanceFilterVo.getLatitude(), distanceFilterVo.getLongitude());
+
+                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300,
+                            distanceFilterVo.getDistanceMetres());
+
+                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120,
+                            distanceFilterVo.getDistanceMetres());
+
+                    List<MemberVo> memberVo = this.memberRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
+
+                    return gson.toJson(memberVo);
                 }
             }
         } else {

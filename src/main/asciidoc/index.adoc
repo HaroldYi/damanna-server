@@ -222,7 +222,7 @@ OK
 
 == 정보변경 [updateMemberInfo]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getMemberInfo/{memberId}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getMemberInfo/{memberId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 ==== HTTP request
@@ -260,7 +260,7 @@ Content-Length: 1234
 
 == 닉네임 변경 [changeNickName]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeNickName/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeNickName/{memberId}' -i -X PUT -H 'apiKey: {apiKey}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "name" : "Harolddd"
 }'
@@ -296,7 +296,7 @@ OK
 
 == 나이 변경 [changeAge]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeAge/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeAge/{memberId}' -i -X PUT -H 'apiKey: {apiKey}' -H 'Content-Type: application/json; charset=utf8' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "age" : "29"
 }'
@@ -330,7 +330,7 @@ OK
 ----
 == 사진업로드 [uploadPhoto]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/uploadPhoto' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/uploadPhoto' -i -X POST -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "fileName":"333",
     "originalImg":"222",
@@ -386,7 +386,7 @@ Content-Length: 120
 ----
 == 사진목록조회 by 회원ID [findPhotoVoByMemberId]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/findPhotoVoByMemberId/{memberId}/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/findPhotoVoByMemberId/{memberId}/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
@@ -419,11 +419,64 @@ Content-Type: application/json;charset=UTF-8
     }
 ]
 ----
+== 프로필사진 변경 [updateProfilePhoto]
+
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getNearMemberList' -i -X PUT -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "memberId":"bqIDXpsVzlTL5X2cPMFROPHjtZn2",
+    "latitude":"333",
+    "longitude":"111",
+    "distanceMetres":"100",
+    "page":"1"
+}'
+----
+
+=== HTTP request
+----
+PUT /member/getNearMemberList HTTP/1.1
+----
+|===
+|Parameter|Description
+
+|`memberId`
+|The identifier of member
+|`latitude`
+|latitude
+|`longitude`
+|longitude
+|`distanceMetres`
+|distanceMetres(radius)
+|`page`
+|page(radius)
+
+|===
+
+==== Request body example
+----
+{
+    "memberId":"bqIDXpsVzlTL5X2cPMFROPHjtZn2",
+    "latitude":"333",
+    "longitude":"111",
+    "distanceMetres":"100",
+    "page":"1"
+}
+----
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
+
+200
+
+----
 
 == 프로필사진 변경 [updateProfilePhoto]
 
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/updateProfilePhoto' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/updateProfilePhoto' -i -X PUT -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "profileUrl":"222",
     "profileFile":"333",
@@ -470,7 +523,7 @@ Content-Length: 3
 ----
 == 사진삭제 [deletePhoto]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/deletePhoto/{photoId}' -i -X DELETE -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/photo/deletePhoto/{photoId}' -i -X DELETE -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
@@ -494,7 +547,7 @@ Content-Length: 3
 
 == 포인트수정 [updatePoint]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/point/updatePoint' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/point/updatePoint' -i -X PUT -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "source" : "test",
     "point" : "10",
@@ -538,7 +591,7 @@ Content-Length: 3
 
 == say 글쓰기 [newSay]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newSay' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newSay' -i -X POST -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "message" : "test message",
     "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
@@ -567,7 +620,7 @@ Content-Length: 3
 
 == say 조회(단건) [getSay]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSay/{sayId}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSay/{sayId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
@@ -714,7 +767,7 @@ Content-Length: 4
 ----
 
 == say 조회(목록) [getSayList]
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayList/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayList/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 
 === HTTP request
 ----
@@ -861,7 +914,7 @@ Content-Length: 4
 ----
 == say 조회 by 회원ID [getSayListByUid]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayListByUid/{memberId}/{page}' -i -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayListByUid/{memberId}/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
@@ -1010,7 +1063,7 @@ Content-Length: 4
 ----
 == say 댓글달기 [newComment]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newComment' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newComment' -i -X POST -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "sayId" : "4",
     "comment" : "test message",
@@ -1054,7 +1107,7 @@ Content-Length: 3
 
 == say 대댓글달기 [newCommentReply]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newCommentReply' -i -X POST -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8' -d
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/newCommentReply' -i -X POST -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
 '{
     "commentId" : "4",
     "comment" : "test message",
@@ -1098,7 +1151,7 @@ Content-Length: 3
 
 == say 좋아요 [likeSay]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/likeSay/{sayId}/{memberId}' -i -X PUT -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/likeSay/{sayId}/{memberId}' -i -X PUT -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
@@ -1117,7 +1170,7 @@ Content-Length: 3
 
 == say 삭제 [deleteSay]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/deleteSay/{sayId}' -i -X DELETE -H 'apiToken: {apiToken}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/deleteSay/{sayId}' -i -X DELETE -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 === HTTP request
