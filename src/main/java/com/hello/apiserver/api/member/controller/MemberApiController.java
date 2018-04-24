@@ -111,17 +111,19 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
                 } else {
                     MemberVo newMemberVo = this.memberRepository.findById(memberId);
-                    newMemberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
-                    newMemberVo.setClientToken(memberVo.getClientToken());
-                    newMemberVo.setLocationLon(memberVo.getLocationLon());
-                    newMemberVo.setLocationLat(memberVo.getLocationLat());
+                    if(newMemberVo != null) {
+                        newMemberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+                        newMemberVo.setClientToken(memberVo.getClientToken());
+                        newMemberVo.setLocationLon(memberVo.getLocationLon());
+                        newMemberVo.setLocationLat(memberVo.getLocationLat());
 
 //                    GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
 //                    String geohashString = geohash.toBase32();
 //
 //                    newMemberVo.setLocationHash(geohashString);
 
-                    this.memberRepository.save(newMemberVo);
+                        this.memberRepository.save(newMemberVo);
+                    }
                     return HttpStatus.OK.toString();
                 }
             } else {

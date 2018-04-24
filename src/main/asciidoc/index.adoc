@@ -222,12 +222,12 @@ OK
 
 == 정보변경 [updateMemberInfo]
 ----
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getMemberInfo/{memberId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/updateMemberInfo/{memberId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
 ==== HTTP request
 ----
-GET /member/getMemberInfo/{memberId} HTTP/1.1
+PUT /member/updateMemberInfo/{memberId} HTTP/1.1
 ----
 |===
 |Parameter|Description
@@ -248,7 +248,7 @@ GET /member/getMemberInfo/{memberId} HTTP/1.1
     "id" : "test ID1524019303883",
     "clientToken" : "test token",
     "locationLon" : "10",
-    "locationLat" : "10",
+    "locationLat" : "10"
 }
 ----
 === HTTP Reponse
