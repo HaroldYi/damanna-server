@@ -2,6 +2,7 @@ package com.hello.apiserver.api.say.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -34,10 +35,12 @@ public class SayVo {
 
     @OneToMany
     @JoinColumn(name = "say_id", referencedColumnName = "id")
+    @Cascade(CascadeType.REMOVE)
     private List<CommentVo> comment;
 
     @OneToMany
     @JoinColumn(name = "say_id", referencedColumnName = "id")
+    @Cascade(CascadeType.REMOVE)
     private List<LikeSayVo> likeSay;
 
     @Column(nullable = false)

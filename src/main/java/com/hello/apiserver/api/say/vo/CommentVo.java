@@ -33,6 +33,7 @@ public class CommentVo {
 
     @OneToMany
     @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private List<CommentReplyVo> commentReply;
 
     @Column

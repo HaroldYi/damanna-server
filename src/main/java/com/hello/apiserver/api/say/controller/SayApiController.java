@@ -242,8 +242,7 @@ public class SayApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
 
-                    MemberVo memberVo = new MemberVo();
-                    memberVo.setId(memberId);
+                    MemberVo memberVo = memberRepository.findById(memberId);
 
                     SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
                     LikeSayVo likeSayVo = this.likeSayRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
@@ -259,23 +258,10 @@ public class SayApiController {
                         likeSayVo.setUpdateDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         this.likeSayRepository.save(likeSayVo);
 
-//                        HttpClient httpclient = new DefaultHttpClient();
-//                        org.apache.http.client.methods.HttpPost httppost = new HttpPost("https://us-central1-noryangjin-18dfb.cloudfunctions.net/sendPushMsg");
-//
-//                        try {
-//                            // 아래처럼 적절히 응용해서 데이터형식을 넣으시고
-//                            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs[0], "utf-8"));
-//
-//                            //HTTP Post 요청 실행
-//                            HttpResponse response = httpclient.execute(httppost);
-//                        } catch (ClientProtocolException e) {
-//                            Crashlytics.logException(e);
-//                        } catch (IOException e) {
-//                            Crashlytics.logException(e);
-//                        }
+
                     }
 
-//                    likeSayRepository.save(likeSayVo);
+//                    this.doAsync(sayVo, memberVo, likeSayVo);
 
                     return HttpStatus.OK.toString();
                 }
@@ -305,8 +291,9 @@ public class SayApiController {
 
                 SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
                 if(sayVo != null) {
-                    sayVo.setUseYn("N");
-                    this.sayRepository.save(sayVo);
+//                    sayVo.setUseYn("N");
+//                    this.sayRepository.save(sayVo);
+                    this.sayRepository.delete(sayVo);
                 }
 
                 return HttpStatus.OK.toString();
@@ -317,4 +304,28 @@ public class SayApiController {
 
         return "";
     }
+
+//    @Async
+//    public void doAsync(SayVo sayVo, MemberVo memberVo, LikeSayVo likeSayVo) {
+//        // 비동기로 실행될 로직을 작성
+//        HttpClient httpclient = HttpClients.createDefault();
+//        HttpPost httppost = new HttpPost("https://us-central1-noryangjin-new.cloudfunctions.net/sendPushMsg");
+//
+//        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
+//        nameValuePairs.add(new BasicNameValuePair("nofiMsg", String.format("%s님이 이글을 좋아합니다(테스트)", memberVo.getName())));
+//        nameValuePairs.add(new BasicNameValuePair("clientToken", sayVo.getMember().getClientToken()));
+//        nameValuePairs.add(new BasicNameValuePair("sayId", likeSayVo.getId()));
+//        nameValuePairs.add(new BasicNameValuePair("senderUid", memberVo.getId()));
+//        nameValuePairs.add(new BasicNameValuePair("senderName", memberVo.getName()));
+//
+//        try {
+//            // 아래처럼 적절히 응용해서 데이터형식을 넣으시고
+//            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf-8"));
+//
+//            //HTTP Post 요청 실행
+//            HttpResponse httpResponse = httpclient.execute(httppost);
+//        } catch (ClientProtocolException e) {
+//        } catch (IOException e) {
+//        }
+//    }
 }
