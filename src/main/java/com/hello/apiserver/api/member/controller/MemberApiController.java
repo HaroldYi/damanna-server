@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = {"/member", "/member/"})
@@ -308,17 +305,22 @@ public class MemberApiController {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
             } else {
 
-                distanceMetres *= (1.414 * 1000);
-
+                List<MemberVo> memberVoList = new ArrayList<>();
                 PageRequest pr = new PageRequest(page, 15);
 
-                WGS84Point startPoint = new WGS84Point(latitude, longitude);
+                if(distanceMetres < 200) {
+                    distanceMetres *= (1.414 * 1000);
 
-                WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
+                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
 
-                WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
+                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
 
-                List<MemberVo> memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
+                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
+
+                    memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
+                } else {
+                    memberVoList = this.memberRepository.findAllByOrderByLastSignInDesc(pr).getContent();
+                }
 
                 return gson.toJson(memberVoList);
             }
