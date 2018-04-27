@@ -160,12 +160,8 @@ public class PhotoApiController {
 
                 if(ObjectUtils.isEmpty(memberVo.getId())) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
-                } else if(ObjectUtils.isEmpty(memberVo.getProfileFile())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
-                } else if(ObjectUtils.isEmpty(memberVo.getProfileUrlOrg())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");
                 } else if(ObjectUtils.isEmpty(memberVo.getProfileUrl())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'thumbnailImg' request body must not be null or empty");
+                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'profileUrl' request body must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
                     MemberVo newMemberVo = memberRepository.findById(memberVo.getId());
