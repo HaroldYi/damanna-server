@@ -1,5 +1,7 @@
 package com.hello.apiserver.api.say.controller;
 
+import ch.hsr.geohash.WGS84Point;
+import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @RestController
@@ -53,7 +56,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -62,12 +65,13 @@ public class SayApiController {
                 SayVo sayVo = new Gson().fromJson(body, SayVo.class);
                 sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 sayVo.setUseYn("Y");
+
                 this.sayRepository.save(sayVo);
                 return HttpStatus.OK.toString();
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -81,7 +85,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -89,9 +93,9 @@ public class SayApiController {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 return gson.toJson(this.sayRepository.findByIdAndUseYn(sayId, "Y"));
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return null;
     }
@@ -105,19 +109,70 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
-                PageRequest pr = new PageRequest(page, 15);
+                PageRequest pr = new PageRequest(page, 20);
                 response.setStatus(HttpStatus.OK.value());
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent());
+                List<SayVo> sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
+                return gson.toJson(sayVoList);
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
+
+        return null;
+    }
+
+    @RequestMapping(value = {"/getNearSayList", "/getNearSayList/"}, method = RequestMethod.GET)
+    public String getNearSayList (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestParam(value = "latitude") double latitude,
+            @RequestParam(value = "longitude") double longitude,
+            @RequestParam(value = "distanceMetres") int distanceMetres,
+            @RequestParam(value = "page") int page
+    ) throws IOException {
+
+//        apiKey = new Gson().fromJson(apiKey, String.class);
+
+//        if(Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(latitude)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(longitude)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'longitude' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(distanceMetres)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'distanceMetres' parameter must not be null or empty");
+            } else if (ObjectUtils.isEmpty(page)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
+            } else {
+
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                PageRequest pr = new PageRequest(page, 20);
+                List<SayVo> sayVoList;
+
+                if(distanceMetres < 500) {
+                    distanceMetres *= (1.414 * 1000);
+
+                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
+
+                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
+
+                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
+
+                    sayVoList = this.sayRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
+                } else {
+                    sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
+                }
+
+                return gson.toJson(sayVoList);
+            }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return null;
     }
@@ -132,20 +187,20 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                PageRequest pr = new PageRequest(page, 15);
+                PageRequest pr = new PageRequest(page, 20);
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return null;
     }
@@ -165,7 +220,7 @@ public class SayApiController {
         memberVo.setId(commentVo.getMemberId());
         commentVo.setMember(memberVo);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -180,9 +235,9 @@ public class SayApiController {
                     return gson.toJson(this.commentRepository.save(commentVo));
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -199,7 +254,7 @@ public class SayApiController {
 //        apiKey = gson.fromJson(apiKey, String.class);
         CommentReplyVo commentReplyVo = gson.fromJson(body, CommentReplyVo.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -214,9 +269,9 @@ public class SayApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -233,7 +288,7 @@ public class SayApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -257,8 +312,6 @@ public class SayApiController {
                         likeSayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         likeSayVo.setUpdateDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         this.likeSayRepository.save(likeSayVo);
-
-
                     }
 
 //                    this.doAsync(sayVo, memberVo, likeSayVo);
@@ -266,9 +319,9 @@ public class SayApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -283,7 +336,7 @@ public class SayApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
             } else {
@@ -298,9 +351,9 @@ public class SayApiController {
 
                 return HttpStatus.OK.toString();
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }

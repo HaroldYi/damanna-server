@@ -18,7 +18,7 @@ public class LikeSayVo {
     private String sayId;
 
     @ManyToOne(targetEntity=MemberVo.class)
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+//    @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberVo member;
 
     @Column(nullable = false)

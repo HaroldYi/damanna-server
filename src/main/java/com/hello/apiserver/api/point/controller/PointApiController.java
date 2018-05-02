@@ -37,7 +37,7 @@ public class PointApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             if (msg == null || msg.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -59,10 +59,10 @@ public class PointApiController {
 
                 return HttpStatus.OK.toString();
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
-
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
+//
         return "";
     }
 }

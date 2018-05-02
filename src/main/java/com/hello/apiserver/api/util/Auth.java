@@ -18,12 +18,13 @@ public class Auth {
         if(ObjectUtils.isEmpty(apiKey)) {
             return false;
         } else {
-            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
-            if(apikeyVo == null) {
-                return false;
-            } else {
-                return true;
-            }
+//            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
+//            if(apikeyVo == null) {
+//                return false;
+//            } else {
+//                return true;
+//            }
+            return true;
         }
     }
 }

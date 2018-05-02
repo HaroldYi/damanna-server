@@ -37,7 +37,7 @@ public class PhotoApiController {
             @RequestBody String photoInfo
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(photoInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -54,9 +54,9 @@ public class PhotoApiController {
                     return gson.toJson(this.photoRepository.save(photoVo));
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return null;
     }
@@ -69,7 +69,7 @@ public class PhotoApiController {
             @PathVariable int page
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -84,9 +84,9 @@ public class PhotoApiController {
                     return gson.toJson(this.photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return null;
     }
@@ -99,7 +99,7 @@ public class PhotoApiController {
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
 
             PhotoVo photo = new Gson().fromJson(profileFileInfo, PhotoVo.class);
             if(photo.getUseYn().equals("Y")) {
@@ -136,9 +136,9 @@ public class PhotoApiController {
                 this.photoRepository.save(photoVo);
                 return "OK";
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -151,7 +151,7 @@ public class PhotoApiController {
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
 
             MemberVo memberVo = new Gson().fromJson(profileFileInfo, MemberVo.class);
             if(ObjectUtils.isEmpty(memberVo)) {
@@ -172,9 +172,9 @@ public class PhotoApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
         return "";
     }
@@ -187,17 +187,17 @@ public class PhotoApiController {
             @PathVariable String id
     ) throws IOException {
 
-        if(Auth.checkApiKey(apiKey)) {
+//        if(Auth.checkApiKey(apiKey)) {
             PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
             if(photoVo != null) {
                 this.photoRepository.delete(photoVo);
             }
 
             return HttpStatus.OK.toString();
-        } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-        }
+//        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
+//        }
 
-        return "";
+//        return "";
     }
 }
