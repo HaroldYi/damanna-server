@@ -11,8 +11,9 @@ import java.util.List;
 
 public interface SayRepository extends CrudRepository<SayVo, Long> {
 
-    @Query(name = "Say.findAll", nativeQuery = true)
-    List<SayVo> findAll(@Param("useYn") String useYn);
+//    @Query(name = "Say.findAll", nativeQuery = true)
+//    List<SayVo> findAll(@Param("useYn") String useYn);
+//    List<SayVo> findAll();
 
     Page<SayVo> findAllByUseYnOrderByRegDtDesc(String useYn, Pageable pageable);
 
