@@ -1,0 +1,16 @@
+spring.jpa.orm:
+  path: queries
+  queries:
+  - ${spring.jpa.orm.path}/orm.xml
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: ${RDS_MYSQL_PROTOCOL}://${RDS_MYSQL_HOST}:${RDS_MYSQL_PORT}/${RDS_MYSQL_DATABASE}
+    username: ${RDS_MYSQL_USERNAME}
+    password: ${RDS_MYSQL_PASSWORD}
+    driver-class-name: ${RDS_MYSQL_DRIVER}
+
+

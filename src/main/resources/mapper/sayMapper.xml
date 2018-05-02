@@ -1,0 +1,36 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.apiserver.api.say.mapper.SayMapper">
+    <select id="findSayByDistance" resultType="com.hello.apiserver.api.say.vo.NearSayVo">
+        SELECT
+            s.id, s.message, s.member_id AS memberId, m.name, s.reg_dt AS regDt, IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt
+            FROM
+            say s
+            INNER JOIN
+            member m ON s.member_id = m.id AND s.use_yn = 'Y'
+            <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">
+            AND m.location_lat BETWEEN ${seLat} AND ${nwLat}
+            AND m.location_lon BETWEEN ${nwLon} AND ${seLon}
+            </if>
+            LEFT JOIN
+            (SELECT
+            s.id AS say_id, c.id AS comment_id, COUNT(c.id) AS commentCnt
+            FROM
+            say s
+            LEFT JOIN comment c ON s.id = c.say_id
+            GROUP BY s.id) AS AA ON s.id = AA.say_id
+            LEFT JOIN
+            (SELECT
+            c.say_id, c.id, COUNT(r.id) AS commentReplyCnt
+            FROM
+            comment c
+            LEFT JOIN comment_reply r ON c.id = r.comment_id
+            GROUP BY c.say_id) AS BB ON AA.comment_id = BB.id
+            -- LEFT JOIN like_say l ON s.id = l.say_id
+            GROUP BY s.id
+            LIMIT ${page}, 20
+    </select>
+    <select id="findLikeMemberList" resultType="java.lang.String">
+        SELECT member_id AS memberId FROM like_say WHERE say_id = ${sayId}
+    </select>
+</mapper>

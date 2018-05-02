@@ -6,14 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
+import com.hello.apiserver.api.say.mapper.SayMapper;
 import com.hello.apiserver.api.say.service.CommentReplyRepository;
 import com.hello.apiserver.api.say.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
 import com.hello.apiserver.api.say.service.SayRepository;
-import com.hello.apiserver.api.say.vo.CommentReplyVo;
-import com.hello.apiserver.api.say.vo.CommentVo;
-import com.hello.apiserver.api.say.vo.LikeSayVo;
-import com.hello.apiserver.api.say.vo.SayVo;
+import com.hello.apiserver.api.say.vo.*;
 import com.hello.apiserver.api.util.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,14 +21,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = {"/say", "/say/"})
 public class SayApiController {
+
+    @Autowired
+    private SayMapper sayMapper;
 
     @Autowired
     private SayRepository sayRepository;
@@ -150,24 +148,63 @@ public class SayApiController {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
             } else {
 
+                page *= 20;
+
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 PageRequest pr = new PageRequest(page, 20);
-                List<SayVo> sayVoList;
+                List<NearSayVo> sayVoList;
+                Map<String, Object> map = new HashMap<>();
 
-//                if(distanceMetres < 500) {
-//                    distanceMetres *= (1.414 * 1000);
-//
-//                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
-//
-//                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
-//
-//                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
-//
+                if(distanceMetres < 500) {
+                    distanceMetres *= (1.414 * 1000);
+
+                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
+
+                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
+
+                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
+
+                    map.put("seLat", se.getLatitude());
+                    map.put("seLon", se.getLongitude());
+                    map.put("nwLat", nw.getLatitude());
+                    map.put("nwLon", nw.getLongitude());
+                    map.put("page", page);
+
 //                    sayVoList = this.sayRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
-//                } else {
-//                    sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
-//                }
-                sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
+                } else {
+//                    map.put("seLat", se.getLatitude());
+//                    map.put("seLon", se.getLongitude());
+//                    map.put("nwLat", nw.getLatitude());
+//                    map.put("nwLon", nw.getLongitude());
+                    map.put("page", page);
+                }
+
+                sayVoList = this.sayMapper.findSayByDistance(map);
+
+                int i = 0;
+                for(NearSayVo sayVo : sayVoList) {
+
+                    map.put("sayId", sayVo.getId());
+
+                    List<String> likeSayVoListStr = this.sayMapper.findLikeMemberList(map);
+                    List<LikeSayVo> likeSayVoList = new ArrayList<>();
+                    for(String like : likeSayVoListStr) {
+                        LikeSayVo likeSayVo = new LikeSayVo();
+                        MemberVo memberVo = new MemberVo();
+                        memberVo.setId(like);
+
+                        likeSayVo.setMember(memberVo);
+                        likeSayVoList.add(likeSayVo);
+                    }
+
+                    MemberVo memberVo = new MemberVo();
+                    memberVo.setId(sayVo.getMemberId());
+                    memberVo.setName(sayVo.getName());
+
+                    sayVo.setMember(memberVo);
+                    sayVo.setLikeSay(likeSayVoList);
+                    sayVoList.set(i++, sayVo);
+                }
 
                 return gson.toJson(sayVoList);
             }

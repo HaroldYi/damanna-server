@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd" version="2.1">
+
+    <!-- JPA Named Queries -->
+    <named-native-query name="Say.findSayByDistance" result-class="com.hello.apiserver.api.say.vo.SayVo">
+        <query>
+            SELECT
+            s.id, s.message, s.member_id AS memberId, m.name, s.reg_dt AS regDt
+            FROM
+            say s
+            INNER JOIN
+            member m ON s.member_id = m.id
+            LEFT JOIN
+            (SELECT
+            s.id AS say_id, c.id AS comment_id, COUNT(c.id)
+            FROM
+            say s
+            LEFT JOIN comment c ON s.id = c.say_id
+            GROUP BY s.id) AS AA ON s.id = AA.say_id
+            LEFT JOIN
+            (SELECT
+            c.say_id, c.id, COUNT(r.id)
+            FROM
+            comment c
+            LEFT JOIN comment_reply r ON c.id = r.comment_id
+            GROUP BY c.say_id) AS BB ON AA.comment_id = BB.id
+            -- LEFT JOIN like_say l ON s.id = l.say_id
+            WHERE s.use_yn = 'Y'
+            AND m.location_lat BETWEEN :seLat AND :nwLat
+            AND m.location_lon BETWEEN :nwLon AND :seLon
+        </query>
+    </named-native-query>
+
+    <!-- entity mapping -->
+    <!--<entity class="com.hello.apiserver.api.say.vo.SayVo">-->
+        <!--<attributes>-->
+            <!--<basic name="title"/>-->
+        <!--</attributes>-->
+    <!--</entity>-->
+
+</entity-mappings>

@@ -5,6 +5,7 @@ import ch.hsr.geohash.WGS84Point;
 import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hello.apiserver.api.member.mapper.MemberMapper;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
@@ -24,6 +25,9 @@ import java.util.*;
 @RestController
 @RequestMapping(value = {"/member", "/member/"})
 public class MemberApiController {
+
+    @Autowired
+    MemberMapper memberMapper;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -223,7 +227,7 @@ public class MemberApiController {
 
                     PageRequest pr = new PageRequest(page, 20);
 
-                    Page<MemberVo> memberList = this.memberRepository.findAllByOrderByLastSignInDesc(pr);
+                    Page<MemberVo> memberList = this.memberRepository.findByIdNotOrderByLastSignInDesc("", pr);
                     response.setStatus(HttpStatus.OK.value());
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -319,7 +323,8 @@ public class MemberApiController {
 
                     memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
                 } else {
-                    memberVoList = this.memberRepository.findAllByOrderByLastSignInDesc(pr).getContent();
+                    memberVoList = this.memberRepository.findByIdNotOrderByLastSignInDesc(memberId, pr).getContent();
+//                    memberVoList = this.memberMapper.findMemberList();
                 }
 
                 return gson.toJson(memberVoList);
