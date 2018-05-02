@@ -154,19 +154,20 @@ public class SayApiController {
                 PageRequest pr = new PageRequest(page, 20);
                 List<SayVo> sayVoList;
 
-                if(distanceMetres < 500) {
-                    distanceMetres *= (1.414 * 1000);
-
-                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
-
-                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
-
-                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
-
-                    sayVoList = this.sayRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
-                } else {
-                    sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
-                }
+//                if(distanceMetres < 500) {
+//                    distanceMetres *= (1.414 * 1000);
+//
+//                    WGS84Point startPoint = new WGS84Point(latitude, longitude);
+//
+//                    WGS84Point nw = VincentyGeodesy.moveInDirection(startPoint, 300, distanceMetres);
+//
+//                    WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
+//
+//                    sayVoList = this.sayRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
+//                } else {
+//                    sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
+//                }
+                sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
 
                 return gson.toJson(sayVoList);
             }
