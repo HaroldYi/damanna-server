@@ -18,7 +18,7 @@ public interface SayRepository extends CrudRepository<SayVo, Long> {
 
     Page<SayVo> findByMemberIdAndUseYnOrderByRegDtDesc(String memberId, String useYn, Pageable pageable);
 
-    Page<SayVo> findByLocationLatBetweenAndLocationLonBetween(double slat, double elat, double slon, double elon, Pageable pageable);
+//    Page<SayVo> findByLocationLatBetweenAndLocationLonBetween(double slat, double elat, double slon, double elon, Pageable pageable);
 
     SayVo findByIdAndUseYn(String sayId, String useYn);
 }
