@@ -34,7 +34,7 @@ public class MemberApiController {
     @RequestMapping(value = {"/newMember", "/newMember/"}, method = RequestMethod.POST)
     public String newMember (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String userInfo
     ) throws IOException {
 
@@ -91,7 +91,7 @@ public class MemberApiController {
     @RequestMapping(value = "/updateMemberInfo/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String updateMemberInfo (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String args,
             @PathVariable String memberId
     ) throws IOException {
@@ -136,7 +136,7 @@ public class MemberApiController {
     @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeNickName (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String nickName,
             @PathVariable String memberId
     ) throws IOException {
@@ -175,7 +175,7 @@ public class MemberApiController {
     @RequestMapping(value = "/changeAge/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public String changeAge (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String age,
             @PathVariable String memberId
     ) throws IOException {
@@ -208,7 +208,7 @@ public class MemberApiController {
     @RequestMapping(value = "/getMemberList/{page}", method = RequestMethod.GET)
     public String getMemberList (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable int page
     ) throws IOException {
 
@@ -240,7 +240,7 @@ public class MemberApiController {
     @RequestMapping(value = {"/getMemberInfo/{memberId}/", "/getMemberInfo/{memberId}"}, method = RequestMethod.GET)
     public String getMemberInfo (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("memberId")String memberId
     ) throws IOException {
 
@@ -285,7 +285,7 @@ public class MemberApiController {
             @RequestParam(value = "longitude") double longitude,
             @RequestParam(value = "distanceMetres") int distanceMetres,
             @RequestParam(value = "page") int page,
-            @RequestHeader(value = "apiKey") String apiKey
+            @RequestHeader(value = "apiKey", required = false)String apiKey
     ) throws IOException {
 
 //        if(Auth.checkApiKey(apiKey)) {

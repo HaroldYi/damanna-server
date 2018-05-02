@@ -33,7 +33,7 @@ public class PhotoApiController {
     @RequestMapping(value = {"/uploadPhoto", "/uploadPhoto/"}, method = RequestMethod.POST)
     public String uploadPhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String photoInfo
     ) throws IOException {
 
@@ -64,7 +64,7 @@ public class PhotoApiController {
     @RequestMapping(value = {"/findPhotoVoByMemberId/{memberId}/{page}", "/findPhotoVoByMemberId/{memberId}/{page}/"}, method = RequestMethod.GET)
     public String findPhotoVoByMemberId (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("memberId")String memberId,
             @PathVariable int page
     ) throws IOException {
@@ -95,7 +95,7 @@ public class PhotoApiController {
     @Transactional
     public String changeProfilePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
 
@@ -147,7 +147,7 @@ public class PhotoApiController {
     @Transactional
     public String updateProfilePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
 
@@ -183,7 +183,7 @@ public class PhotoApiController {
     @Transactional
     public String deletePhoto (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String id
     ) throws IOException {
 

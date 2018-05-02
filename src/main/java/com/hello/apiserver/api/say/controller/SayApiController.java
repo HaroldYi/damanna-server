@@ -50,7 +50,7 @@ public class SayApiController {
     @RequestMapping(value = "/newSay", method = RequestMethod.POST)
     public String newSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
@@ -79,7 +79,7 @@ public class SayApiController {
     @RequestMapping(value = {"/getSay/{sayId}", "/getSay/{sayId}/"}, method = RequestMethod.GET)
     public String getSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("sayId")String sayId
     ) throws IOException {
 
@@ -103,7 +103,7 @@ public class SayApiController {
     @RequestMapping(value = {"/getSayList/{page}", "/getSayList/{page}/"}, method = RequestMethod.GET)
     public String getSayList (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("page")int page
     ) throws IOException {
 
@@ -130,7 +130,7 @@ public class SayApiController {
     @RequestMapping(value = {"/getNearSayList", "/getNearSayList/"}, method = RequestMethod.GET)
     public String getNearSayList (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestParam(value = "latitude") double latitude,
             @RequestParam(value = "longitude") double longitude,
             @RequestParam(value = "distanceMetres") int distanceMetres,
@@ -181,7 +181,7 @@ public class SayApiController {
     @RequestMapping(value = {"/getSayListByUid/{memberId}/{page}", "/getSayListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
     public String getSayListByUid (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String memberId,
             @PathVariable int page
     ) throws IOException {
@@ -209,7 +209,7 @@ public class SayApiController {
     @RequestMapping(value = "/newComment", method = RequestMethod.POST)
     public String newComment (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
@@ -246,7 +246,7 @@ public class SayApiController {
     @RequestMapping(value = "/newCommentReply", method = RequestMethod.POST)
     public String newCommentReply (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
@@ -280,7 +280,7 @@ public class SayApiController {
     @RequestMapping(value = "/likeSay/{sayId}/{memberId}", method = RequestMethod.PUT)
     public String likeSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String sayId,
             @PathVariable String memberId
     ) throws IOException {
@@ -330,7 +330,7 @@ public class SayApiController {
     @RequestMapping(value = "/deleteSay/{sayId}", method = RequestMethod.DELETE)
     public String deleteSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String sayId
     ) throws IOException {
         Gson gson = new Gson();

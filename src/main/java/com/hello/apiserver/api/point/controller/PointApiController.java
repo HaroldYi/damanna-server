@@ -29,7 +29,7 @@ public class PointApiController {
     @RequestMapping(value = "/updatePoint", method = RequestMethod.PUT)
     public String newSay (
             HttpServletResponse response,
-            @RequestHeader(value = "apiKey")String apiKey,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String msg
     ) throws IOException {
 
