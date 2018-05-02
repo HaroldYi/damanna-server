@@ -28,6 +28,7 @@
             GROUP BY c.say_id) AS BB ON AA.comment_id = BB.id
             -- LEFT JOIN like_say l ON s.id = l.say_id
             GROUP BY s.id
+            ORDER BY s.reg_dt DESC
             LIMIT ${page}, 20
     </select>
     <select id="findLikeMemberList" resultType="java.lang.String">
