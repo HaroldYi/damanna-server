@@ -23,6 +23,8 @@ public class NearSayVo {
 
     private String useYn = "Y";
 
+    private int commentCnt = 0;
+
     public MemberVo getMember() {
         return member;
     }
@@ -46,14 +48,6 @@ public class NearSayVo {
     public void setMessage(String message) {
         this.message = message;
     }
-
-//    public Point getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Point location) {
-//        this.location = location;
-//    }
 
     public String getMemberId() {
         return memberId;
@@ -101,5 +95,13 @@ public class NearSayVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getCommentCnt() {
+        return commentCnt;
+    }
+
+    public void setCommentCnt(int commentCnt) {
+        this.commentCnt = commentCnt;
     }
 }
