@@ -5,7 +5,7 @@ import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.point.service.PointRepository;
 import com.hello.apiserver.api.point.vo.PointVo;
-import com.hello.apiserver.api.util.Auth;
+import com.hello.apiserver.api.util.Auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +37,7 @@ public class PointApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (msg == null || msg.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -59,10 +59,10 @@ public class PointApiController {
 
                 return HttpStatus.OK.toString();
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
-//
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
+
         return "";
     }
 }

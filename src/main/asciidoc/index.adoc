@@ -419,7 +419,7 @@ Content-Type: application/json;charset=UTF-8
     }
 ]
 ----
-== 프로필사진 변경 [updateProfilePhoto]
+== 주변 사람 검색 [getNearMemberList]
 
 ----
 $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/getNearMemberList' -i -X PUT -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
@@ -814,69 +814,7 @@ Content-Length: 4
             "clientToken": "~~~~",
             "point": 10
         },
-        "comment": [
-            {
-                "id": "1",
-                "sayId": "1",
-                "comment": "ㅎㅇ",
-                "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
-                "member": {
-                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
-                    "name": "하이",
-                    "age": 29,
-                    "genderCode": "M",
-                    "gender": {
-                        "id": 2,
-                        "genderCode": "M",
-                        "genderEn": "male",
-                        "genderKr": "남성"
-                    },
-                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
-                    "profileUrl": "https://~~~",
-                    "profileUrlOrg": "",
-                    "profileFile": "",
-                    "lastSignIn": "2018-04-18 20:25:57",
-                    "locationLat": 33.4909741,
-                    "locationLon": 126.907639,
-                    "photo": [],
-                    "clientToken": "~~~~",
-                    "point": 10
-                },
-                "regDt": "2018-04-19 13:07:20",
-                "commentReply": [
-                    {
-                        "id": "1",
-                        "comment": "  ㅋㅋ",
-                        "commentId": "1",
-                        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
-                        "member": {
-                            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
-                            "name": "하이",
-                            "age": 29,
-                            "genderCode": "M",
-                            "gender": {
-                                "id": 2,
-                                "genderCode": "M",
-                                "genderEn": "male",
-                                "genderKr": "남성"
-                            },
-                            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
-                            "profileUrl": "https://~~~~",
-                            "profileUrlOrg": "",
-                            "profileFile": "",
-                            "lastSignIn": "2018-04-18 20:25:57",
-                            "locationLat": 33.4909741,
-                            "locationLon": 126.907639,
-                            "photo": [],
-                            "clientToken": "~~~~",
-                            "point": 10
-                        },
-                        "regDt": "2018-04-19 13:07:35"
-                    }
-                ],
-                "useYn": "Y"
-            }
-        ],
+        "commentCnt": 0,
         "likeSay": [
             {
                 "id": "1",
@@ -912,6 +850,97 @@ Content-Length: 4
     }
 ]
 ----
+
+== say 조회(목록) [getNearSayList]
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getNearSayList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={0}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+
+=== HTTP request
+----
+GET /say/getSayList/{page} HTTP/1.1
+----
+|===Y
+|Parameter|Description
+
+|`latitude`
+|latitude of current location
+|`longitude`
+|longitude of current location
+|`distanceMetres`
+|radius(unit : metre)
+|`page`
+|The page of say list
+|===
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+[
+    {
+        "id": "1",
+        "message": "테스트요",
+        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "regDt": "2018-04-18 20:26:37",
+        "member": {
+            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "name": "하이",
+            "age": 29,
+            "genderCode": "M",
+            "gender": {
+                "id": 2,
+                "genderCode": "M",
+                "genderEn": "male",
+                "genderKr": "남성"
+            },
+            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+            "profileUrl": "https://~~~~",
+            "profileUrlOrg": "",
+            "profileFile": "",
+            "lastSignIn": "2018-04-18 20:25:57",
+            "locationLat": 33.4909741,
+            "locationLon": 126.907639,
+            "photo": [],
+            "clientToken": "~~~~",
+            "point": 10
+        },
+        "commentCnt": 0,
+        "likeSay": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "useYn": "Y",
+                "regDt": "2018-04-18 20:31:15",
+                "updateDt": "2018-04-18 20:31:15"
+            }
+        ],
+        "useYn": "Y"
+    }
+]
+
 == say 조회 by 회원ID [getSayListByUid]
 ----
 $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayListByUid/{memberId}/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'

@@ -79,6 +79,21 @@ public class MemberVo {
     @Column
     private int point;
 
+    @Column
+    private String blockYn;
+
+    @Column
+    private Date blockStartDt;
+
+    @Column
+    private Date blockEndDt;
+
+    @Column
+    private String blockReason;
+
+    @Column
+    private Date regDt;
+
     public String getId() {
         return id;
     }
@@ -213,5 +228,45 @@ public class MemberVo {
 
     public void setPoint(int point) {
         this.point = point;
+    }
+
+    public String getBlockYn() {
+        return blockYn;
+    }
+
+    public void setBlockYn(String blockYn) {
+        this.blockYn = blockYn;
+    }
+
+    public Date getBlockStartDt() {
+        return blockStartDt;
+    }
+
+    public void setBlockStartDt(Date blockStartDt) {
+        this.blockStartDt = blockStartDt;
+    }
+
+    public Date getBlockEndDt() {
+        return blockEndDt;
+    }
+
+    public void setBlockEndDt(Date blockEndDt) {
+        this.blockEndDt = blockEndDt;
+    }
+
+    public String getBlockReason() {
+        return blockReason;
+    }
+
+    public void setBlockReason(String blockReason) {
+        this.blockReason = blockReason;
+    }
+
+    public Date getRegDt() {
+        return regDt;
+    }
+
+    public void setRegDt(Date regDt) {
+        this.regDt = regDt;
     }
 }

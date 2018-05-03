@@ -6,7 +6,7 @@ import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.photo.service.PhotoRepository;
 import com.hello.apiserver.api.photo.vo.PhotoVo;
-import com.hello.apiserver.api.util.Auth;
+import com.hello.apiserver.api.util.Auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -37,8 +37,7 @@ public class PhotoApiController {
             @RequestBody String photoInfo
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
-
+        if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(photoInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
             } else {
@@ -54,9 +53,9 @@ public class PhotoApiController {
                     return gson.toJson(this.photoRepository.save(photoVo));
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -69,8 +68,7 @@ public class PhotoApiController {
             @PathVariable int page
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
-
+        if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
             } else {
@@ -84,9 +82,9 @@ public class PhotoApiController {
                     return gson.toJson(this.photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -99,8 +97,7 @@ public class PhotoApiController {
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
-
+        if(Auth.checkApiKey(apiKey)) {
             PhotoVo photo = new Gson().fromJson(profileFileInfo, PhotoVo.class);
             if(photo.getUseYn().equals("Y")) {
                 if(ObjectUtils.isEmpty(photo)) {
@@ -136,9 +133,9 @@ public class PhotoApiController {
                 this.photoRepository.save(photoVo);
                 return "OK";
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -151,8 +148,7 @@ public class PhotoApiController {
             @RequestBody String profileFileInfo
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
-
+        if(Auth.checkApiKey(apiKey)) {
             MemberVo memberVo = new Gson().fromJson(profileFileInfo, MemberVo.class);
             if(ObjectUtils.isEmpty(memberVo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
@@ -172,9 +168,9 @@ public class PhotoApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -187,17 +183,17 @@ public class PhotoApiController {
             @PathVariable String id
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
             if(photoVo != null) {
                 this.photoRepository.delete(photoVo);
             }
 
             return HttpStatus.OK.toString();
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
-//        return "";
+        return "";
     }
 }

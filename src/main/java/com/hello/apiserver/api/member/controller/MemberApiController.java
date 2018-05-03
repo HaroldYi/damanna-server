@@ -10,7 +10,7 @@ import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.say.vo.SayVo;
-import com.hello.apiserver.api.util.Auth;
+import com.hello.apiserver.api.util.Auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,7 +53,7 @@ public class MemberApiController {
 
         memberVo.setLocationHash(geohashString);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(userInfo)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -85,9 +85,9 @@ public class MemberApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -106,7 +106,7 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(args, MemberVo.class);
 
 //        if(!ObjectUtils.isEmpty(apiKey)) {
-//            if (Auth.checkApiKey(apiKey)) {
+            if (Auth.checkApiKey(apiKey)) {
 
                 if (ObjectUtils.isEmpty(args)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -118,18 +118,18 @@ public class MemberApiController {
                         newMemberVo.setLocationLon(memberVo.getLocationLon());
                         newMemberVo.setLocationLat(memberVo.getLocationLat());
 
-                    GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
-                    String geohashString = geohash.toBase32();
+                        GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
+                        String geohashString = geohash.toBase32();
 
-                    newMemberVo.setLocationHash(geohashString);
+                        newMemberVo.setLocationHash(geohashString);
 
                         this.memberRepository.save(newMemberVo);
                     }
                     return HttpStatus.OK.toString();
                 }
-//            } else {
-//                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//            }
+            } else {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            }
 //        } else {
 //            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiKey' parameter must not be null or empty");
 //        }
@@ -151,7 +151,7 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(nickName, MemberVo.class);
 
 //        if(!ObjectUtils.isEmpty(apiKey)) {
-//            if (Auth.checkApiKey(apiKey)) {
+            if (Auth.checkApiKey(apiKey)) {
 
                 if (ObjectUtils.isEmpty(nickName)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -166,9 +166,9 @@ public class MemberApiController {
                         return HttpStatus.OK.toString();
                     }
                 }
-//            } else {
-//                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//            }
+            } else {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            }
 //        } else {
 //            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiKey' parameter must not be null or empty");
 //        }
@@ -187,7 +187,7 @@ public class MemberApiController {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = gson.fromJson(age, MemberVo.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(age)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -202,9 +202,9 @@ public class MemberApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -216,7 +216,7 @@ public class MemberApiController {
             @PathVariable int page
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(page)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -234,9 +234,9 @@ public class MemberApiController {
                     return gson.toJson(memberList.getContent());
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -248,7 +248,7 @@ public class MemberApiController {
             @PathVariable("memberId")String memberId
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
 
             if(ObjectUtils.isEmpty(memberId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -274,9 +274,9 @@ public class MemberApiController {
                     return new Gson().toJson(memberVo);
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -292,7 +292,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey
     ) throws IOException {
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             response.setStatus(HttpStatus.OK.value());
 
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -329,9 +329,9 @@ public class MemberApiController {
 
                 return gson.toJson(memberVoList);
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }

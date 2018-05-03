@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util;
+package com.hello.apiserver.api.util.AppVersion;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,13 +6,15 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "api_keys")
-public class ApikeyVo {
+@Table(name = "app_version")
+public class AppVersionVo {
     @Id
     private String id = "";
-    private String apiKey = "";
-    private String useYn = "Y";
+
+    private float appVersion;
+
     private Date regDt;
+
     private Date updateDt;
 
     public String getId() {
@@ -23,20 +25,12 @@ public class ApikeyVo {
         this.id = id;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public float getAppVersion() {
+        return appVersion;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
+    public void setAppVersion(float appVersion) {
+        this.appVersion = appVersion;
     }
 
     public Date getRegDt() {

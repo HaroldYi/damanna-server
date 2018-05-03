@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util;
+package com.hello.apiserver.api.util.Auth;
 
 import org.springframework.data.repository.CrudRepository;
 

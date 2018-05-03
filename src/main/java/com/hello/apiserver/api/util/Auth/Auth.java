@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util;
+package com.hello.apiserver.api.util.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,13 +18,12 @@ public class Auth {
         if(ObjectUtils.isEmpty(apiKey)) {
             return false;
         } else {
-//            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
-//            if(apikeyVo == null) {
-//                return false;
-//            } else {
-//                return true;
-//            }
-            return true;
+            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
+            if(apikeyVo == null) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 }

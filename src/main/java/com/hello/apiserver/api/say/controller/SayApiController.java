@@ -12,7 +12,7 @@ import com.hello.apiserver.api.say.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.say.vo.*;
-import com.hello.apiserver.api.util.Auth;
+import com.hello.apiserver.api.util.Auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -67,9 +67,9 @@ public class SayApiController {
                 this.sayRepository.save(sayVo);
                 return HttpStatus.OK.toString();
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -83,7 +83,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -91,9 +91,9 @@ public class SayApiController {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 return gson.toJson(this.sayRepository.findByIdAndUseYn(sayId, "Y"));
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -107,7 +107,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -118,9 +118,9 @@ public class SayApiController {
                 List<SayVo> sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
                 return gson.toJson(sayVoList);
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -137,7 +137,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(latitude)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' parameter must not be null or empty");
             } else if (ObjectUtils.isEmpty(longitude)) {
@@ -208,9 +208,9 @@ public class SayApiController {
 
                 return gson.toJson(sayVoList);
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -225,7 +225,7 @@ public class SayApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
@@ -236,9 +236,9 @@ public class SayApiController {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return null;
     }
@@ -258,7 +258,7 @@ public class SayApiController {
         memberVo.setId(commentVo.getMemberId());
         commentVo.setMember(memberVo);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -273,9 +273,9 @@ public class SayApiController {
                     return gson.toJson(this.commentRepository.save(commentVo));
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -292,7 +292,7 @@ public class SayApiController {
 //        apiKey = gson.fromJson(apiKey, String.class);
         CommentReplyVo commentReplyVo = gson.fromJson(body, CommentReplyVo.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -307,9 +307,9 @@ public class SayApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -326,7 +326,7 @@ public class SayApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
@@ -357,9 +357,9 @@ public class SayApiController {
                     return HttpStatus.OK.toString();
                 }
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
@@ -374,7 +374,7 @@ public class SayApiController {
 
 //        apiKey = gson.fromJson(apiKey, String.class);
 
-//        if(Auth.checkApiKey(apiKey)) {
+        if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(sayId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
             } else {
@@ -389,9 +389,9 @@ public class SayApiController {
 
                 return HttpStatus.OK.toString();
             }
-//        } else {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This token is wrong! please check your token!");
-//        }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
 
         return "";
     }
