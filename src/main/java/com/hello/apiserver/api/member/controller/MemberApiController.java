@@ -47,6 +47,7 @@ public class MemberApiController {
 //        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
         memberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+        memberVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
         GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
         String geohashString = geohash.toBase32();
