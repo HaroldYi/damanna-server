@@ -58,13 +58,13 @@ use of HTTP status codes.
 
 |===
 
-==== reference
+=== reference
 https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C
 
 == 사용자 리스트 조회 [getMemberList]
 
-==== HTTP Request
+=== HTTP Request
 ----
 GET /member/getMemberList/{page} HTTP/1.1
 ----
@@ -125,7 +125,7 @@ Content-Length: 5701
 ----
 == 사용자 조회 [getMemberInfo]
 
-==== HTTP request
+=== HTTP request
 ----
 GET /member/getMemberInfo/{memberId} HTTP/1.1
 ----
@@ -160,7 +160,7 @@ Content-Length: 1234
 ----
 
 == 사용자 입력 [newMember]
-==== HTTP request
+=== HTTP request
 ----
 POST /member/newMember HTTP/1.1
 ----
@@ -194,7 +194,7 @@ POST /member/newMember HTTP/1.1
 
 |===
 
-==== Request body example
+=== Request body example
 ----
 {
     "id" : "test ID1524019303883",
@@ -225,7 +225,7 @@ OK
 $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/updateMemberInfo/{memberId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
 ----
 
-==== HTTP request
+=== HTTP request
 ----
 PUT /member/updateMemberInfo/{memberId} HTTP/1.1
 ----
@@ -242,7 +242,7 @@ PUT /member/updateMemberInfo/{memberId} HTTP/1.1
 |The latitude of lation
 |===
 
-==== Request body example
+=== Request body example
 ----
 {
     "id" : "test ID1524019303883",
@@ -266,7 +266,7 @@ $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/member/changeNickNam
 }'
 ----
 
-==== HTTP request
+=== HTTP request
 ----
 POST /member/changeNickName/{memberId} HTTP/1.1
 ----
@@ -278,7 +278,7 @@ POST /member/changeNickName/{memberId} HTTP/1.1
 
 |===
 
-==== Request body example
+=== Request body example
 ----
 {
     "name" : "Harolddd"
@@ -767,8 +767,9 @@ Content-Length: 4
 ----
 
 == say 조회(목록) [getSayList]
+----
 $ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getSayList/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
-
+----
 === HTTP request
 ----
 GET /say/getSayList/{page} HTTP/1.1
@@ -851,14 +852,15 @@ Content-Length: 4
 ]
 ----
 
-== say 조회(목록) [getNearSayList]
-$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getNearSayList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={0}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
-
+== say 조회(주변사람) [getNearSayList]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getNearSayList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+----
 === HTTP request
 ----
-GET /say/getSayList/{page} HTTP/1.1
+GET /say/getNearSayList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={page} HTTP/1.1
 ----
-|===Y
+|===
 |Parameter|Description
 
 |`latitude`
@@ -940,6 +942,7 @@ Content-Length: 4
         "useYn": "Y"
     }
 ]
+----
 
 == say 조회 by 회원ID [getSayListByUid]
 ----
