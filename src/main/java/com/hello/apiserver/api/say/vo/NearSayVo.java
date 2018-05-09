@@ -25,6 +25,8 @@ public class NearSayVo {
 
     private int commentCnt = 0;
 
+    private String clientToken = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -103,5 +105,13 @@ public class NearSayVo {
 
     public void setCommentCnt(int commentCnt) {
         this.commentCnt = commentCnt;
+    }
+
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
 }

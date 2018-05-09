@@ -200,6 +200,7 @@ public class SayApiController {
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(sayVo.getMemberId());
                     memberVo.setName(sayVo.getName());
+                    memberVo.setClientToken(sayVo.getClientToken());
 
                     sayVo.setMember(memberVo);
                     sayVo.setLikeSay(likeSayVoList);
