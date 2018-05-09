@@ -12,11 +12,11 @@ public class CallCntController {
     private CallCntRepository callCntRepository;
 
     @RequestMapping(value = {"", "/"})
-    public int checkAppVersion() {
+    public CallCntVo checkAppVersion() {
 
         CallCntVo callCntVo = callCntRepository.findAll().iterator().next();
         callCntVo.setCnt(callCntVo.getCnt() + 1);
 
-        return callCntRepository.save(callCntVo).getCnt();
+        return callCntRepository.save(callCntVo);
     }
 }
