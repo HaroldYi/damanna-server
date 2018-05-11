@@ -235,10 +235,44 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                PageRequest pr = new PageRequest(page, 20);
-
+//                PageRequest pr = new PageRequest(page, 20);
+//
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
+//                return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("memberId", memberId);
+                map.put("page", page);
+
+                List<NearSayVo> sayVoList = this.sayMapper.getSayListByUid(map);
+                for(NearSayVo sayVo : sayVoList) {
+
+                    map.put("sayId", sayVo.getId());
+
+                    List<String> likeSayVoListStr = this.sayMapper.findLikeMemberList(map);
+                    List<LikeSayVo> likeSayVoList = new ArrayList<>();
+                    for(String like : likeSayVoListStr) {
+                        LikeSayVo likeSayVo = new LikeSayVo();
+                        MemberVo memberVo = new MemberVo();
+                        memberVo.setId(like);
+
+                        likeSayVo.setMember(memberVo);
+                        likeSayVoList.add(likeSayVo);
+                    }
+
+                    MemberVo memberVo = new MemberVo();
+                    memberVo.setId(sayVo.getMemberId());
+                    memberVo.setName(sayVo.getName());
+                    memberVo.setClientToken(sayVo.getClientToken());
+                    memberVo.setProfileUrl(sayVo.getProfileUrl());
+                    memberVo.setProfileUrlOrg(sayVo.getProfileUrlOrg());
+                    memberVo.setProfileFile(sayVo.getProfileFile());
+
+                    sayVo.setMember(memberVo);
+                    sayVo.setLikeSay(likeSayVoList);
+                }
+
+                return gson.toJson(sayVoList);
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");

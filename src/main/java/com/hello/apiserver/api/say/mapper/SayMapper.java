@@ -8,4 +8,5 @@ import java.util.Map;
 public interface SayMapper {
     List<NearSayVo> findSayByDistance(Map<String, Object> map);
     List<String> findLikeMemberList(Map<String, Object> map);
+    List<NearSayVo> getSayListByUid(Map<String, Object> map);
 }
