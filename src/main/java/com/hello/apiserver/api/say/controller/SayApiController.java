@@ -201,6 +201,9 @@ public class SayApiController {
                     memberVo.setId(sayVo.getMemberId());
                     memberVo.setName(sayVo.getName());
                     memberVo.setClientToken(sayVo.getClientToken());
+                    memberVo.setProfileUrl(sayVo.getProfileUrl());
+                    memberVo.setProfileUrlOrg(sayVo.getProfileUrlOrg());
+                    memberVo.setProfileFile(sayVo.getProfileFile());
 
                     sayVo.setMember(memberVo);
                     sayVo.setLikeSay(likeSayVoList);

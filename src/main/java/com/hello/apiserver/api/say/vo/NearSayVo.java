@@ -27,6 +27,12 @@ public class NearSayVo {
 
     private String clientToken = "";
 
+    private String profileUrl = "";
+
+    private String profileUrlOrg = "";
+
+    private String profileFile = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -113,5 +119,29 @@ public class NearSayVo {
 
     public void setClientToken(String clientToken) {
         this.clientToken = clientToken;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getProfileUrlOrg() {
+        return profileUrlOrg;
+    }
+
+    public void setProfileUrlOrg(String profileUrlOrg) {
+        this.profileUrlOrg = profileUrlOrg;
+    }
+
+    public String getProfileFile() {
+        return profileFile;
+    }
+
+    public void setProfileFile(String profileFile) {
+        this.profileFile = profileFile;
     }
 }

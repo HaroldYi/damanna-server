@@ -3,7 +3,16 @@
 <mapper namespace="com.hello.apiserver.api.say.mapper.SayMapper">
     <select id="findSayByDistance" resultType="com.hello.apiserver.api.say.vo.NearSayVo">
         SELECT
-            s.id, s.message, s.member_id AS memberId, m.name, s.reg_dt AS regDt, IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt, m.client_token AS clientToken
+            s.id,
+            s.message,
+            s.member_id AS memberId,
+            m.name,
+            s.reg_dt AS regDt,
+            IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt,
+            m.client_token AS clientToken,
+            m.profile_url AS profileUrl,
+            m.profile_url_org AS profileUrlOrg,
+            m.profile_file AS profileFile
             FROM
             say s
             INNER JOIN
