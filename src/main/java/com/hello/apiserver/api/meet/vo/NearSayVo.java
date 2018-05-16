@@ -1,52 +1,38 @@
-package com.hello.apiserver.api.say.vo;
+package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
-import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "say")
-public class SayVo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class NearSayVo {
     private String id;
 
-    @Column(nullable = false, length = 1000)
     private String message = "";
 
-//    @Column(nullable = false, columnDefinition = "POINT")
-//    private Point location;
-
-    @Column(name = "member_id", nullable = false, length = 28)
     private String memberId = "";
 
-    @Column(nullable = false)
     private Date regDt;
 
-    @ManyToOne(targetEntity=MemberVo.class)
-    @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MemberVo member;
+    private String name = "";
 
-    @OneToMany
-    @JoinColumn(name = "say_id", referencedColumnName = "id")
-    @Cascade(CascadeType.REMOVE)
     private List<CommentVo> comment;
 
-    @OneToMany
-    @JoinColumn(name = "say_id", referencedColumnName = "id")
-    @Cascade(CascadeType.REMOVE)
     private List<LikeSayVo> likeSay;
 
-    @Column(nullable = false)
     private String useYn = "Y";
+
+    private int commentCnt = 0;
+
+    private String clientToken = "";
+
+    private String profileUrl = "";
+
+    private String profileUrlOrg = "";
+
+    private String profileFile = "";
 
     public MemberVo getMember() {
         return member;
@@ -71,14 +57,6 @@ public class SayVo {
     public void setMessage(String message) {
         this.message = message;
     }
-
-//    public Point getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Point location) {
-//        this.location = location;
-//    }
 
     public String getMemberId() {
         return memberId;
@@ -118,5 +96,53 @@ public class SayVo {
 
     public void setLikeSay(List<LikeSayVo> likeSay) {
         this.likeSay = likeSay;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCommentCnt() {
+        return commentCnt;
+    }
+
+    public void setCommentCnt(int commentCnt) {
+        this.commentCnt = commentCnt;
+    }
+
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getProfileUrlOrg() {
+        return profileUrlOrg;
+    }
+
+    public void setProfileUrlOrg(String profileUrlOrg) {
+        this.profileUrlOrg = profileUrlOrg;
+    }
+
+    public String getProfileFile() {
+        return profileFile;
+    }
+
+    public void setProfileFile(String profileFile) {
+        this.profileFile = profileFile;
     }
 }

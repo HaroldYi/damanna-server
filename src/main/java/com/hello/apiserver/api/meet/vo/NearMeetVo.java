@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.say.vo;
+package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
@@ -7,10 +7,12 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import java.util.Date;
 import java.util.List;
 
-public class NearSayVo {
+public class NearMeetVo {
     private String id;
 
     private String message = "";
+
+    private String channelUrl = "";
 
     private String memberId = "";
 
@@ -21,7 +23,7 @@ public class NearSayVo {
 
     private List<CommentVo> comment;
 
-    private List<LikeSayVo> likeSay;
+    private List<com.hello.apiserver.api.like.vo.LikeSayVo> likeSay;
 
     private String useYn = "Y";
 
@@ -34,14 +36,6 @@ public class NearSayVo {
     private String profileUrlOrg = "";
 
     private String profileFile = "";
-
-    public MemberVo getMember() {
-        return member;
-    }
-
-    public void setMember(MemberVo member) {
-        this.member = member;
-    }
 
     public String getId() {
         return id;
@@ -57,6 +51,14 @@ public class NearSayVo {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getChannelUrl() {
+        return channelUrl;
+    }
+
+    public void setChannelUrl(String channelUrl) {
+        this.channelUrl = channelUrl;
     }
 
     public String getMemberId() {
@@ -75,28 +77,12 @@ public class NearSayVo {
         this.regDt = regDt;
     }
 
-    public List<CommentVo> getComment() {
-        return comment;
+    public MemberVo getMember() {
+        return member;
     }
 
-    public void setComment(List<CommentVo> comment) {
-        this.comment = comment;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
-
-    public List<LikeSayVo> getLikeSay() {
-        return likeSay;
-    }
-
-    public void setLikeSay(List<LikeSayVo> likeSay) {
-        this.likeSay = likeSay;
+    public void setMember(MemberVo member) {
+        this.member = member;
     }
 
     public String getName() {
@@ -105,6 +91,30 @@ public class NearSayVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<CommentVo> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<CommentVo> comment) {
+        this.comment = comment;
+    }
+
+    public List<LikeSayVo> getLikeSay() {
+        return likeSay;
+    }
+
+    public void setLikeSay(List<com.hello.apiserver.api.like.vo.LikeSayVo> likeSay) {
+        this.likeSay = likeSay;
+    }
+
+    public String getUseYn() {
+        return useYn;
+    }
+
+    public void setUseYn(String useYn) {
+        this.useYn = useYn;
     }
 
     public int getCommentCnt() {

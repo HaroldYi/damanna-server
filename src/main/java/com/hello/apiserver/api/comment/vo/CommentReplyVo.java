@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.say.vo;
+package com.hello.apiserver.api.comment.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
 

@@ -1,20 +1,17 @@
-package com.hello.apiserver.api.say.vo;
+package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
-import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "say")
-public class SayVo {
+@Table(name = "meet")
+public class MeetVo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -47,6 +44,18 @@ public class SayVo {
 
     @Column(nullable = false)
     private String useYn = "Y";
+
+    @Column
+    private String channelUrl = "";
+
+    @Column
+    private String sortation = "";
+
+    @Column
+    private Date meetStartDt;
+
+    @Column
+    private Date meetEndDt;
 
     public MemberVo getMember() {
         return member;
@@ -118,5 +127,37 @@ public class SayVo {
 
     public void setLikeSay(List<LikeSayVo> likeSay) {
         this.likeSay = likeSay;
+    }
+
+    public String getChannelUrl() {
+        return channelUrl;
+    }
+
+    public void setChannelUrl(String channelUrl) {
+        this.channelUrl = channelUrl;
+    }
+
+    public String getSortation() {
+        return sortation;
+    }
+
+    public void setSortation(String sortation) {
+        this.sortation = sortation;
+    }
+
+    public Date getMeetStartDt() {
+        return meetStartDt;
+    }
+
+    public void setMeetStartDt(Date meetStartDt) {
+        this.meetStartDt = meetStartDt;
+    }
+
+    public Date getMeetEndDt() {
+        return meetEndDt;
+    }
+
+    public void setMeetEndDt(Date meetEndDt) {
+        this.meetEndDt = meetEndDt;
     }
 }

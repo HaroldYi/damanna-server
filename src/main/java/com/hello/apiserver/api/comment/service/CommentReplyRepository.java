@@ -1,9 +1,6 @@
-package com.hello.apiserver.api.say.service;
+package com.hello.apiserver.api.comment.service;
 
-import com.hello.apiserver.api.say.vo.CommentReplyVo;
-import com.hello.apiserver.api.say.vo.CommentVo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.hello.apiserver.api.comment.vo.CommentReplyVo;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

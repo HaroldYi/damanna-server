@@ -1,19 +1,20 @@
-package com.hello.apiserver.api.say.controller;
+package com.hello.apiserver.api.meet.controller;
 
 import ch.hsr.geohash.WGS84Point;
 import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.like.service.LikeRepository;
-import com.hello.apiserver.api.like.vo.LikeSayVo;
+import com.hello.apiserver.api.meet.mapper.MeetMapper;
+import com.hello.apiserver.api.meet.service.MeetRepository;
+import com.hello.apiserver.api.meet.vo.MeetVo;
+import com.hello.apiserver.api.meet.vo.NearMeetVo;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
-import com.hello.apiserver.api.say.mapper.SayMapper;
 import com.hello.apiserver.api.comment.service.CommentReplyRepository;
 import com.hello.apiserver.api.comment.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
-import com.hello.apiserver.api.say.service.SayRepository;
-import com.hello.apiserver.api.say.vo.*;
+import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,19 +27,31 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = {"/say", "/say/"})
-public class SayApiController {
+@RequestMapping(value = {"/meet", "/meet/"})
+public class MeetApiController {
 
     @Autowired
-    private SayMapper sayMapper;
+    private MeetMapper meetMapper;
 
     @Autowired
-    private SayRepository sayRepository;
+    private MeetRepository meetRepository;
+
+    @Autowired
+    private LikeSayRepository likeSayRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentReplyRepository commentReplyRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private LikeRepository likeRepository;
 
-    @RequestMapping(value = "/newSay", method = RequestMethod.POST)
+    @RequestMapping(value = "/newMeet", method = RequestMethod.POST)
     public String newSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -53,11 +66,11 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                SayVo sayVo = new Gson().fromJson(body, SayVo.class);
-                sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
-                sayVo.setUseYn("Y");
+                MeetVo meetVo = new Gson().fromJson(body, MeetVo.class);
+                meetVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+                meetVo.setUseYn("Y");
 
-                this.sayRepository.save(sayVo);
+                this.meetRepository.save(meetVo);
                 return HttpStatus.OK.toString();
             }
         } else {
@@ -67,7 +80,7 @@ public class SayApiController {
         return "";
     }
 
-    @RequestMapping(value = {"/getSay/{sayId}", "/getSay/{sayId}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getMeet/{sayId}", "/getMeet/{sayId}/"}, method = RequestMethod.GET)
     public String getSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -82,7 +95,7 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(this.sayRepository.findByIdAndUseYn(sayId, "Y"));
+                return gson.toJson(this.meetRepository.findByIdAndUseYn(sayId, "Y"));
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
@@ -91,7 +104,7 @@ public class SayApiController {
         return null;
     }
 
-    @RequestMapping(value = {"/getSayList/{page}", "/getSayList/{page}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getMeetList/{page}", "/getMeetList/{page}/"}, method = RequestMethod.GET)
     public String getSayList (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -104,12 +117,15 @@ public class SayApiController {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
-                PageRequest pr = new PageRequest(page, 20);
-                response.setStatus(HttpStatus.OK.value());
+//                PageRequest pr = new PageRequest(page, 20);
+//                response.setStatus(HttpStatus.OK.value());
+//
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+//                List<MeetVo> sayVoList = this.meetRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
+//                return gson.toJson(sayVoList);
 
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                List<SayVo> sayVoList = this.sayRepository.findAllByUseYnOrderByRegDtDesc("Y", pr).getContent();
-                return gson.toJson(sayVoList);
+//                return new Gson().toJson(meetRepository.getMeetList(0));
+//                meetMapper.findMeetByDistance();
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
@@ -118,8 +134,8 @@ public class SayApiController {
         return null;
     }
 
-    @RequestMapping(value = {"/getNearSayList", "/getNearSayList/"}, method = RequestMethod.GET)
-    public String getNearSayList (
+    @RequestMapping(value = {"/getNearMeetList", "/getNearMeetList/"}, method = RequestMethod.GET)
+    public String getNearMeetList (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestParam(value = "latitude") double latitude,
@@ -145,7 +161,7 @@ public class SayApiController {
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 PageRequest pr = new PageRequest(page, 20);
-                List<NearSayVo> sayVoList;
+                List<NearMeetVo> meetVoList;
                 Map<String, Object> map = new HashMap<>();
 
                 if(distanceMetres < 500) {
@@ -162,40 +178,32 @@ public class SayApiController {
                     map.put("nwLat", nw.getLatitude());
                     map.put("nwLon", nw.getLongitude());
                     map.put("page", page);
-
-//                    sayVoList = this.sayRepository.findByLocationLatBetweenAndLocationLonBetween(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(), pr).getContent();
                 } else {
-//                    map.put("seLat", se.getLatitude());
-//                    map.put("seLon", se.getLongitude());
-//                    map.put("nwLat", nw.getLatitude());
-//                    map.put("nwLon", nw.getLongitude());
                     map.put("page", page);
                 }
 
-                sayVoList = this.sayMapper.findSayByDistance(map);
+                meetVoList = this.meetMapper.findMeetByDistance(map);
 
                 int i = 0;
-                for(NearSayVo sayVo : sayVoList) {
+//
+                for(NearMeetVo meetVo : meetVoList) {
 
-                    map.put("sayId", sayVo.getId());
-                    map.put("sortation", "S");
-
-                    List<LikeSayVo> likeSayVoList = this.likeRepository.findLike(sayVo.getId(), "S");
+                    List<LikeSayVo> likeSayVoList = this.likeRepository.findLike(meetVo.getId(), "M");
 
                     MemberVo memberVo = new MemberVo();
-                    memberVo.setId(sayVo.getMemberId());
-                    memberVo.setName(sayVo.getName());
-                    memberVo.setClientToken(sayVo.getClientToken());
-                    memberVo.setProfileUrl(sayVo.getProfileUrl());
-                    memberVo.setProfileUrlOrg(sayVo.getProfileUrlOrg());
-                    memberVo.setProfileFile(sayVo.getProfileFile());
+                    memberVo.setId(meetVo.getMemberId());
+                    memberVo.setName(meetVo.getName());
+                    memberVo.setClientToken(meetVo.getClientToken());
+                    memberVo.setProfileUrl(meetVo.getProfileUrl());
+                    memberVo.setProfileUrlOrg(meetVo.getProfileUrlOrg());
+                    memberVo.setProfileFile(meetVo.getProfileFile());
 
-                    sayVo.setMember(memberVo);
-                    sayVo.setLikeSay(likeSayVoList);
-                    sayVoList.set(i++, sayVo);
+                    meetVo.setMember(memberVo);
+                    meetVo.setLikeSay(likeSayVoList);
+                    meetVoList.set(i++, meetVo);
                 }
 
-                return gson.toJson(sayVoList);
+                return gson.toJson(meetVoList);
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
@@ -204,7 +212,7 @@ public class SayApiController {
         return null;
     }
 
-    @RequestMapping(value = {"/getSayListByUid/{memberId}/{page}", "/getSayListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getMeetListByUid/{memberId}/{page}", "/getMeetListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
     public String getSayListByUid (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -220,41 +228,27 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-//                PageRequest pr = new PageRequest(page, 20);
-//
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-//                return gson.toJson(this.sayRepository.findByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("memberId", memberId);
                 map.put("page", page);
 
-                List<NearSayVo> sayVoList = this.sayMapper.getSayListByUid(map);
-                for(NearSayVo sayVo : sayVoList) {
+                List<NearMeetVo> sayVoList = this.meetMapper.getMeetListByUid(map);
+                for(NearMeetVo meetVo : sayVoList) {
 
-                    map.put("sayId", sayVo.getId());
-
-                    List<String> likeSayVoListStr = this.sayMapper.findLikeMemberList(map);
-                    List<LikeSayVo> likeSayVoList = new ArrayList<>();
-                    for(String like : likeSayVoListStr) {
-                        LikeSayVo likeSayVo = new LikeSayVo();
-                        MemberVo memberVo = new MemberVo();
-                        memberVo.setId(like);
-
-                        likeSayVo.setMember(memberVo);
-                        likeSayVoList.add(likeSayVo);
-                    }
+                    List<LikeSayVo> likeSayVoList = this.likeRepository.findLike(meetVo.getId(), "M");
 
                     MemberVo memberVo = new MemberVo();
-                    memberVo.setId(sayVo.getMemberId());
-                    memberVo.setName(sayVo.getName());
-                    memberVo.setClientToken(sayVo.getClientToken());
-                    memberVo.setProfileUrl(sayVo.getProfileUrl());
-                    memberVo.setProfileUrlOrg(sayVo.getProfileUrlOrg());
-                    memberVo.setProfileFile(sayVo.getProfileFile());
+                    memberVo.setId(meetVo.getMemberId());
+                    memberVo.setName(meetVo.getName());
+                    memberVo.setClientToken(meetVo.getClientToken());
+                    memberVo.setProfileUrl(meetVo.getProfileUrl());
+                    memberVo.setProfileUrlOrg(meetVo.getProfileUrlOrg());
+                    memberVo.setProfileFile(meetVo.getProfileFile());
 
-                    sayVo.setMember(memberVo);
-                    sayVo.setLikeSay(likeSayVoList);
+                    meetVo.setMember(memberVo);
+                    meetVo.setLikeSay(likeSayVoList);
                 }
 
                 return gson.toJson(sayVoList);
@@ -266,27 +260,21 @@ public class SayApiController {
         return null;
     }
 
-    @RequestMapping(value = "/deleteSay/{sayId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/deleteMeet/{meetId}", method = RequestMethod.DELETE)
     public String deleteSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
-            @PathVariable String sayId
+            @PathVariable String meetId
     ) throws IOException {
-        Gson gson = new Gson();
-
-//        apiKey = gson.fromJson(apiKey, String.class);
-
         if(Auth.checkApiKey(apiKey)) {
-            if(ObjectUtils.isEmpty(sayId)) {
+            if(ObjectUtils.isEmpty(meetId)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
-                if(sayVo != null) {
-//                    sayVo.setUseYn("N");
-//                    this.sayRepository.save(sayVo);
-                    this.sayRepository.delete(sayVo);
+                MeetVo meetVo = this.meetRepository.findByIdAndUseYn(meetId, "Y");
+                if(meetVo != null) {
+                    this.meetRepository.delete(meetVo);
                 }
 
                 return HttpStatus.OK.toString();

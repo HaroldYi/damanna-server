@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.say.vo;
+package com.hello.apiserver.api.comment.vo;
 
 import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.Cascade;
@@ -38,6 +38,9 @@ public class CommentVo {
 
     @Column
     private String useYn = "Y";
+
+    @Column
+    private String sortation = "";
 
     public String getId() {
         return id;
@@ -101,5 +104,13 @@ public class CommentVo {
 
     public void setUseYn(String useYn) {
         this.useYn = useYn;
+    }
+
+    public String getSortation() {
+        return sortation;
+    }
+
+    public void setSortation(String sortation) {
+        this.sortation = sortation;
     }
 }
