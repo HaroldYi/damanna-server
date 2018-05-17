@@ -10,6 +10,5 @@ public interface LikeRepository extends CrudRepository<LikeSayVo, Long>, LikeRep
 
     LikeSayVo findBySayIdAndMemberAndUseYn(String sayId, MemberVo memberVo, String useYn);
 
-    @Override
-    List<LikeSayVo> findLike(String sayId, String sortation);
+    List<LikeSayVo> findBySayIdAndSortation(String sayId, String sortation);
 }
