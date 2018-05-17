@@ -57,6 +57,10 @@ public class MeetVo {
     @Column
     private Date meetEndDt;
 
+    private String originalImg = "";
+    private String thumbnailImg = "";
+    private String fileName = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -159,5 +163,29 @@ public class MeetVo {
 
     public void setMeetEndDt(Date meetEndDt) {
         this.meetEndDt = meetEndDt;
+    }
+
+    public String getOriginalImg() {
+        return originalImg;
+    }
+
+    public void setOriginalImg(String originalImg) {
+        this.originalImg = originalImg;
+    }
+
+    public String getThumbnailImg() {
+        return thumbnailImg;
+    }
+
+    public void setThumbnailImg(String thumbnailImg) {
+        this.thumbnailImg = thumbnailImg;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

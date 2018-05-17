@@ -35,6 +35,10 @@ public class NearSayVo {
 
     private String profileFile = "";
 
+    private String originalImg = "";
+    private String thumbnailImg = "";
+    private String fileName = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -145,5 +149,29 @@ public class NearSayVo {
 
     public void setProfileFile(String profileFile) {
         this.profileFile = profileFile;
+    }
+
+    public String getOriginalImg() {
+        return originalImg;
+    }
+
+    public void setOriginalImg(String originalImg) {
+        this.originalImg = originalImg;
+    }
+
+    public String getThumbnailImg() {
+        return thumbnailImg;
+    }
+
+    public void setThumbnailImg(String thumbnailImg) {
+        this.thumbnailImg = thumbnailImg;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

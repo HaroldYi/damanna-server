@@ -48,6 +48,10 @@ public class SayVo {
     @Column(nullable = false)
     private String useYn = "Y";
 
+    private String originalImg = "";
+    private String thumbnailImg = "";
+    private String fileName = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -118,5 +122,29 @@ public class SayVo {
 
     public void setLikeSay(List<LikeSayVo> likeSay) {
         this.likeSay = likeSay;
+    }
+
+    public String getOriginalImg() {
+        return originalImg;
+    }
+
+    public void setOriginalImg(String originalImg) {
+        this.originalImg = originalImg;
+    }
+
+    public String getThumbnailImg() {
+        return thumbnailImg;
+    }
+
+    public void setThumbnailImg(String thumbnailImg) {
+        this.thumbnailImg = thumbnailImg;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

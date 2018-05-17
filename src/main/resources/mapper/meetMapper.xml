@@ -13,7 +13,10 @@
             m.client_token AS clientToken,
             m.profile_url AS profileUrl,
             m.profile_url_org AS profileUrlOrg,
-            m.profile_file AS profileFile
+            m.profile_file AS profileFile,
+            s.original_img AS originalImg,
+            s.thumbnail_img AS thumbnailImg,
+            s.file_name AS fileName
         FROM
             meet s
         INNER JOIN
@@ -54,7 +57,10 @@
         m.client_token AS clientToken,
         m.profile_url AS profileUrl,
         m.profile_url_org AS profileUrlOrg,
-        m.profile_file AS profileFile
+        m.profile_file AS profileFile,
+        s.original_img AS originalImg,
+        s.thumbnail_img AS thumbnailImg,
+        s.file_name AS fileName
         FROM
         meet s
         INNER JOIN
