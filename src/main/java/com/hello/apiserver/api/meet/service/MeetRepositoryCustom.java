@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MeetRepositoryCustom {
     List<MeetVo> getMeetList(int page);
+
+    MeetVo getMeet(String id);
 }

@@ -95,7 +95,9 @@ public class MeetApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(this.meetRepository.findByIdAndUseYn(sayId, "Y"));
+
+                MeetVo meetVo = this.meetRepository.getMeet(sayId);
+                return gson.toJson(meetVo);
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
