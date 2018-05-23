@@ -177,7 +177,7 @@ public class SayApiController {
                     map.put("sayId", sayVo.getId());
                     map.put("sortation", "S");
 
-                    List<LikeSayVo> likeSayVoList = this.likeRepository.findLike(sayVo.getId(), "S");
+                    List<LikeSayVo> likeSayVoList = this.likeRepository.findBySayIdAndSortation(sayVo.getId(), "S");
 
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(sayVo.getMemberId());
