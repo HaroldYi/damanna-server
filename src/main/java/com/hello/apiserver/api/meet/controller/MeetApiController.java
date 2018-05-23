@@ -188,7 +188,7 @@ public class MeetApiController {
 //
                 for(NearMeetVo meetVo : meetVoList) {
 
-                    List<LikeSayVo> likeSayVoList = this.likeRepository.findBySayIdAndSortation(meetVo.getId(), "M");
+                    List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
 
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(meetVo.getMemberId());
@@ -237,7 +237,7 @@ public class MeetApiController {
                 List<NearMeetVo> sayVoList = this.meetMapper.getMeetListByUid(map);
                 for(NearMeetVo meetVo : sayVoList) {
 
-                    List<LikeSayVo> likeSayVoList = this.likeRepository.findBySayIdAndSortation(meetVo.getId(), "M");
+                    List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
 
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(meetVo.getMemberId());
