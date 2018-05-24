@@ -287,4 +287,35 @@ public class MeetApiController {
 
         return "";
     }
+
+    @RequestMapping(value = "/updateChannelUrl", method = RequestMethod.PUT)
+    public String updateChannelUrl (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @RequestBody(required = false)String body
+    ) throws IOException {
+
+//        apiKey = new Gson().fromJson(apiKey, String.class);
+
+        if(Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(body)) {
+                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+            } else {
+                response.setStatus(HttpStatus.OK.value());
+
+                MeetVo meetVo = new Gson().fromJson(body, MeetVo.class);
+                String channelUrl = meetVo.getChannelUrl();
+
+                meetVo = this.meetRepository.findByIdAndUseYn(meetVo.getId(), "Y");
+                meetVo.setChannelUrl(channelUrl);
+
+                this.meetRepository.save(meetVo);
+                return HttpStatus.OK.toString();
+            }
+        } else {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+        }
+
+        return "";
+    }
 }
