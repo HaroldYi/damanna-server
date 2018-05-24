@@ -1218,3 +1218,450 @@ Content-Length: 3
 
 200
 ----
+
+== Meet 글쓰기 [newMeet]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/meet/newMeet' -i -X POST -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8' -d
+'{
+    "message" : "test message",
+    "memberId" : "bqIDXpsVzlTL5X2cPMFROPHjtZn2"
+    "sortation" : {sortation},
+    "meetStartDt" : {meetStartDt}
+    "meetEndDt" : {meetStartDt}
+}'
+----
+=== HTTP request
+----
+POST /meet/newMeet HTTP/1.1
+----
+|===
+|Parameter|Description
+|`message`
+|Message
+|`memberId`
+|The identifier of member
+|`sortation`
+|kind of Meet(F - 번개, A - 동행, C - 카풀)
+|`meetStartDt`
+|The date of start date of meet
+|`meetEndDt`
+|The date of end date of meet
+|===
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
+
+200
+----
+
+== Meet 조회(단건) [getMeet]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/meet/getMeet/{meetId}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+----
+
+=== HTTP request
+----
+GET /meet/getMeet/{meetId} HTTP/1.1
+----
+
+|===
+|Parameter|Description
+
+|`sayId`
+|The identifier of meet
+|===
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+{
+    "id": "1",
+    "message": "테스트요",
+    "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+    "regDt": "2018-04-18 20:26:37",
+    "member": {
+        "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "name": "하이",
+        "age": 29,
+        "genderCode": "M",
+        "gender": {
+            "id": 2,
+            "genderCode": "M",
+            "genderEn": "male",
+            "genderKr": "남성"
+        },
+        "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+        "profileUrl": "https://~~~~",
+        "profileUrlOrg": "",
+        "profileFile": "",
+        "lastSignIn": "2018-04-18 20:25:57",
+        "locationLat": 33.4909741,
+        "locationLon": 126.907639,
+        "photo": [],
+        "clientToken": "~~~~",
+        "point": 10
+    },
+    "comment": [
+        {
+            "id": "1",
+            "sayId": "1",
+            "comment": "ㅎㅇ",
+            "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "member": {
+                "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "name": "하이",
+                "age": 29,
+                "genderCode": "M",
+                "gender": {
+                    "id": 2,
+                    "genderCode": "M",
+                    "genderEn": "male",
+                    "genderKr": "남성"
+                },
+                "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                "profileUrl": "https://~~~",
+                "profileUrlOrg": "",
+                "profileFile": "",
+                "lastSignIn": "2018-04-18 20:25:57",
+                "locationLat": 33.4909741,
+                "locationLon": 126.907639,
+                "photo": [],
+                "clientToken": "~~~~",
+                "point": 10
+            },
+            "regDt": "2018-04-19 13:07:20",
+            "commentReply": [
+                {
+                    "id": "1",
+                    "comment": "  ㅋㅋ",
+                    "commentId": "1",
+                    "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "member": {
+                        "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                        "name": "하이",
+                        "age": 29,
+                        "genderCode": "M",
+                        "gender": {
+                            "id": 2,
+                            "genderCode": "M",
+                            "genderEn": "male",
+                            "genderKr": "남성"
+                        },
+                        "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                        "profileUrl": "https://~~~~",
+                        "profileUrlOrg": "",
+                        "profileFile": "",
+                        "lastSignIn": "2018-04-18 20:25:57",
+                        "locationLat": 33.4909741,
+                        "locationLon": 126.907639,
+                        "photo": [],
+                        "clientToken": "~~~~",
+                        "point": 10
+                    },
+                    "regDt": "2018-04-19 13:07:35"
+                }
+            ],
+            "useYn": "Y"
+        }
+    ],
+    "likeSay": [
+        {
+            "id": "1",
+            "sayId": "1",
+            "member": {
+                "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "name": "하이",
+                "age": 29,
+                "genderCode": "M",
+                "gender": {
+                    "id": 2,
+                    "genderCode": "M",
+                    "genderEn": "male",
+                    "genderKr": "남성"
+                },
+                "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                "profileUrl": "https://~~~~",
+                "profileUrlOrg": "",
+                "profileFile": "",
+                "lastSignIn": "2018-04-18 20:25:57",
+                "locationLat": 33.4909741,
+                "locationLon": 126.907639,
+                "photo": [],
+                "clientToken": "~~~~",
+                "point": 10
+            },
+            "useYn": "Y",
+            "regDt": "2018-04-18 20:31:15",
+            "updateDt": "2018-04-18 20:31:15"
+        }
+    ],
+    "useYn": "Y"
+}
+----
+
+== meet 조회(주변사람) [getNearMeetList]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/say/getNearMeetList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+----
+=== HTTP request
+----
+GET /say/getNearMeetList?latitude={latitude}&longitude={longitude}&distanceMetres={distanceMetres}&page={page} HTTP/1.1
+----
+|===
+|Parameter|Description
+
+|`latitude`
+|latitude of current location
+|`longitude`
+|longitude of current location
+|`distanceMetres`
+|radius(unit : metre)
+|`page`
+|The page of say list
+|===
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+[
+    {
+        "id": "1",
+        "message": "테스트요",
+        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "regDt": "2018-04-18 20:26:37",
+        "member": {
+            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "name": "하이",
+            "age": 29,
+            "genderCode": "M",
+            "gender": {
+                "id": 2,
+                "genderCode": "M",
+                "genderEn": "male",
+                "genderKr": "남성"
+            },
+            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+            "profileUrl": "https://~~~~",
+            "profileUrlOrg": "",
+            "profileFile": "",
+            "lastSignIn": "2018-04-18 20:25:57",
+            "locationLat": 33.4909741,
+            "locationLon": 126.907639,
+            "photo": [],
+            "clientToken": "~~~~",
+            "point": 10
+        },
+        "commentCnt": 0,
+        "likeSay": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "useYn": "Y",
+                "regDt": "2018-04-18 20:31:15",
+                "updateDt": "2018-04-18 20:31:15"
+            }
+        ],
+        "useYn": "Y"
+    }
+]
+----
+
+== meet 조회 by 회원ID [getMeetListByUid]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/meet/getMeetListByUid/{memberId}/{page}' -i -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+----
+
+=== HTTP request
+----
+GET /meet/getMeetListByUid/{memberId}/{page} HTTP/1.1
+----
+|===
+|Parameter|Description
+|`memberId`
+|The identifier of member
+|`page`
+|The page of meet list
+|===
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+[
+    {
+        "id": "1",
+        "message": "테스트요",
+        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+        "regDt": "2018-04-18 20:26:37",
+        "member": {
+            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+            "name": "하이",
+            "age": 29,
+            "genderCode": "M",
+            "gender": {
+                "id": 2,
+                "genderCode": "M",
+                "genderEn": "male",
+                "genderKr": "남성"
+            },
+            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+            "profileUrl": "https://~~~~",
+            "profileUrlOrg": "",
+            "profileFile": "",
+            "lastSignIn": "2018-04-18 20:25:57",
+            "locationLat": 33.4909741,
+            "locationLon": 126.907639,
+            "photo": [],
+            "clientToken": "~~~~",
+            "point": 10
+        },
+        "comment": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "comment": "ㅎㅇ",
+                "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "regDt": "2018-04-19 13:07:20",
+                "commentReply": [
+                    {
+                        "id": "1",
+                        "comment": "  ㅋㅋ",
+                        "commentId": "1",
+                        "memberId": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                        "member": {
+                            "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                            "name": "하이",
+                            "age": 29,
+                            "genderCode": "M",
+                            "gender": {
+                                "id": 2,
+                                "genderCode": "M",
+                                "genderEn": "male",
+                                "genderKr": "남성"
+                            },
+                            "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                            "profileUrl": "https://~~~~",
+                            "profileUrlOrg": "",
+                            "profileFile": "",
+                            "lastSignIn": "2018-04-18 20:25:57",
+                            "locationLat": 33.4909741,
+                            "locationLon": 126.907639,
+                            "photo": [],
+                            "clientToken": "~~~~",
+                            "point": 10
+                        },
+                        "regDt": "2018-04-19 13:07:35"
+                    }
+                ],
+                "useYn": "Y"
+            }
+        ],
+        "likeSay": [
+            {
+                "id": "1",
+                "sayId": "1",
+                "member": {
+                    "id": "ntAIdenCIAbY9iKtl57f83FlltI3",
+                    "name": "하이",
+                    "age": 29,
+                    "genderCode": "M",
+                    "gender": {
+                        "id": 2,
+                        "genderCode": "M",
+                        "genderEn": "male",
+                        "genderKr": "남성"
+                    },
+                    "email": "8eeaab59cc0638ccb7b52d44271dac79@gmail.com",
+                    "profileUrl": "https://~~~~",
+                    "profileUrlOrg": "",
+                    "profileFile": "",
+                    "lastSignIn": "2018-04-18 20:25:57",
+                    "locationLat": 33.4909741,
+                    "locationLon": 126.907639,
+                    "photo": [],
+                    "clientToken": "~~~~",
+                    "point": 10
+                },
+                "useYn": "Y",
+                "regDt": "2018-04-18 20:31:15",
+                "updateDt": "2018-04-18 20:31:15"
+            }
+        ],
+        "useYn": "Y"
+    }
+]
+----
+
+== meet 삭제 [deleteMeet]
+----
+$ curl 'http://Helloapi.ap-northeast-2.elasticbeanstalk.com/meet/deleteMeet/{meetId}' -i -X DELETE -H 'apiKey: {apiKey}' -H 'Accept: application/json;charset=UTF-8'
+----
+
+=== HTTP request
+----
+DELETE /say/deleteMeet/{meetId} HTTP/1.1
+----
+
+=== HTTP Reponse
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 3
+
+200
+----
