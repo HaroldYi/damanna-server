@@ -49,7 +49,7 @@ public class CommentController {
             if (body == null || body.isEmpty()) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
             } else {
-                if(ObjectUtils.isEmpty(commentVo.getSayId())) {
+                if(ObjectUtils.isEmpty(commentVo.getSayId()) && ObjectUtils.isEmpty(commentVo.getMeetId())) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
                 } else if(ObjectUtils.isEmpty(commentVo.getComment())) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'comment' request body must not be null or empty");

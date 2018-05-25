@@ -18,6 +18,9 @@ public class CommentVo {
     @Column(name = "say_id", nullable = false)
     private String sayId = "";
 
+    @Column(name = "meet_id", nullable = false)
+    private String meetId = "";
+
     @Column(nullable = false)
     private String comment = "";
 
@@ -112,5 +115,13 @@ public class CommentVo {
 
     public void setSortation(String sortation) {
         this.sortation = sortation;
+    }
+
+    public String getMeetId() {
+        return meetId;
+    }
+
+    public void setMeetId(String meetId) {
+        this.meetId = meetId;
     }
 }

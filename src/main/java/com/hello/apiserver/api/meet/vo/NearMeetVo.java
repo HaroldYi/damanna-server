@@ -41,6 +41,8 @@ public class NearMeetVo {
     private String thumbnailImg = "";
     private String fileName = "";
 
+    private String sortation = "";
+
     public String getId() {
         return id;
     }
@@ -183,5 +185,13 @@ public class NearMeetVo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getSortation() {
+        return sortation;
+    }
+
+    public void setSortation(String sortation) {
+        this.sortation = sortation;
     }
 }

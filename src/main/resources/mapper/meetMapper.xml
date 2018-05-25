@@ -16,7 +16,8 @@
             m.profile_file AS profileFile,
             s.original_img AS originalImg,
             s.thumbnail_img AS thumbnailImg,
-            s.file_name AS fileName
+            s.file_name AS fileName,
+            c.sortation
         FROM
             meet s
         INNER JOIN
@@ -60,7 +61,8 @@
         m.profile_file AS profileFile,
         s.original_img AS originalImg,
         s.thumbnail_img AS thumbnailImg,
-        s.file_name AS fileName
+        s.file_name AS fileName,
+        c.sortation
         FROM
         meet s
         INNER JOIN
