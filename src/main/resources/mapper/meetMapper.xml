@@ -22,6 +22,16 @@
             meet s
         INNER JOIN
             member m ON s.member_id = m.id AND s.use_yn = 'Y'
+            <if test="meetStartDT neq null">
+                <![CDATA[
+                  AND meet_start_dt >= ${meetStartDT}
+                ]]>
+            </if>
+            <if test="meetEndDT neq null">
+                <![CDATA[
+                  AND meet_end_dt < ${meetEndDT}
+                ]]>
+            </if>
             <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">
             AND m.location_lat BETWEEN ${seLat} AND ${nwLat}
             AND m.location_lon BETWEEN ${nwLon} AND ${seLon}

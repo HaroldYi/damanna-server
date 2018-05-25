@@ -143,6 +143,8 @@ public class MeetApiController {
             @RequestParam(value = "latitude") double latitude,
             @RequestParam(value = "longitude") double longitude,
             @RequestParam(value = "distanceMetres") int distanceMetres,
+            @RequestParam(value = "meetStartDt", required = false) String meetStartDT,
+            @RequestParam(value = "meetEndDt", required = false) String meetEndDT,
             @RequestParam(value = "page") int page
     ) throws IOException {
 
@@ -182,6 +184,14 @@ public class MeetApiController {
                     map.put("page", page);
                 } else {
                     map.put("page", page);
+                }
+
+                if(!ObjectUtils.isEmpty(meetStartDT)) {
+                    map.put("meetStartDT", meetStartDT);
+                }
+
+                if(!ObjectUtils.isEmpty(meetEndDT)) {
+                    map.put("meetEndDT", meetEndDT);
                 }
 
                 meetVoList = this.meetMapper.findMeetByDistance(map);
