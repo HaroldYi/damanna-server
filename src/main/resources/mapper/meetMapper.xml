@@ -17,7 +17,7 @@
             s.original_img AS originalImg,
             s.thumbnail_img AS thumbnailImg,
             s.file_name AS fileName,
-            c.sortation
+            s.sortation
         FROM
             meet s
         INNER JOIN
@@ -62,7 +62,7 @@
         s.original_img AS originalImg,
         s.thumbnail_img AS thumbnailImg,
         s.file_name AS fileName,
-        c.sortation
+        s.sortation
         FROM
         meet s
         INNER JOIN
