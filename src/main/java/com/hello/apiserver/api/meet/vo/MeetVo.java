@@ -1,6 +1,7 @@
 package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
+import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;

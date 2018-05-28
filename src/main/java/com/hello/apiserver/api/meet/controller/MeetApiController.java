@@ -70,6 +70,28 @@ public class MeetApiController {
                 meetVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 meetVo.setUseYn("Y");
 
+                Date meetStartDt = meetVo.getMeetStartDt();
+                Date meetEndDt = meetVo.getMeetEndDt();
+
+                // 시작날짜 0시 ~ 종료날짜 23시 59분 59초까지
+                Calendar meetStartCalendar = Calendar.getInstance();
+                meetStartCalendar.setTime(meetStartDt);
+                meetStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                meetStartCalendar.set(Calendar.MINUTE, 0);
+                meetStartCalendar.set(Calendar.SECOND, 0);
+
+                Calendar meetEndCalendar = Calendar.getInstance();
+                meetEndCalendar.setTime(meetEndDt);
+                meetEndCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                meetEndCalendar.set(Calendar.MINUTE, 59);
+                meetEndCalendar.set(Calendar.SECOND, 59);
+
+                meetStartDt.setTime(meetStartCalendar.getTimeInMillis());
+                meetEndDt.setTime(meetEndCalendar.getTimeInMillis());
+
+                meetVo.setMeetStartDt(meetStartDt);
+                meetVo.setMeetEndDt(meetEndDt);
+
                 this.meetRepository.save(meetVo);
                 return HttpStatus.OK.toString();
             }
@@ -80,23 +102,26 @@ public class MeetApiController {
         return "";
     }
 
-    @RequestMapping(value = {"/getMeet/{sayId}", "/getMeet/{sayId}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getMeet/{meetId}", "/getMeet/{meetId}/"}, method = RequestMethod.GET)
     public String getSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
-            @PathVariable("sayId")String sayId
+            @PathVariable("meetId")String meetId
     ) throws IOException {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
         if(Auth.checkApiKey(apiKey)) {
-            if (ObjectUtils.isEmpty(sayId)) {
+            if (ObjectUtils.isEmpty(meetId)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-                MeetVo meetVo = this.meetRepository.getMeet(sayId);
+                MeetVo meetVo = this.meetRepository.getMeet(meetId);
+                List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");
+
+                meetVo.setLikeSay(likeSayVoList);
                 return gson.toJson(meetVo);
             }
         } else {
@@ -143,8 +168,8 @@ public class MeetApiController {
             @RequestParam(value = "latitude") double latitude,
             @RequestParam(value = "longitude") double longitude,
             @RequestParam(value = "distanceMetres") int distanceMetres,
-            @RequestParam(value = "meetStartDt", required = false) String meetStartDT,
-            @RequestParam(value = "meetEndDt", required = false) String meetEndDT,
+            @RequestParam(value = "meetStartDt", required = false) String meetStartDt,
+            @RequestParam(value = "meetEndDt", required = false) String meetEndDt,
             @RequestParam(value = "page") int page
     ) throws IOException {
 
@@ -186,12 +211,12 @@ public class MeetApiController {
                     map.put("page", page);
                 }
 
-                if(!ObjectUtils.isEmpty(meetStartDT)) {
-                    map.put("meetStartDT", meetStartDT);
+                if(!ObjectUtils.isEmpty(meetStartDt)) {
+                    map.put("meetStartDt", meetStartDt);
                 }
 
-                if(!ObjectUtils.isEmpty(meetEndDT)) {
-                    map.put("meetEndDT", meetEndDT);
+                if(!ObjectUtils.isEmpty(meetEndDt)) {
+                    map.put("meetEndDt", meetEndDt);
                 }
 
                 meetVoList = this.meetMapper.findMeetByDistance(map);
@@ -200,7 +225,21 @@ public class MeetApiController {
 //
                 for(NearMeetVo meetVo : meetVoList) {
 
+                    map.put("sayId", meetVo.getId());
+                    map.put("sortation", "M");
+
                     List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
+
+//                    List<String> likeSayVoListStr = this.meetMapper.findLikeMemberList(map);
+//                    List<LikeSayVo> likeSayVoList = new ArrayList<>();
+//                    for(String like : likeSayVoListStr) {
+//                        LikeSayVo likeSayVo = new LikeSayVo();
+//                        MemberVo memberVo = new MemberVo();
+//                        memberVo.setId(like);
+//
+//                        likeSayVo.setMember(memberVo);
+//                        likeSayVoList.add(likeSayVo);
+//                    }
 
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(meetVo.getMemberId());

@@ -44,7 +44,7 @@
             LIMIT ${page}, 20
     </select>
     <select id="findLikeMemberList" resultType="java.lang.String">
-        SELECT member_id AS memberId FROM like_say WHERE say_id = ${sayId}
+        SELECT member_id AS memberId FROM like_say WHERE say_id = ${sayId} AND sortation = #{sortation}
     </select>
 
     <select id="getSayListByUid" resultType="com.hello.apiserver.api.say.vo.NearSayVo">

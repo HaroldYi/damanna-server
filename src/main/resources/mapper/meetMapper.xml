@@ -22,14 +22,14 @@
             meet s
         INNER JOIN
             member m ON s.member_id = m.id AND s.use_yn = 'Y'
-            <if test="meetStartDT neq null">
+            <if test="meetStartDt neq null and meetStartDt neq ''">
                 <![CDATA[
-                  AND meet_start_dt >= ${meetStartDT}
+                  AND meet_start_dt >= ${meetStartDt}
                 ]]>
             </if>
-            <if test="meetEndDT neq null">
+            <if test="meetEndDt neq null and meetEndDt neq ''">
                 <![CDATA[
-                  AND meet_end_dt < ${meetEndDT}
+                  AND meet_end_dt <= ${meetEndDt}
                 ]]>
             </if>
             <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">
@@ -54,6 +54,10 @@
             GROUP BY s.id
             ORDER BY s.reg_dt DESC
             LIMIT ${page}, 20
+    </select>
+
+    <select id="findLikeMemberList" resultType="java.lang.String">
+        SELECT member_id AS memberId FROM like_say WHERE meet_id = ${sayId} AND sortation = #{sortation}
     </select>
 
     <select id="getMeetListByUid" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">

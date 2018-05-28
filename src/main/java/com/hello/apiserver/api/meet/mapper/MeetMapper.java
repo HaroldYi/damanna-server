@@ -8,4 +8,5 @@ import java.util.Map;
 public interface MeetMapper {
     List<NearMeetVo> findMeetByDistance(Map<String, Object> map);
     List<NearMeetVo> getMeetListByUid(Map<String, Object> map);
+    List<String> findLikeMemberList(Map<String, Object> map);
 }

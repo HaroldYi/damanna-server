@@ -79,7 +79,13 @@ public class SayApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                return gson.toJson(this.sayRepository.findByIdAndUseYn(sayId, "Y"));
+
+                SayVo sayVo = this.sayRepository.findByIdAndUseYn(sayId, "Y");
+                List<LikeSayVo> likeSayVoList = this.likeRepository.findBySayIdAndSortation(sayId, "S");
+
+                sayVo.setLikeSay(likeSayVoList);
+
+                return gson.toJson(sayVo);
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
@@ -230,6 +236,7 @@ public class SayApiController {
                 for(NearSayVo sayVo : sayVoList) {
 
                     map.put("sayId", sayVo.getId());
+                    map.put("sortation", "S");
 
                     List<String> likeSayVoListStr = this.sayMapper.findLikeMemberList(map);
                     List<LikeSayVo> likeSayVoList = new ArrayList<>();
