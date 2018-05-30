@@ -43,6 +43,11 @@ public class NearMeetVo {
 
     private String sortation = "";
 
+    private String meetStartDt = "";
+    private String meetEndDt = "";
+    private String locationLat = "";
+    private String locationLon = "";
+
     public String getId() {
         return id;
     }
@@ -193,5 +198,37 @@ public class NearMeetVo {
 
     public void setSortation(String sortation) {
         this.sortation = sortation;
+    }
+
+    public String getMeetStartDt() {
+        return meetStartDt;
+    }
+
+    public void setMeetStartDt(String meetStartDt) {
+        this.meetStartDt = meetStartDt;
+    }
+
+    public String getMeetEndDt() {
+        return meetEndDt;
+    }
+
+    public void setMeetEndDt(String meetEndDt) {
+        this.meetEndDt = meetEndDt;
+    }
+
+    public String getLocationLat() {
+        return locationLat;
+    }
+
+    public void setLocationLat(String locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLon() {
+        return locationLon;
+    }
+
+    public void setLocationLon(String locationLon) {
+        this.locationLon = locationLon;
     }
 }

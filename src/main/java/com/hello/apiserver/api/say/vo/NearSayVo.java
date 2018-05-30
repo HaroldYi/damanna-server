@@ -39,6 +39,9 @@ public class NearSayVo {
     private String thumbnailImg = "";
     private String fileName = "";
 
+    private String locationLat = "";
+    private String locationLon = "";
+
     public MemberVo getMember() {
         return member;
     }
@@ -173,5 +176,21 @@ public class NearSayVo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getLocationLat() {
+        return locationLat;
+    }
+
+    public void setLocationLat(String locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public String getLocationLon() {
+        return locationLon;
+    }
+
+    public void setLocationLon(String locationLon) {
+        this.locationLon = locationLon;
     }
 }

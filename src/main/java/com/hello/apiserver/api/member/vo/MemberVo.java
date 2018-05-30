@@ -20,6 +20,9 @@ public class MemberVo {
     /* 이름 : required */
     private String name = "";
 
+    @Column
+    private Date dateOfBirth;
+
     @Column(nullable = false)
     /* 나이 : required */
     private int age;
@@ -116,6 +119,14 @@ public class MemberVo {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getGenderCode() {

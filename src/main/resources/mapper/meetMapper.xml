@@ -17,19 +17,25 @@
             s.original_img AS originalImg,
             s.thumbnail_img AS thumbnailImg,
             s.file_name AS fileName,
-            s.sortation
+            s.sortation,
+            s.meet_start_dt AS meetStartDt,
+            s.meet_end_dt AS meetEndDt,
+            m.location_lat AS locationLat,
+            m.location_lon AS locationLon
         FROM
             meet s
         INNER JOIN
             member m ON s.member_id = m.id AND s.use_yn = 'Y'
-            <if test="meetStartDt neq null and meetStartDt neq ''">
+            <if test="(meetStartDt neq null and meetStartDt neq '') and (meetEndDt neq null and meetEndDt neq '')">
                 <![CDATA[
-                  AND meet_start_dt >= ${meetStartDt}
-                ]]>
-            </if>
-            <if test="meetEndDt neq null and meetEndDt neq ''">
-                <![CDATA[
-                  AND meet_end_dt <= ${meetEndDt}
+                  AND (
+                        CASE
+                            WHEN s.sortation = 'F'
+                                THEN meet_start_dt >= ${meetStartDt}
+                            ELSE
+                                ( meet_start_dt >= ${meetStartDt} OR meet_end_dt <= ${meetEndDt} AND s.sortation <> 'F' )
+                            END
+                      )
                 ]]>
             </if>
             <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">

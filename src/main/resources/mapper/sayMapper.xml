@@ -15,7 +15,9 @@
             m.profile_file AS profileFile,
             s.original_img AS originalImg,
             s.thumbnail_img AS thumbnailImg,
-            s.file_name AS fileName
+            s.file_name AS fileName,
+            m.location_lat AS locationLat,
+            m.location_lon AS locationLon
             FROM
             say s
             INNER JOIN
