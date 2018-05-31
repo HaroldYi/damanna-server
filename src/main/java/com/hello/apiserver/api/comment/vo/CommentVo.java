@@ -15,11 +15,11 @@ public class CommentVo {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "say_id", nullable = false)
-    private String sayId = "";
+    @Column(name = "say_id")
+    private String sayId;
 
-    @Column(name = "meet_id", nullable = false)
-    private String meetId = "";
+    @Column(name = "meet_id")
+    private String meetId;
 
     @Column(nullable = false)
     private String comment = "";

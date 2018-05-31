@@ -10,6 +10,8 @@ import java.util.List;
 public class NearMeetVo {
     private String id;
 
+    private String title = "";
+
     private String message = "";
 
     private String channelUrl = "";
@@ -54,6 +56,14 @@ public class NearMeetVo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {

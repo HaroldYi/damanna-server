@@ -4,6 +4,7 @@
     <select id="findMeetByDistance" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">
         SELECT
             s.id,
+            s.title,
             s.message,
             s.channel_url AS channelUrl,
             s.member_id AS memberId,
@@ -69,6 +70,7 @@
     <select id="getMeetListByUid" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">
         SELECT
         s.id,
+        s.title,
         s.message,
         s.channel_url AS channelUrl,
         s.member_id AS memberId,
@@ -82,7 +84,11 @@
         s.original_img AS originalImg,
         s.thumbnail_img AS thumbnailImg,
         s.file_name AS fileName,
-        s.sortation
+        s.sortation,
+        s.meet_start_dt AS meetStartDt,
+        s.meet_end_dt AS meetEndDt,
+        m.location_lat AS locationLat,
+        m.location_lon AS locationLon
         FROM
         meet s
         INNER JOIN

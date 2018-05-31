@@ -60,8 +60,10 @@ public class CommentController {
                     String sortation = "";
                     if(request.getRequestURI().indexOf("say") != -1) {
                         sortation = "S";
+                        commentVo.setMeetId(null);
                     } else if(request.getRequestURI().indexOf("meet") != -1) {
                         sortation = "M";
+                        commentVo.setSayId(null);
                     }
 
                     commentVo.setSortation(sortation);

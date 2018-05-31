@@ -17,6 +17,9 @@ public class MeetVo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    @Column
+    private String title = "";
+
     @Column(nullable = false, length = 1000)
     private String message = "";
 
@@ -34,12 +37,12 @@ public class MeetVo {
     private MemberVo member;
 
     @OneToMany
-    @JoinColumn(name = "say_id", referencedColumnName = "id")
+    @JoinColumn(name = "meet_id", referencedColumnName = "id")
     @Cascade(CascadeType.REMOVE)
     private List<CommentVo> comment;
 
     @OneToMany
-    @JoinColumn(name = "say_id", referencedColumnName = "id")
+    @JoinColumn(name = "meet_id", referencedColumnName = "id")
     @Cascade(CascadeType.REMOVE)
     private List<LikeSayVo> likeSay;
 
@@ -76,6 +79,14 @@ public class MeetVo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {
