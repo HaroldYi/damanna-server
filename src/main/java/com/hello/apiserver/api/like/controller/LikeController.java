@@ -57,12 +57,8 @@ public class LikeController {
                     MemberVo memberVo = this.memberRepository.findById(memberId);
 
                     if(request.getRequestURI().indexOf("say") != -1) {
-                        sortation = "S";
-                        likeSayVo.setSayId(sayId);
                         likeSayVo = this.likeRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     } else if(request.getRequestURI().indexOf("meet") != -1) {
-                        sortation = "M";
-                        likeSayVo.setMeetId(sayId);
                         likeSayVo = this.likeRepository.findByMeetIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     }
 
@@ -70,6 +66,15 @@ public class LikeController {
                         likeRepository.delete(likeSayVo.getId());
                     } else {
                         likeSayVo = new LikeSayVo();
+
+                        if(request.getRequestURI().indexOf("say") != -1) {
+                            sortation = "S";
+                            likeSayVo.setSayId(sayId);
+                        } else if(request.getRequestURI().indexOf("meet") != -1) {
+                            sortation = "M";
+                            likeSayVo.setMeetId(sayId);
+                        }
+
                         likeSayVo.setMember(memberVo);
                         likeSayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         likeSayVo.setUpdateDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
