@@ -2,6 +2,7 @@ package com.hello.apiserver.api.member.vo;
 
 import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.vividsolutions.jts.geom.Point;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -83,7 +84,8 @@ public class MemberVo {
     private int point;
 
     @Column
-    private String blockYn = "N";
+    @ColumnDefault("N")
+    private String blockYn;
 
     @Column
     private Date blockStartDt;
@@ -98,7 +100,8 @@ public class MemberVo {
     private Date regDt;
 
     @Column
-    private String useYn = "Y";
+    @ColumnDefault("Y")
+    private String useYn;
 
     public String getId() {
         return id;

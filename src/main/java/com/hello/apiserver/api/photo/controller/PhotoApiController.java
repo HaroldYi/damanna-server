@@ -160,7 +160,7 @@ public class PhotoApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'profileUrl' request body must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    MemberVo newMemberVo = memberRepository.findByIdAndUseYn(memberVo.getId(), "Y");
+                    MemberVo newMemberVo = memberRepository.findById(memberVo.getId());
                     newMemberVo.setProfileFile(memberVo.getProfileFile());
                     newMemberVo.setProfileUrl(memberVo.getProfileUrl());
                     newMemberVo.setProfileUrlOrg(memberVo.getProfileUrlOrg());

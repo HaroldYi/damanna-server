@@ -9,7 +9,7 @@ public interface MemberRepository extends CrudRepository<MemberVo, Long> {
 
     Page<MemberVo> findByIdNotOrderByLastSignInDesc(String memberId, Pageable pageable);
 
-    MemberVo findByIdAndUseYn(String id, String useYn);
+    MemberVo findById(String id);
 
     Page<MemberVo> findByLocationHashContaining(String hash, Pageable pageable);
 
