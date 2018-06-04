@@ -83,7 +83,7 @@ public class MemberVo {
     private int point;
 
     @Column
-    private String blockYn;
+    private String blockYn = "N";
 
     @Column
     private Date blockStartDt;
@@ -96,6 +96,9 @@ public class MemberVo {
 
     @Column
     private Date regDt;
+
+    @Column
+    private String useYn = "Y";
 
     public String getId() {
         return id;
@@ -279,5 +282,13 @@ public class MemberVo {
 
     public void setRegDt(Date regDt) {
         this.regDt = regDt;
+    }
+
+    public String getUseYn() {
+        return useYn;
+    }
+
+    public void setUseYn(String useYn) {
+        this.useYn = useYn;
     }
 }

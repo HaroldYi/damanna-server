@@ -54,7 +54,7 @@ public class LikeController {
 
                     String sortation = "";
                     LikeSayVo likeSayVo = new LikeSayVo();
-                    MemberVo memberVo = this.memberRepository.findById(memberId);
+                    MemberVo memberVo = this.memberRepository.findByIdAndUseYn(memberId, "Y");
 
                     if(request.getRequestURI().indexOf("say") != -1) {
                         likeSayVo = this.likeRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");

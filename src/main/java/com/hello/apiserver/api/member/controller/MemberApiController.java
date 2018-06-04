@@ -48,6 +48,8 @@ public class MemberApiController {
         MemberVo memberVo = gson.fromJson(userInfo, MemberVo.class);
         memberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
         memberVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+        memberVo.setBlockYn("N");
+        memberVo.setUseYn("Y");
 
         GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
         String geohashString = geohash.toBase32();
@@ -112,7 +114,7 @@ public class MemberApiController {
                 if (ObjectUtils.isEmpty(args)) {
                     response.sendError(HttpStatus.BAD_REQUEST.value());
                 } else {
-                    MemberVo newMemberVo = this.memberRepository.findById(memberId);
+                    MemberVo newMemberVo = this.memberRepository.findByIdAndUseYn(memberId, "Y");
                     if(newMemberVo != null) {
                         newMemberVo.setLastSignIn(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                         newMemberVo.setClientToken(memberVo.getClientToken());
@@ -161,7 +163,7 @@ public class MemberApiController {
                         response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'name' parameter must not be null or empty");
                     } else {
                         response.setStatus(HttpStatus.OK.value());
-                        MemberVo member = this.memberRepository.findById(memberId);
+                        MemberVo member = this.memberRepository.findByIdAndUseYn(memberId, "Y");
                         member.setName(memberVo.getName());
                         this.memberRepository.save(member);
                         return HttpStatus.OK.toString();
@@ -197,7 +199,7 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
                 } else {
                     response.setStatus(HttpStatus.OK.value());
-                    MemberVo member = this.memberRepository.findById(memberId);
+                    MemberVo member = this.memberRepository.findByIdAndUseYn(memberId, "Y");
                     member.setAge(memberVo.getAge());
                     this.memberRepository.save(member);
                     return HttpStatus.OK.toString();
@@ -259,7 +261,7 @@ public class MemberApiController {
                 } else {
                     response.setStatus(HttpStatus.OK.value());
 
-                    MemberVo memberVo = this.memberRepository.findById(memberId);
+                    MemberVo memberVo = this.memberRepository.findByIdAndUseYn(memberId, "Y");
 //                    GeoHashCircleQuery d = new GeoHashCircleQuery(new WGS84Point(33.5002516, 126.5298658), 15000);
 //                    List<GeoHash> geoHashes = d.getSearchHashes();
 //
