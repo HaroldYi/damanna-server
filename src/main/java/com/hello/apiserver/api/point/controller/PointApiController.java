@@ -47,7 +47,7 @@ public class PointApiController {
                 pointVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
                 this.pointRepository.save(pointVo);
-                MemberVo memberVo = memberRepository.findByIdAndUseYn(pointVo.getMemberId(), "Y");
+                MemberVo memberVo = memberRepository.findById(pointVo.getMemberId());
 
                 if(pointVo.getSource().equals("attendance")) {
                     memberVo.setLastAttendance(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
