@@ -34,18 +34,19 @@ public class PushController {
 
         JSONObject body = new JSONObject();
         body.put("to", map.get("clientToken"));
-//        body.put("priority", "high");
+        body.put("priority", "high");
+//        body.put("content_available", true);
 
-        JSONObject notification = new JSONObject();
-        notification.put("title", "");
-        notification.put("body", "");
+//        JSONObject notification = new JSONObject();
+//        notification.put("title", "제주메이트");
+//        notification.put("body", map.get("nofiMsg"));
 
         JSONObject data = new JSONObject();
         data.put("sayId", map.get("sayId"));
         data.put("nofiMsg", map.get("nofiMsg"));
         data.put("sortation", map.get("sortation"));
 
-        body.put("notification", notification);
+//        body.put("notification", notification);
         body.put("data", data);
 
         HttpHeaders headers = new HttpHeaders();
