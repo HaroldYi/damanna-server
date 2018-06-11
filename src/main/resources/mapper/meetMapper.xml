@@ -32,7 +32,7 @@
                   AND (
                         CASE
                             WHEN s.sortation = 'F'
-                                THEN meet_start_dt >= ${meetStartDt}
+                                THEN (meet_start_dt >= ${meetStartDt} AND meet_start_dt <= ${meetEndDt})
                             ELSE
                                 ( meet_start_dt >= ${meetStartDt} AND meet_end_dt <= ${meetEndDt} )
                             END
