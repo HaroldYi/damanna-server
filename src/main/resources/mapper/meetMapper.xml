@@ -34,7 +34,7 @@
                             WHEN s.sortation = 'F'
                                 THEN meet_start_dt >= ${meetStartDt}
                             ELSE
-                                ( meet_start_dt >= ${meetStartDt} OR meet_end_dt <= ${meetEndDt} AND s.sortation <> 'F' )
+                                ( meet_start_dt >= ${meetStartDt} AND meet_end_dt <= ${meetEndDt} )
                             END
                       )
                 ]]>
