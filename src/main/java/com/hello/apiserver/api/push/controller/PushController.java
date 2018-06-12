@@ -32,8 +32,7 @@ public class PushController {
     ) throws IOException {
 
         if(Auth.checkApiKey(apiKey)) {
-            Type mapType = new TypeToken<Map<String, String>>() {
-            }.getType();
+            Type mapType = new TypeToken<Map<String, String>>() {}.getType();
             Map<String, String> map = new Gson().fromJson(requestBody, mapType);
 
             JSONObject body = new JSONObject();

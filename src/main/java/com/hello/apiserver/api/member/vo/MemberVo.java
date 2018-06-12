@@ -103,6 +103,9 @@ public class MemberVo {
     @ColumnDefault("Y")
     private String useYn;
 
+    @Column
+    private String kind = "";
+
     public String getId() {
         return id;
     }
@@ -293,5 +296,13 @@ public class MemberVo {
 
     public void setUseYn(String useYn) {
         this.useYn = useYn;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }
