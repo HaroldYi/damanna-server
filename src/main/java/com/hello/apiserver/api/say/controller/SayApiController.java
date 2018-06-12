@@ -12,15 +12,20 @@ import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.say.vo.NearSayVo;
 import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = {"/say", "/say/"})
@@ -34,6 +39,9 @@ public class SayApiController {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    @Autowired
+    AndroidPushNotificationsService androidPushNotificationsService;
 
     @RequestMapping(value = "/newSay", method = RequestMethod.POST)
     public String newSay (
@@ -54,8 +62,43 @@ public class SayApiController {
                 sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 sayVo.setUseYn("Y");
 
-                this.sayRepository.save(sayVo);
-                return HttpStatus.OK.toString();
+                sayVo = this.sayRepository.save(sayVo);
+
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("to", "/topics/notice");
+                jsonBody.put("priority", "high");
+
+                JSONObject data = new JSONObject();
+                data.put("sayId", sayVo.getId());
+                data.put("nofiMsg", sayVo.getMessage());
+                data.put("sortation", "S");
+
+//        body.put("notification", notification);
+                jsonBody.put("data", data);
+
+                HttpHeaders headers = new HttpHeaders();
+                Charset utf8 = Charset.forName("UTF-8");
+                MediaType mediaType = new MediaType("application", "json", utf8);
+                headers.setContentType(mediaType);
+
+                HttpEntity<String> request = new HttpEntity<>(jsonBody.toString(), headers);
+
+                CompletableFuture<String> pushNotification = androidPushNotificationsService.send(request);
+                CompletableFuture.allOf(pushNotification).join();
+
+                try {
+                    String firebaseResponse = pushNotification.get();
+
+                    return new ResponseEntity<>(firebaseResponse, HttpStatus.OK).toString();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return HttpStatus.INTERNAL_SERVER_ERROR.toString();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    return HttpStatus.INTERNAL_SERVER_ERROR.toString();
+                }
+
+//                return HttpStatus.OK.toString();
             }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");

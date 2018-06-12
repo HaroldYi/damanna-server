@@ -77,13 +77,13 @@ public class MemberApiController {
                     response.setStatus(HttpStatus.OK.value());
                     this.memberRepository.save(memberVo);
 
-                    SayVo sayVo = new SayVo();
-                    sayVo.setMessage(String.format("%s님이 가입하셨습니다.", memberVo.getName()));
-                    sayVo.setMemberId(memberVo.getId());
-                    sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
-                    sayVo.setUseYn("Y");
-
-                    this.sayRepository.save(sayVo);
+//                    SayVo sayVo = new SayVo();
+//                    sayVo.setMessage(String.format("%s님이 가입하셨습니다.", memberVo.getName()));
+//                    sayVo.setMemberId(memberVo.getId());
+//                    sayVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
+//                    sayVo.setUseYn("Y");
+//
+//                    this.sayRepository.save(sayVo);
 
                     return HttpStatus.OK.toString();
                 }
