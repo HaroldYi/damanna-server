@@ -65,8 +65,6 @@ public class MemberApiController {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'id' parameter must not be null or empty");
                 } else if(ObjectUtils.isEmpty(memberVo.getName())) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'name' parameter must not be null or empty");
-                } else if(ObjectUtils.isEmpty(memberVo.getEmail())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'email' parameter must not be null or empty");
                 } else if(ObjectUtils.isEmpty(memberVo.getAge())) {
                     response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'age' parameter must not be null or empty");
                 } else if(ObjectUtils.isEmpty(memberVo.getProfileUrl())) {
