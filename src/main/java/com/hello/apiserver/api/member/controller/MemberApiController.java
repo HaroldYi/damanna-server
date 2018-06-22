@@ -9,15 +9,17 @@ import com.hello.apiserver.api.member.mapper.MemberMapper;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
-import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -50,6 +52,7 @@ public class MemberApiController {
         memberVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
         memberVo.setUseYn("Y");
         memberVo.setBlockYn("N");
+        memberVo.setKind("M");
 
         GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
         String geohashString = geohash.toBase32();
@@ -139,42 +142,50 @@ public class MemberApiController {
     }
 
     @RequestMapping(value = "/changeNickName/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
-    public String changeNickName (
-            HttpServletResponse response,
+    public ResponseEntity changeNickName (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String nickName,
             @PathVariable String memberId
     ) throws IOException {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
 
 //        apiToken = gson.fromJson(apiToken, String.class);
         MemberVo memberVo = gson.fromJson(nickName, MemberVo.class);
 
-//        if(!ObjectUtils.isEmpty(apiKey)) {
-            if (Auth.checkApiKey(apiKey)) {
-
-                if (ObjectUtils.isEmpty(nickName)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value());
-                } else {
-                    if (ObjectUtils.isEmpty(memberVo.getName())) {
-                        response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'name' parameter must not be null or empty");
-                    } else {
-                        response.setStatus(HttpStatus.OK.value());
-                        MemberVo member = this.memberRepository.findById(memberId);
-                        member.setName(memberVo.getName());
-                        this.memberRepository.save(member);
-                        return HttpStatus.OK.toString();
-                    }
-                }
+        if (Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(memberVo.getName())) {
+                httpResponseVo.setMessage("The 'name' parameter must not be null or empty");
+                httpResponseVo.setStatus(HttpStatus.BAD_REQUEST.value());
+                httpResponseVo.setResult(HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
             } else {
-                response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
-            }
-//        } else {
-//            response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'apiKey' parameter must not be null or empty");
-//        }
+                MemberVo member = this.memberRepository.findById(memberId);
+                member.setName(memberVo.getName());
+                this.memberRepository.save(member);
 
-        return "";
+                httpResponseVo.setMessage("");
+                httpResponseVo.setStatus(HttpStatus.OK.value());
+                httpResponseVo.setResult(HttpStatus.OK.getReasonPhrase());
+
+                httpStatus = HttpStatus.OK;
+            }
+        } else {
+//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            httpResponseVo.setMessage("This api key is wrong! please check your api key!");
+            httpResponseVo.setStatus(HttpStatus.UNAUTHORIZED.value());
+            httpResponseVo.setResult(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            httpStatus = HttpStatus.UNAUTHORIZED;
+        }
+
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 
     @RequestMapping(value = "/changeAge/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
