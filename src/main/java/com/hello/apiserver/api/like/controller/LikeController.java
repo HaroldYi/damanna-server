@@ -7,17 +7,22 @@ import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class LikeController {
@@ -34,13 +39,17 @@ public class LikeController {
     @Autowired
     private LikeRepository likeRepository;
 
-    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}", "/say/likeSay/{sayId}/{memberId}"}, method = RequestMethod.PUT)
+    @Autowired
+    AndroidPushNotificationsService androidPushNotificationsService;
+
+    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}/{clientToken}", "/say/likeSay/{sayId}/{memberId}/{clientToken}"}, method = RequestMethod.PUT)
     public String likeSay (
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String sayId,
-            @PathVariable String memberId
+            @PathVariable String memberId,
+            @PathVariable String clientToken
     ) throws IOException {
 
         if(Auth.checkApiKey(apiKey)) {
@@ -63,7 +72,7 @@ public class LikeController {
                     }
 
                     if(likeSayVo != null) {
-                        likeRepository.delete(likeSayVo.getId());
+                        this.likeRepository.delete(likeSayVo.getId());
                     } else {
                         likeSayVo = new LikeSayVo();
 
@@ -81,9 +90,41 @@ public class LikeController {
                         likeSayVo.setSortation(sortation);
 
                         this.likeRepository.save(likeSayVo);
-                    }
 
-                    return HttpStatus.OK.toString();
+                        JSONObject body = new JSONObject();
+                        body.put("to", clientToken);
+                        body.put("priority", "high");
+
+                        String nofiMsg = String.format("%s님이 이글을 좋아합니다.", memberVo.getName());
+
+                        JSONObject data = new JSONObject();
+                        data.put("sayId", sayId);
+                        data.put("nofiMsg", nofiMsg);
+                        data.put("sortation", sortation);
+
+                        body.put("data", data);
+
+                        HttpHeaders headers = new HttpHeaders();
+                        Charset utf8 = Charset.forName("UTF-8");
+                        MediaType mediaType = new MediaType("application", "json", utf8);
+                        headers.setContentType(mediaType);
+
+                        HttpEntity<String> httpEntity = new HttpEntity<>(body.toString(), headers);
+
+                        CompletableFuture<String> pushNotification = this.androidPushNotificationsService.send(httpEntity);
+                        CompletableFuture.allOf(pushNotification).join();
+
+                        try {
+                            String firebaseResponse = pushNotification.get();
+                            return HttpStatus.OK.toString();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            return HttpStatus.OK.toString();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                            return HttpStatus.OK.toString();
+                        }
+                    }
                 }
             }
         } else {
