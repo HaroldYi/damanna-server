@@ -55,4 +55,10 @@ public class HttpResponseVo {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public void setHttpResponse(String msg, int status, String result) {
+        this.message = msg;
+        this.status = status;
+        this.result = result;
+    }
 }
