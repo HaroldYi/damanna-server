@@ -194,7 +194,7 @@ public class SayApiController {
                 List<NearSayVo> sayVoList;
                 Map<String, Object> map = new HashMap<>();
 
-                if(distanceMetres < 500) {
+                if(distanceMetres < 300) {
                     distanceMetres *= (1.414 * 1000);
 
                     WGS84Point startPoint = new WGS84Point(latitude, longitude);

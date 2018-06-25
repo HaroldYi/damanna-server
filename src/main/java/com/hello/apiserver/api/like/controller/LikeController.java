@@ -140,8 +140,7 @@ public class LikeController {
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String sayId,
-            @PathVariable String memberId,
-            @PathVariable String clientToken
+            @PathVariable String memberId
     ) throws IOException {
 
         if(Auth.checkApiKey(apiKey)) {
