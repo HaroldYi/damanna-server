@@ -46,7 +46,7 @@ public class PushController {
 
             JSONObject data = new JSONObject();
             data.put("sayId", map.get("sayId"));
-            data.put("nofiMsg", map.get("nofiMsg"));
+            data.put("notiMsg", map.get("notiMsg"));
             data.put("sortation", map.get("sortation"));
 
 //        body.put("notification", notification);
