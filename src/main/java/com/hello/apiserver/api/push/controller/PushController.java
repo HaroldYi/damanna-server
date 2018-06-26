@@ -7,6 +7,7 @@ import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotifica
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,10 +25,11 @@ public class PushController {
     @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
 
-    @RequestMapping(value = "/sendPushMsg", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendPushMsg/{os}", method = RequestMethod.POST)
     public ResponseEntity<String> sendPushMsg(
             @RequestBody(required = false)String requestBody,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @PathVariable(value = "os") String os,
             HttpServletResponse response
     ) throws IOException {
 
@@ -38,18 +40,22 @@ public class PushController {
             JSONObject body = new JSONObject();
             body.put("to", map.get("clientToken"));
             body.put("priority", "high");
-//        body.put("content_available", true);
 
-//        JSONObject notification = new JSONObject();
-//        notification.put("title", "제주메이트");
-//        notification.put("body", map.get("nofiMsg"));
+            if(!ObjectUtils.isEmpty(os) && os.equals("ios")) {
+                JSONObject notification = new JSONObject();
+                notification.put("title", "제주메이트");
+                notification.put("body", map.get("notiMsg"));
+                notification.put("content_available", true);
+                notification.put("sound", "enabled");
+
+                body.put("notification", notification);
+            }
 
             JSONObject data = new JSONObject();
             data.put("sayId", map.get("sayId"));
             data.put("notiMsg", map.get("notiMsg"));
             data.put("sortation", map.get("sortation"));
 
-//        body.put("notification", notification);
             body.put("data", data);
 
             HttpHeaders headers = new HttpHeaders();
