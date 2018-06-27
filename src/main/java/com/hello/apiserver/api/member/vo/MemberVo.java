@@ -71,6 +71,14 @@ public class MemberVo {
     @Column
     private String locationHash;
 
+    @Column(name = "district_code", nullable = false)
+    private String districtCode = "";
+
+    @OneToOne
+    @JoinColumn(name = "district_code", referencedColumnName = "district_code", insertable = false, updatable = false)
+    /* 성별 : required */
+    private DistrictVo district;
+
     @OneToMany
     @JoinColumn(name = "member_id")
     /* location : optional */
@@ -304,5 +312,21 @@ public class MemberVo {
 
     public void setKind(String kind) {
         this.kind = kind;
+    }
+
+    public DistrictVo getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(DistrictVo district) {
+        this.district = district;
+    }
+
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 }

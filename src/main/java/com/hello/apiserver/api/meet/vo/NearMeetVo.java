@@ -49,6 +49,8 @@ public class NearMeetVo {
     private String meetEndDt = "";
     private String locationLat = "";
     private String locationLon = "";
+    private String districtKrName = "";
+    private String districtKrNameAbbr = "";
 
     public String getId() {
         return id;
@@ -240,5 +242,21 @@ public class NearMeetVo {
 
     public void setLocationLon(String locationLon) {
         this.locationLon = locationLon;
+    }
+
+    public String getDistrictKrName() {
+        return districtKrName;
+    }
+
+    public void setDistrictKrName(String districtKrName) {
+        this.districtKrName = districtKrName;
+    }
+
+    public String getDistrictKrNameAbbr() {
+        return districtKrNameAbbr;
+    }
+
+    public void setDistrictKrNameAbbr(String districtKrNameAbbr) {
+        this.districtKrNameAbbr = districtKrNameAbbr;
     }
 }

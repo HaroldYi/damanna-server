@@ -2,6 +2,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hello.apiserver.api.meet.mapper.MeetMapper">
     <select id="findMeetByDistance" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">
+        /* findMeetByDistance */
         SELECT
             s.id,
             s.title,
@@ -22,55 +23,71 @@
             s.meet_start_dt AS meetStartDt,
             s.meet_end_dt AS meetEndDt,
             m.location_lat AS locationLat,
-            m.location_lon AS locationLon
+            m.location_lon AS locationLon,
+            d.district_kr_name AS districtKrName,
+            d.district_kr_name_abbr AS districtKrNameAbbr
         FROM
             meet s
         INNER JOIN
             member m ON s.member_id = m.id AND s.use_yn = 'Y'
-            <if test="(meetStartDt neq null and meetStartDt neq '') and (meetEndDt neq null and meetEndDt neq '')">
-                <![CDATA[
-                  AND (
-                        CASE
-                            WHEN s.sortation = 'F'
-                                THEN (meet_start_dt >= ${meetStartDt} AND meet_start_dt <= ${meetEndDt})
-                            ELSE
-                                ( meet_start_dt >= ${meetStartDt} AND meet_end_dt <= ${meetEndDt} )
-                            END
-                      )
-                ]]>
-            </if>
-            <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">
+        INNER JOIN
+            district_code d ON m.district_code = d.district_code
+        <if test="(meetStartDt neq null and meetStartDt neq '') and (meetEndDt neq null and meetEndDt neq '')">
+            <![CDATA[
+              AND (
+                    CASE
+                        WHEN s.sortation = 'F'
+                            THEN (meet_start_dt >= ${meetStartDt} AND meet_start_dt <= ${meetEndDt})
+                        ELSE
+                            ( meet_start_dt >= ${meetStartDt} AND meet_end_dt <= ${meetEndDt} )
+                        END
+                  )
+            ]]>
+        </if>
+        <if test="seLat neq null and nwLat neq null and nwLon neq null and seLon neq null">
             AND m.location_lat BETWEEN ${seLat} AND ${nwLat}
             AND m.location_lon BETWEEN ${nwLon} AND ${seLon}
-            </if>
-            LEFT JOIN
-            (SELECT * FROM (
-            SELECT
-            s.id AS meetid, c.id AS comment_id, COUNT(c.id) AS commentCnt
-            FROM
-            meet s
-
-            LEFT JOIN comment c ON s.id = c.meet_id AND c.sortation = 'M'
-            GROUP BY s.id
+        </if>
+        LEFT JOIN
+        (
+            SELECT * FROM (
+                            SELECT
+                                  s.id AS meetid, c.id AS comment_id, COUNT(c.id) AS commentCnt
+                            FROM
+                                meet s
+                            LEFT JOIN comment c
+                                  ON s.id = c.meet_id
+                                  AND c.sortation = 'M'
+                            GROUP BY s.id
             ) AA
-
-            LEFT JOIN (SELECT
-            c.meet_id, c.id,  COUNT(r.id) AS commentReplyCnt
-            FROM
-            comment c
-            LEFT JOIN comment_reply r ON c.id = r.comment_id AND c.sortation = 'M'
-            GROUP BY c.meet_id) BB ON AA.meetid = BB.meet_id) AS CC ON s.id = CC.meetid
-            -- LEFT JOIN like_say l ON s.id = l.say_id
-            GROUP BY s.id
-            ORDER BY s.reg_dt DESC
-            LIMIT ${page}, 20
+            LEFT JOIN
+                    (
+                        SELECT
+                              c.meet_id, c.id,  COUNT(r.id) AS commentReplyCnt
+                        FROM
+                              comment c
+                        LEFT JOIN
+                              comment_reply r
+                              ON c.id = r.comment_id
+                              AND c.sortation = 'M'
+                        GROUP BY c.meet_id
+                    ) BB
+                    ON AA.meetid = BB.meet_id
+        ) AS CC
+          ON s.id = CC.meetid
+        -- LEFT JOIN like_say l ON s.id = l.say_id
+        GROUP BY s.id
+        ORDER BY s.reg_dt DESC
+        LIMIT ${page}, 20
     </select>
 
     <select id="findLikeMemberList" resultType="java.lang.String">
+        /* findLikeMemberList */
         SELECT member_id AS memberId FROM like_say WHERE meet_id = ${sayId} AND sortation = #{sortation}
     </select>
 
     <select id="getMeetListByUid" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">
+        /* getMeetListByUid */
         SELECT
         s.id,
         s.title,

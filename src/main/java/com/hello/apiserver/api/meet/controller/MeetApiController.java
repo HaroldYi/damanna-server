@@ -176,7 +176,7 @@ public class MeetApiController {
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
         if(Auth.checkApiKey(apiKey)) {
-        /*
+            /*
             if (ObjectUtils.isEmpty(latitude)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'latitude' parameter must not be null or empty");
             } else if (ObjectUtils.isEmpty(longitude)) {
@@ -186,7 +186,7 @@ public class MeetApiController {
             } else if (ObjectUtils.isEmpty(page)) {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
             } else {
-*/
+            */
                 page *= 20;
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -256,7 +256,7 @@ public class MeetApiController {
                 }
 
                 return gson.toJson(meetVoList);
-            /*}*/
+//            }
         } else {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
         }

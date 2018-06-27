@@ -249,6 +249,49 @@ public class MemberApiController {
         return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 
+    @RequestMapping(value = "/changeDistrict/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
+    public ResponseEntity changeDistrict (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @RequestBody(required = false)String age,
+            @PathVariable String memberId
+    ) throws IOException {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MemberVo memberVo = gson.fromJson(age, MemberVo.class);
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
+        if(Auth.checkApiKey(apiKey)) {
+
+            if(ObjectUtils.isEmpty(age)) {
+                httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+            } else {
+                if(ObjectUtils.isEmpty(memberVo.getAge())) {
+                    httpResponseVo.setHttpResponse("The parameter 'age' must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                } else {
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
+                    MemberVo member = this.memberRepository.findById(memberId);
+                    member.setDistrictCode(memberVo.getDistrictCode());
+                    this.memberRepository.save(member);
+                }
+            }
+        } else {
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
+    }
+
     @RequestMapping(value = "/getMemberList/{page}", method = RequestMethod.GET)
     public ResponseEntity getMemberList (
             HttpServletRequest request,
