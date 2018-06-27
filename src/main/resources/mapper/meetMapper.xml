@@ -10,7 +10,7 @@
             s.member_id AS memberId,
             m.name,
             s.reg_dt AS regDt,
-            IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt,
+            IFNULL(SUM(CC.commentCnt + CC.commentReplyCnt), 0) AS commentCnt,
             m.client_token AS clientToken,
             m.profile_url AS profileUrl,
             m.profile_url_org AS profileUrlOrg,
@@ -44,19 +44,22 @@
             AND m.location_lon BETWEEN ${nwLon} AND ${seLon}
             </if>
             LEFT JOIN
-            (SELECT
-            s.id AS meet_id, c.id AS comment_id, COUNT(c.id) AS commentCnt
+            (SELECT * FROM (
+            SELECT
+            s.id AS meetid, c.id AS comment_id, COUNT(c.id) AS commentCnt
             FROM
             meet s
+
             LEFT JOIN comment c ON s.id = c.meet_id AND c.sortation = 'M'
-            GROUP BY s.id) AS AA ON s.id = AA.meet_id
-            LEFT JOIN
-            (SELECT
-            c.meet_id, c.id, COUNT(r.id) AS commentReplyCnt
+            GROUP BY s.id
+            ) AA
+
+            LEFT JOIN (SELECT
+            c.meet_id, c.id,  COUNT(r.id) AS commentReplyCnt
             FROM
             comment c
             LEFT JOIN comment_reply r ON c.id = r.comment_id AND c.sortation = 'M'
-            GROUP BY c.meet_id) AS BB ON AA.comment_id = BB.id
+            GROUP BY c.meet_id) BB ON AA.meetid = BB.meet_id) AS CC ON s.id = CC.meetid
             -- LEFT JOIN like_say l ON s.id = l.say_id
             GROUP BY s.id
             ORDER BY s.reg_dt DESC
