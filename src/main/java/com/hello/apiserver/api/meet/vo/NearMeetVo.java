@@ -51,6 +51,7 @@ public class NearMeetVo {
     private String locationLon = "";
     private String districtKrName = "";
     private String districtKrNameAbbr = "";
+    private String memberLimit = "";
 
     public String getId() {
         return id;
@@ -258,5 +259,13 @@ public class NearMeetVo {
 
     public void setDistrictKrNameAbbr(String districtKrNameAbbr) {
         this.districtKrNameAbbr = districtKrNameAbbr;
+    }
+
+    public String getMemberLimit() {
+        return memberLimit;
+    }
+
+    public void setMemberLimit(String memberLimit) {
+        this.memberLimit = memberLimit;
     }
 }

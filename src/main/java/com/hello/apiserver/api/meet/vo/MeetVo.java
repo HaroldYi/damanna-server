@@ -61,6 +61,9 @@ public class MeetVo {
     @Column
     private Date meetEndDt;
 
+    @Column
+    private String memberLimit;
+
     private String originalImg = "";
     private String thumbnailImg = "";
     private String fileName = "";
@@ -199,5 +202,13 @@ public class MeetVo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getMemberLimit() {
+        return memberLimit;
+    }
+
+    public void setMemberLimit(String memberLimit) {
+        this.memberLimit = memberLimit;
     }
 }

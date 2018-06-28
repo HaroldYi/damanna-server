@@ -25,7 +25,8 @@
             m.location_lat AS locationLat,
             m.location_lon AS locationLon,
             d.district_kr_name AS districtKrName,
-            d.district_kr_name_abbr AS districtKrNameAbbr
+            d.district_kr_name_abbr AS districtKrNameAbbr,
+            s.member_limit AS memberLimit
         FROM
             meet s
         INNER JOIN
