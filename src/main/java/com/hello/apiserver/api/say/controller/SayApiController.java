@@ -67,11 +67,13 @@ public class SayApiController {
                 JSONObject jsonBody = new JSONObject();
                 jsonBody.put("to", "/topics/notice");
                 jsonBody.put("priority", "high");
+                jsonBody.put("content_available", true);
 
                 JSONObject data = new JSONObject();
                 data.put("sayId", sayVo.getId());
-                data.put("nofiMsg", sayVo.getMessage());
+                data.put("notiMsg", sayVo.getMessage());
                 data.put("sortation", "S");
+                data.put("content_available", true);
 
 //        body.put("notification", notification);
                 jsonBody.put("data", data);
