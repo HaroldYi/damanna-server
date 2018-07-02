@@ -6,7 +6,9 @@ import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.mapper.MemberMapper;
+import com.hello.apiserver.api.member.service.MeetBannedMemberRepository;
 import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.util.Auth.Auth;
@@ -21,7 +23,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -37,6 +38,9 @@ public class MemberApiController {
 
     @Autowired
     private SayRepository sayRepository;
+
+    @Autowired
+    private MeetBannedMemberRepository meetBannedMemberRepository;
 
     @RequestMapping(value = {"/newMember", "/newMember/"}, method = RequestMethod.POST)
     public ResponseEntity newMember (
@@ -478,5 +482,48 @@ public class MemberApiController {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
             return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(memberVoList));
         }
+    }
+
+    @RequestMapping(value = "/addBanMember/{channelUrl}/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
+    public ResponseEntity addBanMember (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @PathVariable String channelUrl,
+            @PathVariable String memberId
+    ) throws IOException {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
+        if(Auth.checkApiKey(apiKey)) {
+
+            if(ObjectUtils.isEmpty(memberId)) {
+                httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+            } else {
+                httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                httpStatus = HttpStatus.OK;
+//                MemberVo member = this.memberRepository.findById(memberId);
+//                member.setDistrictCode(memberVo.getDistrictCode());
+//                this.memberRepository.save(member);
+
+                MeetBannedMemberVo meetBannedMemberVo = new MeetBannedMemberVo();
+                meetBannedMemberVo.setChannelUrl(channelUrl);
+                meetBannedMemberVo.setMemberId(memberId);
+
+                meetBannedMemberRepository.save(meetBannedMemberVo);
+            }
+        } else {
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 }

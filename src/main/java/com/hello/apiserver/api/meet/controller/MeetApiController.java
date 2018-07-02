@@ -9,7 +9,9 @@ import com.hello.apiserver.api.meet.mapper.MeetMapper;
 import com.hello.apiserver.api.meet.service.MeetRepository;
 import com.hello.apiserver.api.meet.vo.MeetVo;
 import com.hello.apiserver.api.meet.vo.NearMeetVo;
+import com.hello.apiserver.api.member.service.MeetBannedMemberRepository;
 import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.comment.service.CommentReplyRepository;
 import com.hello.apiserver.api.comment.service.CommentRepository;
@@ -50,6 +52,9 @@ public class MeetApiController {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    @Autowired
+    private MeetBannedMemberRepository meetBannedMemberRepository;
 
     @RequestMapping(value = "/newMeet", method = RequestMethod.POST)
     public String newSay (
@@ -230,7 +235,7 @@ public class MeetApiController {
                     map.put("sortation", "M");
 
                     List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
-
+                    List<MeetBannedMemberVo> meetBannedMemberList = this.meetBannedMemberRepository.findByChannelUrl(meetVo.getChannelUrl());
 //                    List<String> likeSayVoListStr = this.meetMapper.findLikeMemberList(map);
 //                    List<LikeSayVo> likeSayVoList = new ArrayList<>();
 //                    for(String like : likeSayVoListStr) {
@@ -252,6 +257,7 @@ public class MeetApiController {
 
                     meetVo.setMember(memberVo);
                     meetVo.setLikeSay(likeSayVoList);
+                    meetVo.setMeetBannedMemberList(meetBannedMemberList);
                     meetVoList.set(i++, meetVo);
                 }
 

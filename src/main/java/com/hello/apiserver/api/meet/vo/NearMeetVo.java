@@ -2,6 +2,7 @@ package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
+import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 
 import java.util.Date;
@@ -26,6 +27,8 @@ public class NearMeetVo {
     private List<CommentVo> comment;
 
     private List<com.hello.apiserver.api.like.vo.LikeSayVo> likeSay;
+
+    private List<MeetBannedMemberVo> meetBannedMemberList;
 
     private String useYn = "Y";
 
@@ -267,5 +270,13 @@ public class NearMeetVo {
 
     public void setMemberLimit(String memberLimit) {
         this.memberLimit = memberLimit;
+    }
+
+    public List<MeetBannedMemberVo> getMeetBannedMemberList() {
+        return meetBannedMemberList;
+    }
+
+    public void setMeetBannedMemberList(List<MeetBannedMemberVo> meetBannedMemberList) {
+        this.meetBannedMemberList = meetBannedMemberList;
     }
 }
