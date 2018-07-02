@@ -484,7 +484,7 @@ public class MemberApiController {
         }
     }
 
-    @RequestMapping(value = "/addBanMember/{channelUrl}/{memberId}", method = RequestMethod.PUT, consumes="application/json; charset=utf8")
+    @RequestMapping(value = {"/addBanMember/{channelUrl}/{memberId}", "/addBanMember/{channelUrl}/{memberId}/"}, method = RequestMethod.PUT, consumes="application/json; charset=utf8")
     public ResponseEntity addBanMember (
             HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
