@@ -493,6 +493,8 @@ public class MemberApiController {
     ) throws IOException {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MemberVo memberVo = new MemberVo();
+        boolean isError = false;
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");
@@ -506,6 +508,7 @@ public class MemberApiController {
             if(ObjectUtils.isEmpty(memberId)) {
                 httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
                 httpStatus = HttpStatus.BAD_REQUEST;
+                isError = true;
             } else {
                 httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                 httpStatus = HttpStatus.OK;
@@ -518,12 +521,20 @@ public class MemberApiController {
                 meetBannedMemberVo.setMemberId(memberId);
 
                 meetBannedMemberRepository.save(meetBannedMemberVo);
+
+                memberVo = memberRepository.findById(memberId);
+                isError = false;
             }
         } else {
             httpStatus = HttpStatus.UNAUTHORIZED;
             httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            isError = true;
         }
 
-        return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        if(isError) {
+            return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        } else {
+            return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(memberVo));
+        }
     }
 }
