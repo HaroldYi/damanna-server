@@ -455,7 +455,7 @@ public class MemberApiController {
 
                 PageRequest pr = new PageRequest(page, 20);
 
-                if(distanceMetres < 500) {
+                if(distanceMetres < 300) {
                     distanceMetres *= (1.414 * 1000);
 
                     WGS84Point startPoint = new WGS84Point(latitude, longitude);
