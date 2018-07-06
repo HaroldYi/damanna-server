@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MemberRepository extends CrudRepository<MemberVo, Long> {
 
-    Page<MemberVo> findByIdNotOrderByLastSignInDesc(String memberId, Pageable pageable);
+    Page<MemberVo> findByIdNotAndAndUseYnOrderByLastSignInDesc(String memberId, String useYn, Pageable pageable);
 
     MemberVo findById(String id);
 
