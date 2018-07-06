@@ -18,6 +18,9 @@ public class CouponVo {
     @Column
     private Date regDt;
 
+    @Column
+    private int flag;
+
     public String getId() {
         return id;
     }
@@ -40,5 +43,13 @@ public class CouponVo {
 
     public void setRegDt(Date regDt) {
         this.regDt = regDt;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }
