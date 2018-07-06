@@ -327,7 +327,7 @@ public class MemberApiController {
 
                     PageRequest pr = new PageRequest(page, 20);
 
-                    memberList = this.memberRepository.findByIdNotOrderByLastSignInDesc("", pr);
+                    memberList = this.memberRepository.findByIdNotAndAndUseYnOrderByLastSignInDesc("", "Y", pr);
                     httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                     httpStatus = HttpStatus.OK;
                 }
@@ -466,7 +466,7 @@ public class MemberApiController {
 
                     memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
                 } else {
-                    memberVoList = this.memberRepository.findByIdNotOrderByLastSignInDesc(memberId, pr).getContent();
+                    memberVoList = this.memberRepository.findByIdNotAndAndUseYnOrderByLastSignInDesc(memberId, "Y",  pr).getContent();
 //                    memberVoList = this.memberMapper.findMemberList();
                 }
 
