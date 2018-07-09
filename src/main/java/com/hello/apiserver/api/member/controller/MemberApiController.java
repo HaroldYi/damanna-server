@@ -95,6 +95,11 @@ public class MemberApiController {
                 } else {
                     httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                     httpStatus = HttpStatus.OK;
+
+                    if(ObjectUtils.isEmpty(memberVo.getDistrictCode())) {
+                        memberVo.setDistrictCode("0");
+                    }
+
                     this.memberRepository.save(memberVo);
 
 //                    SayVo sayVo = new SayVo();
