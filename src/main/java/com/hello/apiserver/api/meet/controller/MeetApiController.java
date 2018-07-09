@@ -97,6 +97,10 @@ public class MeetApiController {
                 meetVo.setMeetStartDt(meetStartDt);
                 meetVo.setMeetEndDt(meetEndDt);
 
+                if(ObjectUtils.isEmpty(meetVo.getMemberLimit())) {
+                    meetVo.setMemberLimit("4");
+                }
+
                 this.meetRepository.save(meetVo);
                 return HttpStatus.OK.toString();
             }
