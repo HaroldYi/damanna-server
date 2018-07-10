@@ -1,11 +1,15 @@
 package com.hello.apiserver.api.util;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hello.apiserver.api.util.HttpRequest.HeaderRequestInterceptor;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
@@ -29,8 +35,26 @@ public class FirebaseAdminAuth {
     // Kakao API request url to retrieve user profile based on access token
     private static final String requestMeUrl = "https://kapi.kakao.com/v1/user/me?secure_resource=true";
 
+    private FirebaseApp defaultApp;
+
     @RequestMapping(value = {"verifyToken", "verifyToken/"}, method = RequestMethod.POST)
     public ResponseEntity checkAndroidAppVersion(@RequestBody(required = false) String requestBody) {
+
+        FileInputStream serviceAccount = null;
+        FirebaseOptions options = null;
+
+        try {
+            serviceAccount = new FileInputStream(new PathMatchingResourcePatternResolver().getResource("classpath:/firebase/jejumate-e540b-firebase-adminsdk-q10ta-163789a2d2.json").getFile().getAbsolutePath());
+            options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://<DATABASE_NAME>.firebaseio.com/")
+                    .build();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.defaultApp = FirebaseApp.initializeApp(options);
 
         Type mapType = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String> map = new Gson().fromJson(requestBody, mapType);
@@ -51,7 +75,7 @@ public class FirebaseAdminAuth {
             String profileImage = (String) memberInfoMap.get("profile_image");
 
             UserRecord userRecord = this.updateOrCreateUser(userId, nickname, profileImage);
-            return FirebaseAuth.getInstance().createCustomToken(userRecord.getUid());
+            return FirebaseAuth.getInstance(this.defaultApp).createCustomToken(userRecord.getUid());
 
             // {"id":810116557,"properties":{"profile_image":"https://k.kakaocdn.net/dn/cZiHF6/btqnc2CAdCX/3KbGWkIVkVJ3Rbd8TuONb0/profile_640x640s.jpg","nickname":"Harold J. Yi","thumbnail_image":"https://k.kakaocdn.net/dn/cZiHF6/btqnc2CAdCX/3KbGWkIVkVJ3Rbd8TuONb0/profile_110x110c.jpg"}}
         } catch (InterruptedException e) {
@@ -81,13 +105,13 @@ public class FirebaseAdminAuth {
         String uid = String.format("KAKAO:%d", (int) userId);
 
         try {
-            UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+            UserRecord userRecord = FirebaseAuth.getInstance(this.defaultApp).getUser(uid);
             UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(userRecord.getUid())
                     .setDisplayName(displayName)
                     .setPhotoUrl(photoURL)
                     .setDisabled(false);
 
-            return FirebaseAuth.getInstance().updateUser(request);
+            return FirebaseAuth.getInstance(this.defaultApp).updateUser(request);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
 
@@ -99,7 +123,7 @@ public class FirebaseAdminAuth {
                         .setPhotoUrl(photoURL)
                         .setDisabled(false);
 
-                return FirebaseAuth.getInstance().createUser(request);
+                return FirebaseAuth.getInstance(this.defaultApp).createUser(request);
             }
 
             return null;

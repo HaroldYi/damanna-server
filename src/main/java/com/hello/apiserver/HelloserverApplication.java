@@ -20,13 +20,14 @@ public class HelloserverApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(HelloserverApplication.class, args);
-        FileInputStream serviceAccount = new FileInputStream(new PathMatchingResourcePatternResolver().getResource("classpath:/firebase/jejumate-e540b-firebase-adminsdk-q10ta-163789a2d2.json").getFile().getAbsolutePath());
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-
-        FirebaseApp.initializeApp(options);
+//        FileInputStream serviceAccount = new FileInputStream(new PathMatchingResourcePatternResolver().getResource("classpath:/firebase/jejumate-e540b-firebase-adminsdk-q10ta-163789a2d2.json").getFile().getAbsolutePath());
+//
+//        FirebaseOptions options = new FirebaseOptions.Builder()
+//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                .setDatabaseUrl("https://<DATABASE_NAME>.firebaseio.com/")
+//                .build();
+//
+//        FirebaseApp.initializeApp(options);
     }
 
     @Override
