@@ -109,7 +109,8 @@
         s.meet_start_dt AS meetStartDt,
         s.meet_end_dt AS meetEndDt,
         m.location_lat AS locationLat,
-        m.location_lon AS locationLon
+        m.location_lon AS locationLon,
+        s.member_limit AS memberLimit
         FROM
         meet s
         INNER JOIN

@@ -300,6 +300,7 @@ public class MeetApiController {
                 for(NearMeetVo meetVo : sayVoList) {
 
                     List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
+                    List<MeetBannedMemberVo> meetBannedMemberList = this.meetBannedMemberRepository.findByChannelUrl(meetVo.getChannelUrl());
 
                     MemberVo memberVo = new MemberVo();
                     memberVo.setId(meetVo.getMemberId());
@@ -308,6 +309,7 @@ public class MeetApiController {
                     memberVo.setProfileUrl(meetVo.getProfileUrl());
                     memberVo.setProfileUrlOrg(meetVo.getProfileUrlOrg());
                     memberVo.setProfileFile(meetVo.getProfileFile());
+                    meetVo.setMeetBannedMemberList(meetBannedMemberList);
 
                     meetVo.setMember(memberVo);
                     meetVo.setLikeSay(likeSayVoList);
