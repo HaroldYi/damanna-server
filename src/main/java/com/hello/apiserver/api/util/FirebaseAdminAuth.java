@@ -53,7 +53,9 @@ public class FirebaseAdminAuth {
             e.printStackTrace();
         }
 
-        this.defaultApp = FirebaseApp.initializeApp(options);
+        if(this.defaultApp == null) {
+            this.defaultApp = FirebaseApp.initializeApp(options);
+        }
 
         Type mapType = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String> map = new Gson().fromJson(requestBody, mapType);
