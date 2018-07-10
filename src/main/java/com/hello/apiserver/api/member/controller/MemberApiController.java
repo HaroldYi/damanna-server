@@ -58,6 +58,9 @@ public class MemberApiController {
         memberVo.setUseYn("Y");
         memberVo.setBlockYn("N");
         memberVo.setKind("M");
+        if(ObjectUtils.isEmpty(memberVo.getPoint())) {
+            memberVo.setPoint(10);
+        }
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");

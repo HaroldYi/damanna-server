@@ -1,5 +1,8 @@
 package com.hello.apiserver;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,6 +21,12 @@ public class HelloserverApplication extends SpringBootServletInitializer {
     public static void main(String[] args) throws IOException {
         SpringApplication.run(HelloserverApplication.class, args);
         FileInputStream serviceAccount = new FileInputStream(new PathMatchingResourcePatternResolver().getResource("classpath:/firebase/jejumate-e540b-firebase-adminsdk-q10ta-163789a2d2.json").getFile().getAbsolutePath());
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .build();
+
+        FirebaseApp.initializeApp(options);
     }
 
     @Override
