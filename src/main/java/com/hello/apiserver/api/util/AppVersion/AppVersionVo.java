@@ -19,6 +19,9 @@ public class AppVersionVo {
     private float ios;
 
     @Column
+    private String status;
+
+    @Column
     private Date regDt;
 
     @Column
@@ -62,5 +65,13 @@ public class AppVersionVo {
 
     public void setUpdateDt(Date updateDt) {
         this.updateDt = updateDt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
