@@ -7,18 +7,19 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.photo.service.PhotoRepository;
 import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = {"/photo", "/photo/"})
@@ -30,88 +31,123 @@ public class PhotoApiController {
     @Autowired
     MemberRepository memberRepository;
 
+    private HttpResponseVo httpResponseVo = new HttpResponseVo();
+    private HttpStatus httpStatus;
+
     @RequestMapping(value = {"/uploadPhoto", "/uploadPhoto/"}, method = RequestMethod.POST)
-    public String uploadPhoto (
-            HttpServletResponse response,
+    public ResponseEntity uploadPhoto (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String photoInfo
     ) throws IOException {
 
+        boolean isError = false;
+        PhotoVo photoVo = new PhotoVo();
+        this.httpResponseVo.setPath(request.getRequestURI());
+
         if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(photoInfo)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value());
+                isError = true;
             } else {
                 if(ObjectUtils.isEmpty(photoInfo)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'photoInfo' parameter must not be null or empty");
+                    isError = true;
+                    this.httpResponseVo.setHttpResponse("The 'photoInfo' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    this.httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
-                    response.setStatus(HttpStatus.OK.value());
+                    isError = false;
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                    PhotoVo photoVo = gson.fromJson(photoInfo, PhotoVo.class);
+                    photoVo = gson.fromJson(photoInfo, PhotoVo.class);
                     photoVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
 
-                    return gson.toJson(this.photoRepository.save(photoVo));
+                    this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    this.httpStatus = HttpStatus.OK;
+
+                    photoVo = this.photoRepository.save(photoVo);
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            isError = true;
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return null;
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(photoVo));
+        }
     }
 
     @RequestMapping(value = {"/findPhotoVoByMemberId/{memberId}/{page}", "/findPhotoVoByMemberId/{memberId}/{page}/"}, method = RequestMethod.GET)
-    public String findPhotoVoByMemberId (
-            HttpServletResponse response,
+    public ResponseEntity findPhotoVoByMemberId (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("memberId")String memberId,
             @PathVariable int page
     ) throws IOException {
 
+        boolean isError = false;
+        List<PhotoVo> photoVoList = new ArrayList<>();
+        this.httpResponseVo.setPath(request.getRequestURI());
+
         if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(memberId)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value());
+                this.httpResponseVo.setHttpResponse("The 'photoInfo' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+            } if(ObjectUtils.isEmpty(page)) {
+                this.httpResponseVo.setHttpResponse("The 'page' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                this.httpStatus = HttpStatus.BAD_REQUEST;
             } else {
-                if(ObjectUtils.isEmpty(memberId)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' parameter must not be null or empty");
-                } else {
-                    response.setStatus(HttpStatus.OK.value());
+                isError = false;
+                this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                this.httpStatus = HttpStatus.OK;
 
-                    PageRequest pr = new PageRequest(page, 15);
-                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-                    return gson.toJson(this.photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent());
-                }
+                PageRequest pr = new PageRequest(page, 15);
+                photoVoList = this.photoRepository.findPhotoVoByMemberIdAndUseYnOrderByRegDtDesc(memberId, "Y", pr).getContent();
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            isError = true;
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return null;
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(photoVoList));
+        }
     }
 
     @RequestMapping(value = {"/updatePhoto", "/updatePhoto/"}, method = RequestMethod.PUT)
     @Transactional
-    public String changeProfilePhoto (
-            HttpServletResponse response,
+    public ResponseEntity changeProfilePhoto (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
+
+        this.httpResponseVo.setPath(request.getRequestURI());
 
         if(Auth.checkApiKey(apiKey)) {
             PhotoVo photo = new Gson().fromJson(profileFileInfo, PhotoVo.class);
             if(photo.getUseYn().equals("Y")) {
                 if(ObjectUtils.isEmpty(photo)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                    this.httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    this.httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
                     if(ObjectUtils.isEmpty(photo.getFileName())) {
-                        response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'fileName' of request body must not be null or empty");
+                        this.httpResponseVo.setHttpResponse("The 'fileName' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                        this.httpStatus = HttpStatus.BAD_REQUEST;
                     } else if(ObjectUtils.isEmpty(photo.getOriginalImg())) {
-                        response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'originalImg' request body must not be null or empty");
+                        this.httpResponseVo.setHttpResponse("The 'originalImg' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                        this.httpStatus = HttpStatus.BAD_REQUEST;
                     } else if(ObjectUtils.isEmpty(photo.getThumbnailImg())) {
-                        response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'thumbnailImg' request body must not be null or empty");
+                        this.httpResponseVo.setHttpResponse("The 'thumbnailImg' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                        this.httpStatus = HttpStatus.BAD_REQUEST;
                     } else {
-                        response.setStatus(HttpStatus.OK.value());
-
                         PhotoVo photoVo;
                         if(!ObjectUtils.isEmpty(photo.getId())) {
                             photoVo = this.photoRepository.findByIdAndUseYn(photo.getId(), "Y");
@@ -124,64 +160,77 @@ public class PhotoApiController {
                         }
 
                         this.photoRepository.save(photoVo);
-                        return HttpStatus.OK.toString();
+                        this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                        this.httpStatus = HttpStatus.OK;
                     }
                 }
             } else {
                 PhotoVo photoVo = photoRepository.findByIdAndUseYn(photo.getId(), "Y");
                 photo.setUseYn("N");
                 this.photoRepository.save(photoVo);
-                return "OK";
+
+                this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                this.httpStatus = HttpStatus.OK;
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 
     @RequestMapping(value = {"/updateProfilePhoto", "/updateProfilePhoto/"}, method = RequestMethod.PUT)
     @Transactional
-    public String updateProfilePhoto (
-            HttpServletResponse response,
+    public ResponseEntity updateProfilePhoto (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody String profileFileInfo
     ) throws IOException {
 
+        this.httpResponseVo.setPath(request.getRequestURI());
+
         if(Auth.checkApiKey(apiKey)) {
             MemberVo memberVo = new Gson().fromJson(profileFileInfo, MemberVo.class);
             if(ObjectUtils.isEmpty(memberVo)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                this.httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                this.httpStatus = HttpStatus.BAD_REQUEST;
             } else {
 
                 if(ObjectUtils.isEmpty(memberVo.getId())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' of request body must not be null or empty");
+                    this.httpResponseVo.setHttpResponse("The 'memberId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    this.httpStatus = HttpStatus.BAD_REQUEST;
                 } else if(ObjectUtils.isEmpty(memberVo.getProfileUrl())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'profileUrl' request body must not be null or empty");
+                    this.httpResponseVo.setHttpResponse("The 'profileUrl' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    this.httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
-                    response.setStatus(HttpStatus.OK.value());
                     MemberVo newMemberVo = memberRepository.findById(memberVo.getId());
                     newMemberVo.setProfileFile(memberVo.getProfileFile());
                     newMemberVo.setProfileUrl(memberVo.getProfileUrl());
                     newMemberVo.setProfileUrlOrg(memberVo.getProfileUrlOrg());
                     this.memberRepository.save(newMemberVo);
-                    return HttpStatus.OK.toString();
+
+                    this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    this.httpStatus = HttpStatus.OK;
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 
     @RequestMapping(value = {"/deletePhoto/{id}", "/deletePhoto/{id}/"}, method = RequestMethod.DELETE)
     @Transactional
-    public String deletePhoto (
-            HttpServletResponse response,
+    public ResponseEntity deletePhoto (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String id
     ) throws IOException {
+
+        this.httpResponseVo.setPath(request.getRequestURI());
 
         if(Auth.checkApiKey(apiKey)) {
             PhotoVo photoVo = this.photoRepository.findByIdAndUseYn(id, "Y");
@@ -189,11 +238,14 @@ public class PhotoApiController {
                 this.photoRepository.delete(photoVo);
             }
 
-            return HttpStatus.OK.toString();
+            this.httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+            this.httpStatus = HttpStatus.OK;
+
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 }

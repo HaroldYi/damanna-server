@@ -1,8 +1,10 @@
 package com.hello.apiserver.api.util.commonVo;
 
+import java.util.Date;
+
 public class HttpResponseVo {
-    private String response = "";
-    private long timestamp;
+    private String response = "httpreponse";
+    private long timestamp = new Date().getTime();
     private int status;
     private String result = "";
     private String message = "";

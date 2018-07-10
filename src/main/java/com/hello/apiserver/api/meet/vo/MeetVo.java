@@ -62,6 +62,9 @@ public class MeetVo {
     private Date meetEndDt;
 
     @Column
+    private String place;
+
+    @Column
     private String memberLimit;
 
     private String originalImg = "";
@@ -210,5 +213,13 @@ public class MeetVo {
 
     public void setMemberLimit(String memberLimit) {
         this.memberLimit = memberLimit;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 }

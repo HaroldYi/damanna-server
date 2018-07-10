@@ -50,6 +50,7 @@ public class NearMeetVo {
 
     private String meetStartDt = "";
     private String meetEndDt = "";
+    private String place = "";
     private String locationLat = "";
     private String locationLon = "";
     private String districtKrName = "";
@@ -278,5 +279,13 @@ public class NearMeetVo {
 
     public void setMeetBannedMemberList(List<MeetBannedMemberVo> meetBannedMemberList) {
         this.meetBannedMemberList = meetBannedMemberList;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 }

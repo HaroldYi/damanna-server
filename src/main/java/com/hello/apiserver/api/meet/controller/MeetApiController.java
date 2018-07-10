@@ -18,12 +18,16 @@ import com.hello.apiserver.api.comment.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -56,20 +60,27 @@ public class MeetApiController {
     @Autowired
     private MeetBannedMemberRepository meetBannedMemberRepository;
 
+    private HttpResponseVo httpResponseVo = new HttpResponseVo();
+    private HttpStatus httpStatus;
+
     @RequestMapping(value = "/newMeet", method = RequestMethod.POST)
-    public String newSay (
-            HttpServletResponse response,
+    public ResponseEntity newMeet (
+            HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String body
     ) throws IOException {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
+        this.httpResponseVo.setPath(request.getRequestURI());
+
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+//                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The 'msg' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
             } else {
-                response.setStatus(HttpStatus.OK.value());
+//                response.setStatus(HttpStatus.OK.value());
 
                 MeetVo meetVo = new Gson().fromJson(body, MeetVo.class);
                 meetVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
@@ -102,17 +113,18 @@ public class MeetApiController {
                 }
 
                 this.meetRepository.save(meetVo);
-                return HttpStatus.OK.toString();
+                this.httpStatus = HttpStatus.OK;
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 
     @RequestMapping(value = {"/getMeet/{meetId}", "/getMeet/{meetId}/"}, method = RequestMethod.GET)
-    public String getSay (
+    public ResponseEntity getSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("meetId")String meetId
@@ -120,28 +132,42 @@ public class MeetApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
+        boolean isError = false;
+        MeetVo meetVo = new MeetVo();
+
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(meetId)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The 'meetId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                isError = true;
             } else {
                 response.setStatus(HttpStatus.OK.value());
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-                MeetVo meetVo = this.meetRepository.getMeet(meetId);
+                meetVo = this.meetRepository.getMeet(meetId);
                 List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");
-
                 meetVo.setLikeSay(likeSayVoList);
-                return gson.toJson(meetVo);
+
+                this.httpStatus = HttpStatus.OK;
+                isError = false;
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            isError = true;
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return null;
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(gson.toJson(meetVo)));
+        }
     }
 
     @RequestMapping(value = {"/getMeetList/{page}", "/getMeetList/{page}/"}, method = RequestMethod.GET)
-    public String getSayList (
+    public ResponseEntity getSayList (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("page")int page
@@ -167,11 +193,11 @@ public class MeetApiController {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
         }
 
-        return null;
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 
     @RequestMapping(value = {"/getNearMeetList", "/getNearMeetList/"}, method = RequestMethod.GET)
-    public String getNearMeetList (
+    public ResponseEntity getNearMeetList (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestParam(value = "latitude") double latitude,
@@ -183,6 +209,9 @@ public class MeetApiController {
     ) throws IOException {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
+
+        boolean isError = false;
+        List<NearMeetVo> meetVoList = new ArrayList<>();
 
         if(Auth.checkApiKey(apiKey)) {
             /*
@@ -196,11 +225,11 @@ public class MeetApiController {
                 response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'page' parameter must not be null or empty");
             } else {
             */
+
                 page *= 20;
 
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 PageRequest pr = new PageRequest(page, 20);
-                List<NearMeetVo> meetVoList;
                 Map<String, Object> map = new HashMap<>();
 
                 if(distanceMetres < 500) {
@@ -265,17 +294,25 @@ public class MeetApiController {
                     meetVoList.set(i++, meetVo);
                 }
 
-                return gson.toJson(meetVoList);
+            this.httpStatus = HttpStatus.OK;
+            isError = false;
 //            }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            isError = true;
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return null;
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(meetVoList));
+        }
     }
 
     @RequestMapping(value = {"/getMeetListByUid/{memberId}/{page}", "/getMeetListByUid/{memberId}/{page}/"}, method = RequestMethod.GET)
-    public String getSayListByUid (
+    public ResponseEntity getSayListByUid (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String memberId,
@@ -284,20 +321,24 @@ public class MeetApiController {
 
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
+        boolean isError = false;
+        List<NearMeetVo> meetVoList = new ArrayList<>();
+
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(page)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The 'page' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
             } else {
-                response.setStatus(HttpStatus.OK.value());
 
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                this.httpStatus = HttpStatus.OK;
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("memberId", memberId);
                 map.put("page", page);
 
-                List<NearMeetVo> sayVoList = this.meetMapper.getMeetListByUid(map);
-                for(NearMeetVo meetVo : sayVoList) {
+                meetVoList = this.meetMapper.getMeetListByUid(map);
+                for(NearMeetVo meetVo : meetVoList) {
 
                     List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetVo.getId(), "M");
                     List<MeetBannedMemberVo> meetBannedMemberList = this.meetBannedMemberRepository.findByChannelUrl(meetVo.getChannelUrl());
@@ -314,44 +355,49 @@ public class MeetApiController {
                     meetVo.setMember(memberVo);
                     meetVo.setLikeSay(likeSayVoList);
                 }
-
-                return gson.toJson(sayVoList);
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            isError = true;
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return null;
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(meetVoList));
+        }
     }
 
     @RequestMapping(value = "/deleteMeet/{meetId}", method = RequestMethod.DELETE)
-    public String deleteSay (
+    public ResponseEntity deleteSay (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String meetId
     ) throws IOException {
         if(Auth.checkApiKey(apiKey)) {
             if(ObjectUtils.isEmpty(meetId)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The 'sayId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
             } else {
-                response.setStatus(HttpStatus.OK.value());
+                this.httpStatus = HttpStatus.OK;
 
                 MeetVo meetVo = this.meetRepository.findByIdAndUseYn(meetId, "Y");
                 if(meetVo != null) {
                     this.meetRepository.delete(meetVo);
                 }
-
-                return HttpStatus.OK.toString();
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 
     @RequestMapping(value = "/updateChannelUrl", method = RequestMethod.PUT)
-    public String updateChannelUrl (
+    public ResponseEntity updateChannelUrl (
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String body
@@ -361,9 +407,10 @@ public class MeetApiController {
 
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
             } else {
-                response.setStatus(HttpStatus.OK.value());
+                this.httpStatus = HttpStatus.OK;
 
                 MeetVo meetVo = new Gson().fromJson(body, MeetVo.class);
                 String channelUrl = meetVo.getChannelUrl();
@@ -372,12 +419,12 @@ public class MeetApiController {
                 meetVo.setChannelUrl(channelUrl);
 
                 this.meetRepository.save(meetVo);
-                return HttpStatus.OK.toString();
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
     }
 }
