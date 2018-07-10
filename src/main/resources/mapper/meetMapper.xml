@@ -26,7 +26,8 @@
             m.location_lon AS locationLon,
             d.district_kr_name AS districtKrName,
             d.district_kr_name_abbr AS districtKrNameAbbr,
-            s.member_limit AS memberLimit
+            s.member_limit AS memberLimit,
+            s.place
         FROM
             meet s
         INNER JOIN
@@ -110,7 +111,8 @@
         s.meet_end_dt AS meetEndDt,
         m.location_lat AS locationLat,
         m.location_lon AS locationLon,
-        s.member_limit AS memberLimit
+        s.member_limit AS memberLimit,
+        s.place
         FROM
         meet s
         INNER JOIN
