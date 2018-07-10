@@ -11,8 +11,13 @@ public class AppVersion {
     @Autowired
     private AppVersionRepository appVersionRepository;
 
-    @RequestMapping(value = {"", "/"})
-    public float checkAppVersion() {
-        return appVersionRepository.findById("0").getAppVersion();
+    @RequestMapping(value = {"", "/android"})
+    public float checkAndroidAppVersion() {
+        return appVersionRepository.findById("0").getAndroid();
+    }
+
+    @RequestMapping(value = {"ios", "/ios"})
+    public float checkIosAppVersion() {
+        return appVersionRepository.findById("0").getIos();
     }
 }
