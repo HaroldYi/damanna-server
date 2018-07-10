@@ -162,7 +162,7 @@ public class MeetApiController {
             return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
         } else {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(gson.toJson(meetVo)));
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(meetVo));
         }
     }
 
