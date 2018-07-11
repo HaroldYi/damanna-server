@@ -50,15 +50,15 @@ public class PushController {
                 notification.put("sound", "enabled");
 
                 body.put("notification", notification);
-            } else {
-                JSONObject data = new JSONObject();
-                data.put("sayId", map.get("sayId"));
-                data.put("notiMsg", map.get("notiMsg"));
-                data.put("sortation", map.get("sortation"));
-                data.put("content_available", true);
-
-                body.put("data", data);
             }
+
+            JSONObject data = new JSONObject();
+            data.put("sayId", map.get("sayId"));
+            data.put("notiMsg", map.get("notiMsg"));
+            data.put("sortation", map.get("sortation"));
+            data.put("content_available", true);
+
+            body.put("data", data);
 
             HttpHeaders headers = new HttpHeaders();
             Charset utf8 = Charset.forName("UTF-8");
