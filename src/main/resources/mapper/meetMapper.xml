@@ -44,7 +44,7 @@
                             (
                              (${meetStartDt} <= meet_start_dt AND meet_start_dt <= ${meetEndDt} AND ${meetEndDt} <= meet_end_dt)
                              OR
-                             (${meetStartDt} <= meet_start_dt AND meet_start_dt <= ${meetEndDt} AND ${meetEndDt} <= meet_end_dt)
+                             (${meetStartDt} <= meet_start_dt AND meet_start_dt <= meet_end_dt AND meet_end_dt <= ${meetEndDt})
                              OR
                              (meet_start_dt <= ${meetStartDt} AND ${meetStartDt} <= meet_end_dt AND meet_end_dt <= ${meetEndDt})
                              )
