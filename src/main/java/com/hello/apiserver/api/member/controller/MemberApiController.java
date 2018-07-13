@@ -527,6 +527,7 @@ public class MemberApiController {
                 MeetBannedMemberVo meetBannedMemberVo = new MeetBannedMemberVo();
                 meetBannedMemberVo.setChannelUrl(channelUrl);
                 meetBannedMemberVo.setMemberId(memberId);
+                meetBannedMemberVo.setRegDt(new Date());
 
                 meetBannedMemberRepository.save(meetBannedMemberVo);
 
