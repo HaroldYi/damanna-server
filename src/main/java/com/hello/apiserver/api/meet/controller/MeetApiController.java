@@ -172,6 +172,9 @@ public class MeetApiController {
                 nearMeetVo.setMember(memberVo);
                 nearMeetVo.setLocationLat("0");
                 nearMeetVo.setLocationLon("0");
+                nearMeetVo.setOriginalImg(meetVo.getOriginalImg());
+                nearMeetVo.setThumbnailImg(meetVo.getThumbnailImg());
+                nearMeetVo.setFileName(meetVo.getFileName());
                 nearMeetVo.setLikeSay(likeSayVoList);
                 nearMeetVo.setMeetBannedMemberList(meetBannedMemberList);
 
