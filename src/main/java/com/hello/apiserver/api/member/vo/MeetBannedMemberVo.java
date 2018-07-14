@@ -10,7 +10,7 @@ public class MeetBannedMemberVo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column
+    @Column(name = "channel_url")
     private String channelUrl;
 
     @Column

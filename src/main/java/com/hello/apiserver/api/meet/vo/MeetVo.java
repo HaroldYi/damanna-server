@@ -2,17 +2,19 @@ package com.hello.apiserver.api.meet.vo;
 
 import com.hello.apiserver.api.comment.vo.CommentVo;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
+import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "meet")
-public class MeetVo {
+public class MeetVo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -49,7 +51,7 @@ public class MeetVo {
     @Column(nullable = false)
     private String useYn = "Y";
 
-    @Column
+    @Column(name = "channel_url")
     private String channelUrl = "";
 
     @Column
@@ -66,6 +68,11 @@ public class MeetVo {
 
     @Column
     private String memberLimit;
+
+    @OneToMany
+    @JoinColumn(name = "channel_url", referencedColumnName = "channel_url", insertable = false, updatable = false)
+    @Cascade(CascadeType.REMOVE)
+    private List<MeetBannedMemberVo> meetBannedMemberList;
 
     private String originalImg = "";
     private String thumbnailImg = "";
@@ -221,5 +228,13 @@ public class MeetVo {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public List<MeetBannedMemberVo> getMeetBannedMemberList() {
+        return meetBannedMemberList;
+    }
+
+    public void setMeetBannedMemberList(List<MeetBannedMemberVo> meetBannedMemberList) {
+        this.meetBannedMemberList = meetBannedMemberList;
     }
 }

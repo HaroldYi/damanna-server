@@ -145,38 +145,9 @@ public class MeetApiController {
             } else {
                 response.setStatus(HttpStatus.OK.value());
 
-                meetVo = this.meetRepository.getMeet(meetId);
+                meetVo = this.meetRepository.findByIdAndUseYn(meetId, "Y");
                 List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");
-                List<MeetBannedMemberVo> meetBannedMemberList = this.meetBannedMemberRepository.findByChannelUrl(meetVo.getChannelUrl());
-
-                MemberVo memberVo = new MemberVo();
-                memberVo.setId(meetVo.getMemberId());
-                memberVo.setName(meetVo.getMember().getName());
-                memberVo.setClientToken(meetVo.getMember().getClientToken());
-                memberVo.setProfileUrl(meetVo.getMember().getProfileUrl());
-                memberVo.setProfileUrlOrg(meetVo.getMember().getProfileUrlOrg());
-                memberVo.setProfileFile(meetVo.getMember().getProfileFile());
-
-                nearMeetVo.setId(meetVo.getId());
-                nearMeetVo.setTitle(meetVo.getTitle());
-                nearMeetVo.setMessage(meetVo.getMessage());
-                nearMeetVo.setMemberId(meetVo.getMember().getId());
-                nearMeetVo.setRegDt(meetVo.getRegDt());
-                nearMeetVo.setComment(meetVo.getComment());
-                nearMeetVo.setChannelUrl(meetVo.getChannelUrl());
-                nearMeetVo.setSortation(meetVo.getSortation());
-                nearMeetVo.setMeetStartDt(meetVo.getMeetStartDt());
-                nearMeetVo.setMeetEndDt(meetVo.getMeetEndDt());
-                nearMeetVo.setPlace(meetVo.getPlace());
-                nearMeetVo.setMemberLimit(meetVo.getMemberLimit());
-                nearMeetVo.setMember(memberVo);
-                nearMeetVo.setLocationLat("0");
-                nearMeetVo.setLocationLon("0");
-                nearMeetVo.setOriginalImg(meetVo.getOriginalImg());
-                nearMeetVo.setThumbnailImg(meetVo.getThumbnailImg());
-                nearMeetVo.setFileName(meetVo.getFileName());
-                nearMeetVo.setLikeSay(likeSayVoList);
-                nearMeetVo.setMeetBannedMemberList(meetBannedMemberList);
+                meetVo.setLikeSay(likeSayVoList);
 
                 this.httpStatus = HttpStatus.OK;
                 isError = false;
@@ -191,7 +162,7 @@ public class MeetApiController {
             return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
         } else {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(nearMeetVo));
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(meetVo));
         }
     }
 
