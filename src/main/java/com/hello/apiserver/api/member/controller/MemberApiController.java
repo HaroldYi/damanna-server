@@ -472,7 +472,7 @@ public class MemberApiController {
 
                     WGS84Point se = VincentyGeodesy.moveInDirection(startPoint, 120, distanceMetres);
 
-                    memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNot(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
+                    memberVoList = this.memberRepository.findByLocationLatBetweenAndLocationLonBetweenAndIdNotOrderByLastSignInDesc(se.getLatitude(), nw.getLatitude(), nw.getLongitude(), se.getLongitude(),memberId, pr).getContent();
                 } else {
                     memberVoList = this.memberRepository.findByIdNotAndAndUseYnOrderByLastSignInDesc(memberId, "Y",  pr).getContent();
 //                    memberVoList = this.memberMapper.findMemberList();
