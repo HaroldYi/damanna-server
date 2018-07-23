@@ -155,6 +155,7 @@ public class MemberApiController {
                         newMemberVo.setClientToken(memberVo.getClientToken());
                         newMemberVo.setLocationLon(memberVo.getLocationLon());
                         newMemberVo.setLocationLat(memberVo.getLocationLat());
+                        newMemberVo.setDeviceOs(memberVo.getDeviceOs());
 
                         GeoHash geohash = GeoHash.withCharacterPrecision(memberVo.getLocationLat(), memberVo.getLocationLon(),12);
                         String geohashString = geohash.toBase32();

@@ -114,6 +114,9 @@ public class MemberVo {
     @Column
     private String kind = "";
 
+    @Column
+    private String deviceOs = "";
+
     public String getId() {
         return id;
     }
@@ -328,5 +331,13 @@ public class MemberVo {
 
     public void setDistrictCode(String districtCode) {
         this.districtCode = districtCode;
+    }
+
+    public String getDeviceOs() {
+        return deviceOs;
+    }
+
+    public void setDeviceOs(String deviceOs) {
+        this.deviceOs = deviceOs;
     }
 }
