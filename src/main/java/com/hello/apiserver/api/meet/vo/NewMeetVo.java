@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "meet")
-public class MeetVo implements Serializable {
+public class NewMeetVo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -83,8 +83,8 @@ public class MeetVo implements Serializable {
     @Column
     private String fileName = "";
 
-//    @Column
-//    private String password = "";
+    @Column
+    private String password = "";
 
     public MemberVo getMember() {
         return member;
@@ -246,11 +246,11 @@ public class MeetVo implements Serializable {
         this.meetBannedMemberList = meetBannedMemberList;
     }
 
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

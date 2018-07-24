@@ -56,6 +56,7 @@ public class NearMeetVo {
     private String districtKrName = "";
     private String districtKrNameAbbr = "";
     private String memberLimit = "";
+    private boolean hasPassword;
 
     public String getId() {
         return id;
@@ -287,5 +288,13 @@ public class NearMeetVo {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public boolean isHasPassword() {
+        return hasPassword;
+    }
+
+    public void setHasPassword(boolean hasPassword) {
+        this.hasPassword = hasPassword;
     }
 }

@@ -27,7 +27,12 @@
             d.district_kr_name AS districtKrName,
             d.district_kr_name_abbr AS districtKrNameAbbr,
             s.member_limit AS memberLimit,
-            s.place
+            s.place,
+            CASE
+                WHEN s.password IS NULL
+                    THEN FALSE
+                ELSE TRUE
+            END AS hasPassword
         FROM
             meet s
         INNER JOIN
@@ -97,28 +102,33 @@
     <select id="getMeetListByUid" resultType="com.hello.apiserver.api.meet.vo.NearMeetVo">
         /* getMeetListByUid */
         SELECT
-        s.id,
-        s.title,
-        s.message,
-        s.channel_url AS channelUrl,
-        s.member_id AS memberId,
-        m.name,
-        s.reg_dt AS regDt,
-        IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt,
-        m.client_token AS clientToken,
-        m.profile_url AS profileUrl,
-        m.profile_url_org AS profileUrlOrg,
-        m.profile_file AS profileFile,
-        s.original_img AS originalImg,
-        s.thumbnail_img AS thumbnailImg,
-        s.file_name AS fileName,
-        s.sortation,
-        s.meet_start_dt AS meetStartDt,
-        s.meet_end_dt AS meetEndDt,
-        m.location_lat AS locationLat,
-        m.location_lon AS locationLon,
-        s.member_limit AS memberLimit,
-        s.place
+                s.id,
+                s.title,
+                s.message,
+                s.channel_url AS channelUrl,
+                s.member_id AS memberId,
+                m.name,
+                s.reg_dt AS regDt,
+                IFNULL(SUM(AA.commentCnt + BB.commentReplyCnt), 0) AS commentCnt,
+                m.client_token AS clientToken,
+                m.profile_url AS profileUrl,
+                m.profile_url_org AS profileUrlOrg,
+                m.profile_file AS profileFile,
+                s.original_img AS originalImg,
+                s.thumbnail_img AS thumbnailImg,
+                s.file_name AS fileName,
+                s.sortation,
+                s.meet_start_dt AS meetStartDt,
+                s.meet_end_dt AS meetEndDt,
+                m.location_lat AS locationLat,
+                m.location_lon AS locationLon,
+                s.member_limit AS memberLimit,
+                s.place,
+                CASE
+                    WHEN s.password IS NULL
+                        THEN FALSE
+                    ELSE TRUE
+            END AS hasPassword
         FROM
         meet s
         INNER JOIN
@@ -141,5 +151,10 @@
         GROUP BY s.id
         ORDER BY s.reg_dt DESC
         LIMIT ${page}, 20
+    </select>
+
+    <select id="checkPassword" resultType="int">
+        /* checkPassword */
+        SELECT COUNT(*) FROM meet WHERE channel_url = #{channelUrl} AND password = #{password}
     </select>
 </mapper>

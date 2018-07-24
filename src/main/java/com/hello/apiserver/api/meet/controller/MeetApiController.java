@@ -4,11 +4,14 @@ import ch.hsr.geohash.WGS84Point;
 import ch.hsr.geohash.util.VincentyGeodesy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.hello.apiserver.api.like.service.LikeRepository;
 import com.hello.apiserver.api.meet.mapper.MeetMapper;
 import com.hello.apiserver.api.meet.service.MeetRepository;
+import com.hello.apiserver.api.meet.service.NewMeetRepository;
 import com.hello.apiserver.api.meet.vo.MeetVo;
 import com.hello.apiserver.api.meet.vo.NearMeetVo;
+import com.hello.apiserver.api.meet.vo.NewMeetVo;
 import com.hello.apiserver.api.member.service.MeetBannedMemberRepository;
 import com.hello.apiserver.api.member.service.MemberRepository;
 import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 @RestController
@@ -41,6 +45,9 @@ public class MeetApiController {
 
     @Autowired
     private MeetRepository meetRepository;
+
+    @Autowired
+    private NewMeetRepository newMeetRepository;
 
     @Autowired
     private LikeSayRepository likeSayRepository;
@@ -82,7 +89,7 @@ public class MeetApiController {
             } else {
 //                response.setStatus(HttpStatus.OK.value());
 
-                MeetVo meetVo = new Gson().fromJson(body, MeetVo.class);
+                NewMeetVo meetVo = new Gson().fromJson(body, NewMeetVo.class);
                 meetVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 meetVo.setUseYn("Y");
 
@@ -112,7 +119,7 @@ public class MeetApiController {
                     meetVo.setMemberLimit("4");
                 }
 
-                this.meetRepository.save(meetVo);
+                this.newMeetRepository.save(meetVo);
                 this.httpStatus = HttpStatus.OK;
             }
         } else {
@@ -419,6 +426,43 @@ public class MeetApiController {
                 meetVo.setChannelUrl(channelUrl);
 
                 this.meetRepository.save(meetVo);
+            }
+        } else {
+            this.httpStatus = HttpStatus.UNAUTHORIZED;
+            this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+    }
+
+    @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
+    public ResponseEntity checkPassword (
+            HttpServletResponse response,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @RequestBody(required = false)String body
+    ) throws IOException {
+
+//        apiKey = new Gson().fromJson(apiKey, String.class);
+
+        if(Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(body)) {
+                this.httpStatus = HttpStatus.BAD_REQUEST;
+                this.httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+            } else {
+                this.httpStatus = HttpStatus.OK;
+
+                Type mapType = new TypeToken<Map<String, String>>() {}.getType();
+                Map<String, Object> map = new Gson().fromJson(body, mapType);
+                map.put("channelUrl", map.get("channelUrl"));
+                map.put("password", map.get("password"));
+
+                int cnt = this.meetMapper.checkPassword(map);
+                if(cnt == 0) {
+                    this.httpStatus = HttpStatus.UNAUTHORIZED;
+                    this.httpResponseVo.setHttpResponse("Password is wrong! please check password", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+                } else {
+                    this.httpStatus = HttpStatus.OK;
+                }
             }
         } else {
             this.httpStatus = HttpStatus.UNAUTHORIZED;
