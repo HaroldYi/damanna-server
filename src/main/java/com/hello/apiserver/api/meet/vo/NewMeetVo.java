@@ -86,6 +86,9 @@ public class NewMeetVo implements Serializable {
     @Column
     private String password = "";
 
+    @Column
+    private boolean hasPassword;
+
     public MemberVo getMember() {
         return member;
     }
@@ -252,5 +255,13 @@ public class NewMeetVo implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isHasPassword() {
+        return hasPassword;
+    }
+
+    public void setHasPassword(boolean hasPassword) {
+        this.hasPassword = hasPassword;
     }
 }

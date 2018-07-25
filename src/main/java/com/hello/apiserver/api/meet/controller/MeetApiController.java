@@ -119,6 +119,10 @@ public class MeetApiController {
                     meetVo.setMemberLimit("4");
                 }
 
+                if(!ObjectUtils.isEmpty(meetVo.getPassword())) {
+                    meetVo.setHasPassword(true);
+                }
+
                 this.newMeetRepository.save(meetVo);
                 this.httpStatus = HttpStatus.OK;
             }
