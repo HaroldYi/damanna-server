@@ -141,7 +141,6 @@ public class MeetApiController {
 
         boolean isError = false;
         MeetVo meetVo = new MeetVo();
-        NearMeetVo nearMeetVo = new NearMeetVo();
 
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(meetId)) {
@@ -153,6 +152,7 @@ public class MeetApiController {
                 response.setStatus(HttpStatus.OK.value());
 
                 meetVo = this.meetRepository.findByIdAndUseYn(meetId, "Y");
+
                 List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");
                 meetVo.setLikeSay(likeSayVoList);
 

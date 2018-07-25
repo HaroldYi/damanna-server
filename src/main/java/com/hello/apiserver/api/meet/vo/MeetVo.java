@@ -6,6 +6,7 @@ import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -85,6 +86,9 @@ public class MeetVo implements Serializable {
 
 //    @Column
 //    private String password = "";
+
+    @Column
+    private boolean hasPassword;
 
     public MemberVo getMember() {
         return member;
@@ -253,4 +257,12 @@ public class MeetVo implements Serializable {
 //    public void setPassword(String password) {
 //        this.password = password;
 //    }
+
+    public boolean isHasPassword() {
+        return hasPassword;
+    }
+
+    public void setHasPassword(boolean hasPassword) {
+        this.hasPassword = hasPassword;
+    }
 }
