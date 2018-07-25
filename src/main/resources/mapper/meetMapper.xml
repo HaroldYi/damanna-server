@@ -28,7 +28,7 @@
             d.district_kr_name_abbr AS districtKrNameAbbr,
             s.member_limit AS memberLimit,
             s.place,
-            s.hasPassword
+            s.has_password
         FROM
             meet s
         INNER JOIN
@@ -120,7 +120,7 @@
                 m.location_lon AS locationLon,
                 s.member_limit AS memberLimit,
                 s.place,
-                s.hasPassword
+                s.has_password
         FROM
         meet s
         INNER JOIN
