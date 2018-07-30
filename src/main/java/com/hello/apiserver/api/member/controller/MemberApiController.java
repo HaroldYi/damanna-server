@@ -8,9 +8,10 @@ import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.member.mapper.MemberMapper;
 import com.hello.apiserver.api.member.service.MeetBannedMemberRepository;
 import com.hello.apiserver.api.member.service.MemberRepository;
+import com.hello.apiserver.api.member.service.VisitMemberRepository;
 import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
-import com.hello.apiserver.api.say.service.SayRepository;
+import com.hello.apiserver.api.member.vo.VisitMemberVo;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -37,7 +37,7 @@ public class MemberApiController {
     private MemberRepository memberRepository;
 
     @Autowired
-    private SayRepository sayRepository;
+    VisitMemberRepository visitMemberRepository;
 
     @Autowired
     private MeetBannedMemberRepository meetBannedMemberRepository;
@@ -47,7 +47,7 @@ public class MemberApiController {
             HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String userInfo
-    ) throws IOException {
+    ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
@@ -128,7 +128,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String args,
             @PathVariable String memberId
-    ) throws IOException {
+    ) {
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");
@@ -185,7 +185,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String nickName,
             @PathVariable String memberId
-    ) throws IOException {
+    ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         HttpResponseVo httpResponseVo = new HttpResponseVo();
@@ -225,7 +225,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String age,
             @PathVariable String memberId
-    ) throws IOException {
+    ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = gson.fromJson(age, MemberVo.class);
@@ -268,7 +268,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @RequestBody(required = false)String age,
             @PathVariable String memberId
-    ) throws IOException {
+    ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = gson.fromJson(age, MemberVo.class);
@@ -310,7 +310,7 @@ public class MemberApiController {
             HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable int page
-    ) throws IOException {
+    ) {
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");
@@ -360,7 +360,7 @@ public class MemberApiController {
             HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable("memberId")String memberId
-    ) throws IOException {
+    ) {
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");
@@ -423,7 +423,7 @@ public class MemberApiController {
             @RequestParam(value = "distanceMetres") int distanceMetres,
             @RequestParam(value = "page") int page,
             @RequestHeader(value = "apiKey", required = false)String apiKey
-    ) throws IOException {
+    ) {
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
         httpResponseVo.setResponse("httpreponse");
@@ -499,7 +499,7 @@ public class MemberApiController {
             @RequestHeader(value = "apiKey", required = false)String apiKey,
             @PathVariable String channelUrl,
             @PathVariable String memberId
-    ) throws IOException {
+    ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         MemberVo memberVo = new MemberVo();
@@ -545,6 +545,102 @@ public class MemberApiController {
             return ResponseEntity.status(httpStatus).body(httpResponseVo);
         } else {
             return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(memberVo));
+        }
+    }
+
+    @RequestMapping(value = {"/addVisitMember/{memberId}/{visitorMemberId}/", "/addVisitMember/{memberId}/{visitorMemberId}"}, method = RequestMethod.PUT, consumes="application/json; charset=utf8")
+    public ResponseEntity addVisitMember (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @PathVariable String memberId,
+            @PathVariable String visitorMemberId
+    ) {
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
+        if(Auth.checkApiKey(apiKey)) {
+
+            if(ObjectUtils.isEmpty(memberId)) {
+                httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+            } else {
+                httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                httpStatus = HttpStatus.OK;
+
+                VisitMemberVo visitMemberVo = visitMemberRepository.findByMemberIdAndVisitorMemberId(memberId, visitorMemberId);
+                if(visitMemberVo == null) {
+                    visitMemberVo = new VisitMemberVo();
+                    visitMemberVo.setMemberId(memberId);
+                    visitMemberVo.setVisitorMemberId(visitorMemberId);
+                    visitMemberVo.setRegDt(new Date());
+                } else {
+
+                }
+
+                visitMemberVo.setLastVisitDt(new Date());
+                visitMemberRepository.save(visitMemberVo);
+
+            }
+        } else {
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
+    }
+
+    @RequestMapping(value = {"/getVisitMemberList/{memberId}/", "/getVisitMemberList/{memberId}"}, method = RequestMethod.GET, consumes="application/json; charset=utf8")
+    public ResponseEntity getVisitMemberList (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @PathVariable String memberId
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        boolean isError = false;
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+        List<VisitMemberVo> visitMemberVoList = null;
+        List<MemberVo> memberVoList = new ArrayList<>();
+
+        if(Auth.checkApiKey(apiKey)) {
+
+            if(ObjectUtils.isEmpty(memberId)) {
+                httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+                isError = true;
+            } else {
+                httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                httpStatus = HttpStatus.OK;
+
+                visitMemberVoList = visitMemberRepository.findByMemberId(memberId);
+
+                for(VisitMemberVo visitMemberVo : visitMemberVoList) {
+                    memberVoList.add(visitMemberVo.getVisitorMember());
+                }
+
+                isError = false;
+            }
+        } else {
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            isError = true;
+        }
+
+        if(isError) {
+            return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        } else {
+            return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(memberVoList));
         }
     }
 }
