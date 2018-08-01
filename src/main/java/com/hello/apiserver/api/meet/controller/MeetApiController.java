@@ -80,16 +80,21 @@ public class MeetApiController {
 //        apiKey = new Gson().fromJson(apiKey, String.class);
 
         this.httpResponseVo.setPath(request.getRequestURI());
+        NewMeetVo meetVo = new NewMeetVo();
+        boolean isError = false;
 
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(body)) {
 //                response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'msg' parameter must not be null or empty");
                 this.httpStatus = HttpStatus.BAD_REQUEST;
                 this.httpResponseVo.setHttpResponse("The 'msg' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                isError = true;
             } else {
 //                response.setStatus(HttpStatus.OK.value());
 
-                NewMeetVo meetVo = new Gson().fromJson(body, NewMeetVo.class);
+                isError = false;
+
+                meetVo = new Gson().fromJson(body, NewMeetVo.class);
                 meetVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                 meetVo.setUseYn("Y");
 
@@ -123,15 +128,21 @@ public class MeetApiController {
                     meetVo.setHasPassword(true);
                 }
 
-                this.newMeetRepository.save(meetVo);
+                meetVo = this.newMeetRepository.save(meetVo);
                 this.httpStatus = HttpStatus.OK;
             }
         } else {
+            isError = true;
             this.httpStatus = HttpStatus.UNAUTHORIZED;
             this.httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        if(isError) {
+            return ResponseEntity.status(this.httpStatus).body(this.httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(this.httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(meetVo));
+        }
     }
 
     @RequestMapping(value = {"/getMeet/{meetId}", "/getMeet/{meetId}/"}, method = RequestMethod.GET)
