@@ -84,7 +84,7 @@ public class NewMeetVo implements Serializable {
     private String fileName = "";
 
     @Column
-    private String password = "";
+    private String password;
 
     @Column
     private boolean hasPassword;

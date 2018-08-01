@@ -13,18 +13,21 @@ import com.hello.apiserver.api.member.vo.MeetBannedMemberVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.member.vo.VisitMemberVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
 import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = {"/member", "/member/"})
@@ -41,6 +44,9 @@ public class MemberApiController {
 
     @Autowired
     private MeetBannedMemberRepository meetBannedMemberRepository;
+
+    @Autowired
+    AndroidPushNotificationsService androidPushNotificationsService;
 
     @RequestMapping(value = {"/newMember", "/newMember/"}, method = RequestMethod.POST)
     public ResponseEntity newMember (
@@ -573,11 +579,56 @@ public class MemberApiController {
                 httpStatus = HttpStatus.OK;
 
                 VisitMemberVo visitMemberVo = visitMemberRepository.findByMemberIdAndVisitorMemberId(memberId, visitorMemberId);
+
                 if(visitMemberVo == null) {
                     visitMemberVo = new VisitMemberVo();
                     visitMemberVo.setMemberId(memberId);
                     visitMemberVo.setVisitorMemberId(visitorMemberId);
                     visitMemberVo.setRegDt(new Date());
+
+                    MemberVo memberVo = this.memberRepository.findById(memberId);
+
+                    JSONObject body = new JSONObject();
+                    body.put("to", memberVo.getClientToken());
+                    body.put("priority", "high");
+                    body.put("content_available", true);
+
+                    JSONObject notification = new JSONObject();
+                    notification.put("title", "제주메이트");
+                    notification.put("body", String.format("%s님이 회원님의 프로필에 방문하였습니다.", memberVo.getName()));
+                    notification.put("content_available", true);
+                    notification.put("sound", "enabled");
+
+                    body.put("notification", notification);
+
+                    JSONObject data = new JSONObject();
+//                    data.put("sayId", map.get("sayId"));
+                    data.put("notiMsg", String.format("%s님이 회원님의 프로필에 방문하였습니다.", memberVo.getName()));
+//                    data.put("sortation", map.get("sortation"));
+                    data.put("content_available", true);
+
+                    body.put("data", data);
+
+                    HttpHeaders headers = new HttpHeaders();
+                    Charset utf8 = Charset.forName("UTF-8");
+                    MediaType mediaType = new MediaType("application", "json", utf8);
+                    headers.setContentType(mediaType);
+
+                    HttpEntity<String> pushRequest = new HttpEntity<>(body.toString(), headers);
+
+                    CompletableFuture<String> pushNotification = androidPushNotificationsService.send(pushRequest);
+                    CompletableFuture.allOf(pushNotification).join();
+
+                    try {
+                        String firebaseResponse = pushNotification.get();
+
+//                        return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
 
                 }
