@@ -586,7 +586,7 @@ public class MemberApiController {
                     visitMemberVo.setVisitorMemberId(visitorMemberId);
                     visitMemberVo.setRegDt(new Date());
 
-                    MemberVo memberVo = this.memberRepository.findById(memberId);
+                    MemberVo memberVo = this.memberRepository.findById(visitorMemberId);
 
                     JSONObject body = new JSONObject();
                     body.put("to", memberVo.getClientToken());
