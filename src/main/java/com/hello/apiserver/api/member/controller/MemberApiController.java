@@ -594,18 +594,17 @@ public class MemberApiController {
                     body.put("priority", "high");
                     body.put("content_available", true);
 
-                    JSONObject notification = new JSONObject();
-                    notification.put("title", "제주메이트");
-                    notification.put("body", String.format("%s님이 회원님의 프로필에 방문하였습니다.", memberVo.getName()));
-                    notification.put("content_available", true);
-                    notification.put("sound", "enabled");
+//                    JSONObject notification = new JSONObject();
+//                    notification.put("title", "제주메이트");
+//                    notification.put("body", String.format("%s님이 회원님의 프로필에 방문하였습니다.", memberVo.getName()));
+//                    notification.put("content_available", true);
+//                    notification.put("sound", "enabled");
 
-                    body.put("notification", notification);
+//                    body.put("notification", notification);
 
                     JSONObject data = new JSONObject();
-//                    data.put("sayId", map.get("sayId"));
                     data.put("notiMsg", String.format("%s님이 회원님의 프로필에 방문하였습니다.", memberVo.getName()));
-//                    data.put("sortation", map.get("sortation"));
+                    data.put("visit", "visit");
                     data.put("content_available", true);
 
                     body.put("data", data);
