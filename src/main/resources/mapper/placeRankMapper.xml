@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.apiserver.api.place.mapper.PlaceRankMapper">
+    <select id="getPlaceRank" resultType="com.hello.apiserver.api.place.vo.PlaceVo">
+        /* getPlaceRank */
+        SELECT  pr.place_id AS placeId,
+                p.place_name AS placeName,
+                pr.rank,
+                pr.before_rank AS beforeRank,
+                (pr.before_rank - pr.rank) variation
+        FROM place_rank pr
+            INNER JOIN place p
+                      ON p.id = pr.place_id
+            INNER JOIN (
+                         SELECT place_id,
+                                MAX(reg_dt) max_reg_dt
+                         FROM place_rank
+                         GROUP BY place_id
+                         ) AA
+                      ON pr.place_id = AA.place_id
+                      AND pr.reg_dt = AA.max_reg_dt
+        ORDER BY pr.rank ASC
+    </select>
+</mapper>
