@@ -674,7 +674,62 @@ public class MemberApiController {
                 httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                 httpStatus = HttpStatus.OK;
 
-                visitMemberVoList = visitMemberRepository.findByMemberId(memberId);
+                PageRequest pr = new PageRequest(0, 20);
+                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
+
+                for(VisitMemberVo visitMemberVo : visitMemberVoList) {
+                    memberVoList.add(visitMemberVo.getVisitorMember());
+                }
+
+                isError = false;
+            }
+        } else {
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            isError = true;
+        }
+
+        if(isError) {
+            return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        } else {
+            return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(memberVoList));
+        }
+    }
+
+    @RequestMapping(value = {"/getVisitMemberList/{memberId}/{page}", "/getVisitMemberList/{memberId}/{page}/"}, method = RequestMethod.GET, consumes="application/json; charset=utf8")
+    public ResponseEntity getVisitMemberList1 (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @PathVariable String memberId,
+            @PathVariable int page
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        boolean isError = false;
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+        List<VisitMemberVo> visitMemberVoList = null;
+        List<MemberVo> memberVoList = new ArrayList<>();
+
+        if(Auth.checkApiKey(apiKey)) {
+
+            if(ObjectUtils.isEmpty(memberId)) {
+                httpResponseVo.setHttpResponse("The parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+                isError = true;
+            } else {
+
+                PageRequest pr = new PageRequest(page, 20);
+
+                httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                httpStatus = HttpStatus.OK;
+
+                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
 
                 for(VisitMemberVo visitMemberVo : visitMemberVoList) {
                     memberVoList.add(visitMemberVo.getVisitorMember());

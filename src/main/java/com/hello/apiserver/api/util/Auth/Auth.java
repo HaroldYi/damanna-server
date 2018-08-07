@@ -15,15 +15,18 @@ public class Auth {
     }
 
     public static boolean checkApiKey(String apiKey) {
-        if(ObjectUtils.isEmpty(apiKey)) {
-            return false;
-        } else {
-            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
-            if(apikeyVo == null) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+        // TODO 임시.
+        return true;
+
+//        if(ObjectUtils.isEmpty(apiKey)) {
+//            return false;
+//        } else {
+//            ApikeyVo apikeyVo = authRepository.findByApiKeyAndUseYn(apiKey, "Y");
+//            if(apikeyVo == null) {
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        }
     }
 }
