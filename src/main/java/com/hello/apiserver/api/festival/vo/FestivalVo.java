@@ -1,7 +1,12 @@
 package com.hello.apiserver.api.festival.vo;
 
+import com.hello.apiserver.api.comment.vo.CommentVo;
+import com.hello.apiserver.api.like.vo.LikeSayVo;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "festival")
@@ -69,6 +74,16 @@ public class FestivalVo {
 
     @Column
     private String title = "";
+
+    @OneToMany
+    @JoinColumn(name = "festival_id", referencedColumnName = "contentid")
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private List<CommentVo> comment;
+
+    @OneToMany
+    @JoinColumn(name = "festival_id", referencedColumnName = "contentid")
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private List<LikeSayVo> likeSay;
 
     public String getAddr1() {
         return addr1;
@@ -236,5 +251,21 @@ public class FestivalVo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<CommentVo> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<CommentVo> comment) {
+        this.comment = comment;
+    }
+
+    public List<LikeSayVo> getLikeSay() {
+        return likeSay;
+    }
+
+    public void setLikeSay(List<LikeSayVo> likeSay) {
+        this.likeSay = likeSay;
     }
 }
