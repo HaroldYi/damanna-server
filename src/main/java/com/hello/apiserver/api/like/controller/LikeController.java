@@ -8,6 +8,7 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
+import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -43,7 +44,7 @@ public class LikeController {
     AndroidPushNotificationsService androidPushNotificationsService;
 
     @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}/{clientToken}", "/say/likeSay/{sayId}/{memberId}/{clientToken}"}, method = RequestMethod.PUT)
-    public String likeSay (
+    public ResponseEntity likeSay (
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -52,14 +53,24 @@ public class LikeController {
             @PathVariable String clientToken
     ) throws IOException {
 
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
             } else {
                 if(ObjectUtils.isEmpty(sayId)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'sayId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
-                    response.setStatus(HttpStatus.OK.value());
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
 
                     String sortation = "";
                     LikeSayVo likeSayVo = new LikeSayVo();
@@ -116,26 +127,24 @@ public class LikeController {
 
                         try {
                             String firebaseResponse = pushNotification.get();
-                            return HttpStatus.OK.toString();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                            return HttpStatus.OK.toString();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
-                            return HttpStatus.OK.toString();
                         }
                     }
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 
     @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}", "/say/likeSay/{sayId}/{memberId}"}, method = RequestMethod.PUT)
-    public String likeSay1 (
+    public ResponseEntity likeSay1 (
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -143,14 +152,24 @@ public class LikeController {
             @PathVariable String memberId
     ) throws IOException {
 
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
         if(Auth.checkApiKey(apiKey)) {
             if (ObjectUtils.isEmpty(sayId)) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
             } else {
                 if(ObjectUtils.isEmpty(sayId)) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'sayId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
-                    response.setStatus(HttpStatus.OK.value());
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
 
                     String sortation = "";
                     LikeSayVo likeSayVo = new LikeSayVo();
@@ -185,9 +204,10 @@ public class LikeController {
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 }
