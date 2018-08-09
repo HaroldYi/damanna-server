@@ -20,6 +20,9 @@ public class LikeSayVo {
     @Column(name = "meet_id", nullable = false)
     private String meetId;
 
+    @Column(name = "festival_id", nullable = false)
+    private String festivalId;
+
     @ManyToOne(targetEntity=MemberVo.class)
 //    @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberVo member;
@@ -59,6 +62,14 @@ public class LikeSayVo {
 
     public void setMeetId(String meetId) {
         this.meetId = meetId;
+    }
+
+    public String getFestivalId() {
+        return festivalId;
+    }
+
+    public void setFestivalId(String festivalId) {
+        this.festivalId = festivalId;
     }
 
     public MemberVo getMember() {

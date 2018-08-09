@@ -43,7 +43,7 @@ public class LikeController {
     @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
 
-    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}/{clientToken}", "/say/likeSay/{sayId}/{memberId}/{clientToken}"}, method = RequestMethod.PUT)
+    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}/{clientToken}", "/say/likeSay/{sayId}/{memberId}/{clientToken}", "/festival/likeFestival/{sayId}/{memberId}/{clientToken}"}, method = RequestMethod.PUT)
     public ResponseEntity likeSay (
             HttpServletRequest request,
             HttpServletResponse response,
@@ -80,6 +80,8 @@ public class LikeController {
                         likeSayVo = this.likeRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     } else if(request.getRequestURI().indexOf("meet") != -1) {
                         likeSayVo = this.likeRepository.findByMeetIdAndMemberAndUseYn(sayId, memberVo, "Y");
+                    } else if(request.getRequestURI().indexOf("festival") != -1) {
+                        likeSayVo = this.likeRepository.findByFestivalIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     }
 
                     if(likeSayVo != null) {
@@ -93,6 +95,9 @@ public class LikeController {
                         } else if(request.getRequestURI().indexOf("meet") != -1) {
                             sortation = "M";
                             likeSayVo.setMeetId(sayId);
+                        } else if(request.getRequestURI().indexOf("festival") != -1) {
+                            sortation = "F";
+                            likeSayVo.setFestivalId(sayId);
                         }
 
                         likeSayVo.setMember(memberVo);
@@ -143,7 +148,7 @@ public class LikeController {
         return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 
-    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}", "/say/likeSay/{sayId}/{memberId}"}, method = RequestMethod.PUT)
+    @RequestMapping(value = {"/meet/likeMeet/{sayId}/{memberId}", "/say/likeSay/{sayId}/{memberId}", "/festival/likeFestival/{sayId}/{memberId}"}, method = RequestMethod.PUT)
     public ResponseEntity likeSay1 (
             HttpServletRequest request,
             HttpServletResponse response,
@@ -179,6 +184,8 @@ public class LikeController {
                         likeSayVo = this.likeRepository.findBySayIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     } else if(request.getRequestURI().indexOf("meet") != -1) {
                         likeSayVo = this.likeRepository.findByMeetIdAndMemberAndUseYn(sayId, memberVo, "Y");
+                    } else if(request.getRequestURI().indexOf("festival") != -1) {
+                        likeSayVo = this.likeRepository.findByFestivalIdAndMemberAndUseYn(sayId, memberVo, "Y");
                     }
 
                     if(likeSayVo != null) {
@@ -192,6 +199,9 @@ public class LikeController {
                         } else if(request.getRequestURI().indexOf("meet") != -1) {
                             sortation = "M";
                             likeSayVo.setMeetId(sayId);
+                        } else if(request.getRequestURI().indexOf("festival") != -1) {
+                            sortation = "F";
+                            likeSayVo.setFestivalId(sayId);
                         }
 
                         likeSayVo.setMember(memberVo);

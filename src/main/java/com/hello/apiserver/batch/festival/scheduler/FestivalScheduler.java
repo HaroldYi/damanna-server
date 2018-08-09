@@ -1,9 +1,11 @@
 package com.hello.apiserver.batch.festival.scheduler;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.hello.apiserver.batch.festival.mapper.FestivalMapper;
-import com.hello.apiserver.batch.festival.service.FestivalRepository;
 import com.hello.apiserver.batch.festival.vo.FestivalVo;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -19,7 +21,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;

@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface FestivalRepository extends CrudRepository<FestivalVo, Long> {
     Page<FestivalVo> findAll(Pageable pageable);
+    FestivalVo findByContentid(String festivalId);
 }
