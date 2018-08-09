@@ -1,0 +1,74 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.apiserver.batch.festival.mapper.FestivalMapper">
+    <insert id="saveFestivalInfoList" parameterType="java.util.Map">
+        /* saveFestivalInfoList */
+        INSERT INTO festival
+        <trim prefix="(" suffix=") VALUES " suffixOverrides=",">
+            addr1,
+            addr2,
+            areacode,
+            cat1,
+            cat2,
+            cat3,
+            contentid,
+            createdtime,
+            eventenddate,
+            eventstartdate,
+            firstimage,
+            firstimage2,
+            mapx,
+            mapy,
+            mlevel,
+            modifiedtime,
+            readcount,
+            sigungucode,
+            tel,
+            title,
+        </trim>
+        <foreach collection="festivalList" index="index" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.addr1},
+                #{item.addr2},
+                #{item.areacode},
+                #{item.cat1},
+                #{item.cat2},
+                #{item.cat3},
+                #{item.contentid},
+                #{item.createdtime},
+                #{item.eventenddate},
+                #{item.eventstartdate},
+                #{item.firstimage},
+                #{item.firstimage2},
+                #{item.mapx},
+                #{item.mapy},
+                #{item.mlevel},
+                #{item.modifiedtime},
+                #{item.readcount},
+                #{item.sigungucode},
+                #{item.tel},
+                #{item.title},
+            </trim>
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            addr1 = VALUES(addr1),
+            addr2 = VALUES(addr2),
+            areacode = VALUES(areacode),
+            cat1 = VALUES(cat1),
+            cat2 = VALUES(cat2),
+            cat3 = VALUES(cat3),
+            createdtime = VALUES(createdtime),
+            eventenddate = VALUES(eventenddate),
+            eventstartdate = VALUES(eventstartdate),
+            firstimage = VALUES(firstimage),
+            firstimage2 = VALUES(firstimage2),
+            mapx = VALUES(mapx),
+            mapy = VALUES(mapy),
+            mlevel = VALUES(mlevel),
+            modifiedtime = VALUES(modifiedtime),
+            readcount = VALUES(readcount),
+            sigungucode = VALUES(sigungucode),
+            tel = VALUES(tel),
+            title = VALUES(title)
+    </insert>
+</mapper>
