@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.hello.apiserver.api.festival.service.FestivalRepository;
 import com.hello.apiserver.api.festival.vo.FestivalVo;
 import com.hello.apiserver.api.util.Auth.Auth;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

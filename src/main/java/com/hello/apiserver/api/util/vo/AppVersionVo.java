@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util.AppData;
+package com.hello.apiserver.api.util.vo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,22 +7,25 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "regex")
-public class RegexVo {
+@Table(name = "app_version")
+public class AppVersionVo {
     @Id
     private String id = "";
 
     @Column
-    private String regex = "";
+    private float android;
+
+    @Column
+    private float ios;
+
+    @Column
+    private String status;
 
     @Column
     private Date regDt;
 
     @Column
     private Date updateDt;
-
-    @Column
-    private String regexVersion = "";
 
     public String getId() {
         return id;
@@ -32,12 +35,20 @@ public class RegexVo {
         this.id = id;
     }
 
-    public String getRegex() {
-        return regex;
+    public float getAndroid() {
+        return android;
     }
 
-    public void setRegex(String regex) {
-        this.regex = regex;
+    public void setAndroid(float android) {
+        this.android = android;
+    }
+
+    public float getIos() {
+        return ios;
+    }
+
+    public void setIos(float ios) {
+        this.ios = ios;
     }
 
     public Date getRegDt() {
@@ -56,11 +67,11 @@ public class RegexVo {
         this.updateDt = updateDt;
     }
 
-    public String getRegexVersion() {
-        return regexVersion;
+    public String getStatus() {
+        return status;
     }
 
-    public void setRegexVersion(String regexVersion) {
-        this.regexVersion = regexVersion;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

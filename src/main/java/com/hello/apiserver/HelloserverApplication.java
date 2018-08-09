@@ -7,12 +7,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
 
 @SpringBootApplication
 @EnableAutoConfiguration
+@EnableJpaRepositories("com.hello.apiserver.*.*.service")
 public class HelloserverApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws IOException {

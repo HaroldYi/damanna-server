@@ -8,7 +8,7 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.say.service.SayRepository;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

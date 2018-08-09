@@ -1,19 +1,28 @@
-package com.hello.apiserver.api.util.Auth;
+package com.hello.apiserver.api.util.vo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "api_keys")
-public class ApikeyVo {
+@Table(name = "regex")
+public class RegexVo {
     @Id
     private String id = "";
-    private String apiKey = "";
-    private String useYn = "Y";
+
+    @Column
+    private String regex = "";
+
+    @Column
     private Date regDt;
+
+    @Column
     private Date updateDt;
+
+    @Column
+    private String regexVersion = "";
 
     public String getId() {
         return id;
@@ -23,20 +32,12 @@ public class ApikeyVo {
         this.id = id;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public String getRegex() {
+        return regex;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getUseYn() {
-        return useYn;
-    }
-
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
+    public void setRegex(String regex) {
+        this.regex = regex;
     }
 
     public Date getRegDt() {
@@ -53,5 +54,13 @@ public class ApikeyVo {
 
     public void setUpdateDt(Date updateDt) {
         this.updateDt = updateDt;
+    }
+
+    public String getRegexVersion() {
+        return regexVersion;
+    }
+
+    public void setRegexVersion(String regexVersion) {
+        this.regexVersion = regexVersion;
     }
 }

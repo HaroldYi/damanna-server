@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util.commonVo;
+package com.hello.apiserver.api.util.vo;
 
 import java.util.Date;
 

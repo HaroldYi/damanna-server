@@ -21,7 +21,7 @@ import com.hello.apiserver.api.comment.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

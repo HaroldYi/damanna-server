@@ -1,5 +1,7 @@
-package com.hello.apiserver.api.util.AppVersion;
+package com.hello.apiserver.api.util.controller;
 
+import com.hello.apiserver.api.util.service.AppVersionRepository;
+import com.hello.apiserver.api.util.vo.AppVersionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
