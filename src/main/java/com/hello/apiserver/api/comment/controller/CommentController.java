@@ -59,8 +59,8 @@ public class CommentController {
                 httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
                 httpStatus = HttpStatus.BAD_REQUEST;
             } else {
-                if(ObjectUtils.isEmpty(commentVo.getSayId()) && ObjectUtils.isEmpty(commentVo.getMeetId())) {
-                    httpResponseVo.setHttpResponse("The 'sayId' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                if(ObjectUtils.isEmpty(commentVo.getSayId()) && ObjectUtils.isEmpty(commentVo.getMeetId()) && ObjectUtils.isEmpty(commentVo.getFestivalId())) {
+                    httpResponseVo.setHttpResponse("The 'sayId', 'meetId' or 'festivalId' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
                     httpStatus = HttpStatus.BAD_REQUEST;
                 } else if(ObjectUtils.isEmpty(commentVo.getComment())) {
                     httpResponseVo.setHttpResponse("The 'comment' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
