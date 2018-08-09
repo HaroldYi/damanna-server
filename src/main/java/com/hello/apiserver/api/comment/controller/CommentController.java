@@ -8,8 +8,10 @@ import com.hello.apiserver.api.comment.vo.CommentReplyVo;
 import com.hello.apiserver.api.comment.vo.CommentVo;
 import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.util.Auth.Auth;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,8 @@ public class CommentController {
     @Autowired
     CommentReplyRepository commentReplyRepository;
 
-    @RequestMapping(value = {"/say/newComment", "/meet/newComment"}, method = RequestMethod.POST)
-    public String newComment (
+    @RequestMapping(value = {"/say/newComment", "/meet/newComment", "/festival/newComment"}, method = RequestMethod.POST)
+    public ResponseEntity newComment (
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -38,6 +40,13 @@ public class CommentController {
     ) throws IOException {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
 
 //        apiKey = gson.fromJson(apiKey, String.class);
         CommentVo commentVo = gson.fromJson(body, CommentVo.class);
@@ -47,12 +56,15 @@ public class CommentController {
 
         if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
             } else {
                 if(ObjectUtils.isEmpty(commentVo.getSayId()) && ObjectUtils.isEmpty(commentVo.getMeetId())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'sayId' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'sayId' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else if(ObjectUtils.isEmpty(commentVo.getComment())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'comment' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'comment' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
                     response.setStatus(HttpStatus.OK.value());
                     commentVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
@@ -61,25 +73,33 @@ public class CommentController {
                     if(request.getRequestURI().indexOf("say") != -1) {
                         sortation = "S";
                         commentVo.setMeetId(null);
+                        commentVo.setFestivalId(null);
                     } else if(request.getRequestURI().indexOf("meet") != -1) {
                         sortation = "M";
                         commentVo.setSayId(null);
+                        commentVo.setFestivalId(null);
+                    } else if(request.getRequestURI().indexOf("festival") != -1) {
+                        sortation = "F";
+                        commentVo.setSayId(null);
+                        commentVo.setMeetId(null);
                     }
 
                     commentVo.setSortation(sortation);
 
-                    return gson.toJson(this.commentRepository.save(commentVo));
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 
-    @RequestMapping(value = {"/say/newCommentReply", "/meet/newCommentReply"}, method = RequestMethod.POST)
-    public String newCommentReply (
+    @RequestMapping(value = {"/say/newCommentReply", "/meet/newCommentReply", "/festival/newCommentReply"}, method = RequestMethod.POST)
+    public ResponseEntity newCommentReply (
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
@@ -88,28 +108,41 @@ public class CommentController {
 
         Gson gson = new Gson();
 
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+
 //        apiKey = gson.fromJson(apiKey, String.class);
         CommentReplyVo commentReplyVo = gson.fromJson(body, CommentReplyVo.class);
 
         if(Auth.checkApiKey(apiKey)) {
             if (body == null || body.isEmpty()) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "The request body must not be null or empty");
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
             } else {
                 if(ObjectUtils.isEmpty(commentReplyVo.getCommentId())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'memberId' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'memberId' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else if(ObjectUtils.isEmpty(commentReplyVo.getComment())) {
-                    response.sendError(HttpStatus.BAD_REQUEST.value(), "The 'message' request body must not be null or empty");
+                    httpResponseVo.setHttpResponse("The 'message' request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
                 } else {
                     response.setStatus(HttpStatus.OK.value());
                     commentReplyVo.setRegDt(new Date(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()));
                     this.commentReplyRepository.save(commentReplyVo);
-                    return HttpStatus.OK.toString();
+
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
                 }
             }
         } else {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "This api key is wrong! please check your api key!");
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
-        return "";
+        return ResponseEntity.status(httpStatus).body(httpResponseVo);
     }
 }
