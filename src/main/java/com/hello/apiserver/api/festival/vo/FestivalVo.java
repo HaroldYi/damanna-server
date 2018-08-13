@@ -40,10 +40,10 @@ public class FestivalVo {
     private Date createdtime;
 
     @Column
-    private String eventenddate = "";
+    private Date eventenddate;
 
     @Column
-    private String eventstartdate = "";
+    private Date eventstartdate;
 
     @Column
     private String firstimage = "";
@@ -157,19 +157,19 @@ public class FestivalVo {
         this.createdtime = createdtime;
     }
 
-    public String getEventenddate() {
+    public Date getEventenddate() {
         return eventenddate;
     }
 
-    public void setEventenddate(String eventenddate) {
+    public void setEventenddate(Date eventenddate) {
         this.eventenddate = eventenddate;
     }
 
-    public String getEventstartdate() {
+    public Date getEventstartdate() {
         return eventstartdate;
     }
 
-    public void setEventstartdate(String eventstartdate) {
+    public void setEventstartdate(Date eventstartdate) {
         this.eventstartdate = eventstartdate;
     }
 

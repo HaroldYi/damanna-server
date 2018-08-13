@@ -55,8 +55,9 @@ public class FestivalController {
                 httpStatus = HttpStatus.OK;
 
                 PageRequest pr = new PageRequest(page, 20);
+                Date today = new Date();
 
-                festivalList = this.festivalRepository.findAll(pr).getContent();
+                festivalList = this.festivalRepository.findByEventstartdateAfterAndEventstartdateAfterOrderByEventstartdateAsc(today, today, pr).getContent();
             }
         } else {
             isError = true;

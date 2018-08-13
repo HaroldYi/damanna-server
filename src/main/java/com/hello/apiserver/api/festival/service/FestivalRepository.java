@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Date;
+
 public interface FestivalRepository extends CrudRepository<FestivalVo, Long> {
-    Page<FestivalVo> findAll(Pageable pageable);
+    Page<FestivalVo> findByEventstartdateAfterAndEventstartdateAfterOrderByEventstartdateAsc(Date startDt, Date endDt, Pageable pageable);
     FestivalVo findByContentid(String festivalId);
 }
