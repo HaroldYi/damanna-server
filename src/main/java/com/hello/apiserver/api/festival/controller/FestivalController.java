@@ -2,7 +2,9 @@ package com.hello.apiserver.api.festival.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hello.apiserver.api.festival.service.FestivalMeetRepository;
 import com.hello.apiserver.api.festival.service.FestivalRepository;
+import com.hello.apiserver.api.festival.vo.FestivalMeetVo;
 import com.hello.apiserver.api.festival.vo.FestivalVo;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.vo.HttpResponseVo;
@@ -26,6 +28,9 @@ public class FestivalController {
 
     @Autowired
     private FestivalRepository festivalRepository;
+
+    @Autowired
+    private FestivalMeetRepository festivalMeetRepository;
 
     @RequestMapping(value = {"/getFestivalList/{page}", "/getFestivalList/{page}/"}, method = RequestMethod.GET)
     public ResponseEntity getSayList (
@@ -100,6 +105,66 @@ public class FestivalController {
                 httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                 httpStatus = HttpStatus.OK;
                 festivalVo = this.festivalRepository.findByContentid(festivalId);
+            }
+        } else {
+            isError = true;
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        if(isError) {
+            return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(festivalVo));
+        }
+    }
+
+    @RequestMapping(value = {"/updateChannelUrl", "/updateChannelUrl/"}, method = RequestMethod.PUT)
+    public ResponseEntity updateChannelUrl (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @RequestBody(required = false)String body
+    ) throws IOException {
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+        boolean isError = false;
+        FestivalVo festivalVo = new FestivalVo();
+
+//        apiKey = new Gson().fromJson(apiKey, String.class);
+
+        if(Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(body)) {
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+                isError = true;
+            } else {
+
+                FestivalMeetVo festivalMeetVo = new Gson().fromJson(body, FestivalMeetVo.class);
+                if(ObjectUtils.isEmpty(festivalMeetVo.getFestivalId())) {
+                    httpResponseVo.setHttpResponse("The 'festivalId' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else if(ObjectUtils.isEmpty(festivalMeetVo.getChannelUrl())) {
+                    httpResponseVo.setHttpResponse("The 'channelUrl' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else if(ObjectUtils.isEmpty(festivalMeetVo.getMeetDt())) {
+                    httpResponseVo.setHttpResponse("The 'meetDt' parameter must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else {
+
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
+
+                    this.festivalMeetRepository.save(festivalMeetVo);
+                }
             }
         } else {
             isError = true;

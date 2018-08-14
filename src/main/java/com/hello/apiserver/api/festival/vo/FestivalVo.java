@@ -85,6 +85,11 @@ public class FestivalVo {
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private List<LikeSayVo> likeSay;
 
+    @OneToMany
+    @JoinColumn(name = "festival_id", referencedColumnName = "contentid")
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private List<FestivalMeetVo> festivalMeet;
+
     public String getAddr1() {
         return addr1;
     }
@@ -267,5 +272,13 @@ public class FestivalVo {
 
     public void setLikeSay(List<LikeSayVo> likeSay) {
         this.likeSay = likeSay;
+    }
+
+    public List<FestivalMeetVo> getFestivalMeet() {
+        return festivalMeet;
+    }
+
+    public void setFestivalMeet(List<FestivalMeetVo> festivalMeet) {
+        this.festivalMeet = festivalMeet;
     }
 }
