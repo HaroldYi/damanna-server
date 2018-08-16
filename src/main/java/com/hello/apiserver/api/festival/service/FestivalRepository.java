@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Date;
 
 public interface FestivalRepository extends CrudRepository<FestivalVo, Long> {
-    Page<FestivalVo> findByEventstartdateAfterAndEventstartdateAfterOrderByEventstartdateAsc(Date startDt, Date endDt, Pageable pageable);
+    Page<FestivalVo> findByEventstartdateAfterAndEventenddateBeforeOrderByEventstartdateAsc(Date startDt, Date endDt, Pageable pageable);
+    Page<FestivalVo> findByEventstartdateAfterOrderByEventstartdateAsc(Date startDt, Pageable pageable);
     FestivalVo findByContentid(String festivalId);
 }

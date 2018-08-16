@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +36,13 @@ public class FestivalController {
     @Autowired
     private FestivalMeetRepository festivalMeetRepository;
 
-    @RequestMapping(value = {"/getFestivalList/{page}", "/getFestivalList/{page}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getFestivalList", "/getFestivalList/"}, method = RequestMethod.GET)
     public ResponseEntity getSayList (
             HttpServletRequest request,
             @RequestHeader(value = "apiKey", required = false)String apiKey,
-            @PathVariable("page")int page
+            @RequestParam(value = "meetStartDt", required = false) String meetStartDt,
+            @RequestParam(value = "meetEndDt", required = false) String meetEndDt,
+            @RequestParam(value = "page") int page
     ) throws IOException {
 
         HttpResponseVo httpResponseVo = new HttpResponseVo();
@@ -60,9 +66,29 @@ public class FestivalController {
                 httpStatus = HttpStatus.OK;
 
                 PageRequest pr = new PageRequest(page, 20);
-                Date today = new Date();
 
-                festivalList = this.festivalRepository.findByEventstartdateAfterAndEventstartdateAfterOrderByEventstartdateAsc(today, today, pr).getContent();
+                DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+                LocalDateTime startDatetime = null;
+                LocalDateTime endDatetime = null;
+
+                Date meetStartDate;
+                Date meetEndDate;
+
+                if(!ObjectUtils.isEmpty(meetStartDt) && !ObjectUtils.isEmpty(meetEndDt)) {
+                    startDatetime = LocalDateTime.of(LocalDate.parse(meetStartDt, sdf), LocalTime.of(0,0,0)); //어제 00:00:00
+                    endDatetime = LocalDateTime.of(LocalDate.parse(meetEndDt, sdf), LocalTime.of(23,59,59)); // 23:59:59
+
+                    meetStartDate = Date.from(startDatetime.toInstant(ZoneOffset.of("+9")));
+                    meetEndDate = Date.from(endDatetime.toInstant(ZoneOffset.of("+9")));
+
+                    festivalList = this.festivalRepository.findByEventstartdateAfterAndEventenddateBeforeOrderByEventstartdateAsc(meetStartDate, meetEndDate, pr).getContent();
+                } else  {
+                    startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0)); //어제 00:00:00
+                    meetStartDate = Date.from(startDatetime.toInstant(ZoneOffset.of("+9")));
+
+                    festivalList = this.festivalRepository.findByEventstartdateAfterOrderByEventstartdateAsc(meetStartDate, pr).getContent();
+                }
             }
         } else {
             isError = true;
