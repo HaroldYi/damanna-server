@@ -115,7 +115,7 @@
                     s.place,
                     s.has_password AS hasPassword
             FROM (
-                  SELECT * FROM meet WHERE member_id IS NULL
+                  SELECT * FROM meet WHERE member_id IS NULL AND use_yn = 'Y'
                     <if test="(meetStartDt neq null and meetStartDt neq '') and (meetEndDt neq null and meetEndDt neq '')">
                         <![CDATA[
                           AND (
