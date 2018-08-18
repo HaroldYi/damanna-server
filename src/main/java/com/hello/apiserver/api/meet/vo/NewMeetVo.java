@@ -29,7 +29,7 @@ public class NewMeetVo implements Serializable {
 //    private Point location;
 
     @Column(name = "member_id", nullable = false, length = 28)
-    private String memberId = "";
+    private String memberId;
 
     @Column(nullable = false)
     private Date regDt;
