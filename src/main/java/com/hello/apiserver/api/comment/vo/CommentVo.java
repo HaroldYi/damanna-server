@@ -21,6 +21,9 @@ public class CommentVo {
     @Column(name = "meet_id")
     private String meetId;
 
+    @Column(name = "festival_id")
+    private String festivalId;
+
     @Column(nullable = false)
     private String comment = "";
 
@@ -59,6 +62,22 @@ public class CommentVo {
 
     public void setSayId(String sayId) {
         this.sayId = sayId;
+    }
+
+    public String getMeetId() {
+        return meetId;
+    }
+
+    public void setMeetId(String meetId) {
+        this.meetId = meetId;
+    }
+
+    public String getFestivalId() {
+        return festivalId;
+    }
+
+    public void setFestivalId(String festivalId) {
+        this.festivalId = festivalId;
     }
 
     public String getComment() {
@@ -115,13 +134,5 @@ public class CommentVo {
 
     public void setSortation(String sortation) {
         this.sortation = sortation;
-    }
-
-    public String getMeetId() {
-        return meetId;
-    }
-
-    public void setMeetId(String meetId) {
-        this.meetId = meetId;
     }
 }

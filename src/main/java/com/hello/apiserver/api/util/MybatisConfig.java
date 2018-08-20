@@ -11,7 +11,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@MapperScan(value={"com.hello.apiserver.api.*.mapper"})
+@MapperScan(value={"com.hello.apiserver.*.*.mapper"})
 public class MybatisConfig {
 
     @Bean
@@ -23,7 +23,8 @@ public class MybatisConfig {
         String path="classpath:mapper/*Mapper.xml";
         Resource[] res = new PathMatchingResourcePatternResolver().getResources(path);
         //resultType, paramType 에 풀 패키지 경로를 쓰지 않기 위해 이곳에 설정
-        sessionBean.setTypeAliasesPackage("com.hello.apiserver.api.*.mapper");
+        sessionBean.setTypeAliasesPackage("com.hello.apiserver.*.*.mapper");
+//        sessionBean.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
         //리소스를 세션 팩토리에 적용
         sessionBean.setMapperLocations(res);
 

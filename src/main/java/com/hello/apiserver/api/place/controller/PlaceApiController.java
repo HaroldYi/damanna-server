@@ -2,25 +2,17 @@ package com.hello.apiserver.api.place.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hello.apiserver.api.member.service.MemberRepository;
-import com.hello.apiserver.api.member.vo.MemberVo;
-import com.hello.apiserver.api.photo.service.PhotoRepository;
-import com.hello.apiserver.api.photo.vo.PhotoVo;
 import com.hello.apiserver.api.place.mapper.PlaceRankMapper;
 import com.hello.apiserver.api.place.vo.PlaceVo;
 import com.hello.apiserver.api.util.Auth.Auth;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.*;
 
 @RestController

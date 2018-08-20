@@ -6,14 +6,13 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.point.service.PointRepository;
 import com.hello.apiserver.api.point.vo.PointVo;
 import com.hello.apiserver.api.util.Auth.Auth;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;

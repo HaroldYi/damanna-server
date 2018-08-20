@@ -14,7 +14,7 @@ import com.hello.apiserver.api.member.vo.MemberVo;
 import com.hello.apiserver.api.member.vo.VisitMemberVo;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -675,7 +675,7 @@ public class MemberApiController {
                 httpStatus = HttpStatus.OK;
 
                 PageRequest pr = new PageRequest(0, 20);
-                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
+                visitMemberVoList = visitMemberRepository.findByMemberIdOrderByLastVisitDtDesc(memberId, pr).getContent();
 
                 for(VisitMemberVo visitMemberVo : visitMemberVoList) {
                     memberVoList.add(visitMemberVo.getVisitorMember());
@@ -729,7 +729,7 @@ public class MemberApiController {
                 httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                 httpStatus = HttpStatus.OK;
 
-                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
+                visitMemberVoList = visitMemberRepository.findByMemberIdOrderByLastVisitDtDesc(memberId, pr).getContent();
 
                 for(VisitMemberVo visitMemberVo : visitMemberVoList) {
                     memberVoList.add(visitMemberVo.getVisitorMember());

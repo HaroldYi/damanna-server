@@ -12,3 +12,10 @@ spring:
     username: ${RDS_MYSQL_USERNAME}
     password: ${RDS_MYSQL_PASSWORD}
     driver-class-name: ${RDS_MYSQL_DRIVER}
+
+  batch:
+        initializer:
+          enabled: false
+
+        job:
+          enabled: false

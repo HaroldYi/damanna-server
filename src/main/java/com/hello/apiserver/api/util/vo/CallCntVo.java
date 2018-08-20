@@ -1,4 +1,4 @@
-package com.hello.apiserver.api.util.callCnt;
+package com.hello.apiserver.api.util.vo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

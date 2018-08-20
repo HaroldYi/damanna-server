@@ -1,8 +1,8 @@
 package com.hello.apiserver.api.util.Auth;
 
+import com.hello.apiserver.api.util.service.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 @Component
 public class Auth {

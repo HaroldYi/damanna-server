@@ -21,7 +21,7 @@ import com.hello.apiserver.api.comment.service.CommentRepository;
 import com.hello.apiserver.api.say.service.LikeSayRepository;
 import com.hello.apiserver.api.like.vo.LikeSayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -167,6 +167,15 @@ public class MeetApiController {
                 response.setStatus(HttpStatus.OK.value());
 
                 meetVo = this.meetRepository.findByIdAndUseYn(meetId, "Y");
+                if(meetVo.getMember() == null) {
+                    MemberVo memberVo = new MemberVo();
+                    memberVo.setName(meetVo.getTitle());
+                    memberVo.setProfileUrl(meetVo.getThumbnailImg());
+                    memberVo.setProfileUrlOrg(meetVo.getOriginalImg());
+
+                    meetVo.setMember(memberVo);
+                    meetVo.setTitle("");
+                }
 
                 List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");
                 meetVo.setLikeSay(likeSayVoList);
@@ -313,6 +322,7 @@ public class MeetApiController {
                     meetVo.setMember(memberVo);
                     meetVo.setLikeSay(likeSayVoList);
                     meetVo.setMeetBannedMemberList(meetBannedMemberList);
+
                     meetVoList.set(i++, meetVo);
                 }
 

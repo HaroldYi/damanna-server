@@ -13,7 +13,7 @@ import com.hello.apiserver.api.say.vo.NearSayVo;
 import com.hello.apiserver.api.say.vo.SayVo;
 import com.hello.apiserver.api.util.Auth.Auth;
 import com.hello.apiserver.api.util.PushNotificationsService.AndroidPushNotificationsService;
-import com.hello.apiserver.api.util.commonVo.HttpResponseVo;
+import com.hello.apiserver.api.util.vo.HttpResponseVo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

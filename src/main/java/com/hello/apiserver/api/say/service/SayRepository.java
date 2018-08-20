@@ -11,8 +11,8 @@ import java.util.List;
 
 public interface SayRepository extends CrudRepository<SayVo, Long> {
 
-    @Query(name = "Say.findSayByDistance", nativeQuery = true)
-    List<SayVo> findSayByDistance(@Param("seLat") double seLat, @Param("seLon") double seLon, @Param("nwLat") double nwLat, @Param("nwLon") double nwLon);
+//    @Query(name = "Say.findSayByDistance", nativeQuery = true)
+//    List<SayVo> findSayByDistance(@Param("seLat") double seLat, @Param("seLon") double seLon, @Param("nwLat") double nwLat, @Param("nwLon") double nwLon);
 //    List<MeetVo> findAll();
 
     Page<SayVo> findAllByUseYnOrderByRegDtDesc(String useYn, Pageable pageable);
