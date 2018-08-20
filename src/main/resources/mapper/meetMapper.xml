@@ -11,7 +11,7 @@
             s.member_id AS memberId,
             m.name,
             s.reg_dt AS regDt,
-            IFNULL(SUM(CC.commentCnt + CC.commentReplyCnt), 0) AS commentCnt,
+            CC.commentCnt + IFNULL(CC.commentReplyCnt, 0) AS commentCnt,
             m.client_token AS clientToken,
             m.profile_url AS profileUrl,
             m.profile_url_org AS profileUrlOrg,
@@ -96,7 +96,7 @@
                     s.member_id AS memberId,
                     s.title,
                     s.reg_dt AS regDt,
-                    IFNULL(SUM(CC.commentCnt + CC.commentReplyCnt), 0) AS commentCnt,
+                    CC.commentCnt + IFNULL(CC.commentReplyCnt, 0) AS commentCnt,
                     null AS clientToken,
                     s.thumbnail_img AS profileUrl,
                     s.original_img AS profileUrlOrg,
@@ -162,7 +162,7 @@
             ) AS CC
               ON s.id = CC.meetid
         )
-        ORDER BY regDt DESC
+        ORDER BY id DESC
         LIMIT ${page}, 20
     </select>
 

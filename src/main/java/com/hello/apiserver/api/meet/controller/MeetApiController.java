@@ -174,6 +174,7 @@ public class MeetApiController {
                     memberVo.setProfileUrlOrg(meetVo.getOriginalImg());
 
                     meetVo.setMember(memberVo);
+                    meetVo.setTitle("");
                 }
 
                 List<LikeSayVo> likeSayVoList = this.likeRepository.findByMeetIdAndSortation(meetId, "M");

@@ -675,7 +675,7 @@ public class MemberApiController {
                 httpStatus = HttpStatus.OK;
 
                 PageRequest pr = new PageRequest(0, 20);
-                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
+                visitMemberVoList = visitMemberRepository.findByMemberIdOrderByLastVisitDtDesc(memberId, pr).getContent();
 
                 for(VisitMemberVo visitMemberVo : visitMemberVoList) {
                     memberVoList.add(visitMemberVo.getVisitorMember());
@@ -729,7 +729,7 @@ public class MemberApiController {
                 httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                 httpStatus = HttpStatus.OK;
 
-                visitMemberVoList = visitMemberRepository.findByMemberId(memberId, pr).getContent();
+                visitMemberVoList = visitMemberRepository.findByMemberIdOrderByLastVisitDtDesc(memberId, pr).getContent();
 
                 for(VisitMemberVo visitMemberVo : visitMemberVoList) {
                     memberVoList.add(visitMemberVo.getVisitorMember());
