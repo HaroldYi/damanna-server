@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/festival")
+@CrossOrigin(origins = "http://localhost", maxAge = 3600)
 public class FestivalController {
 
     @Autowired
@@ -84,10 +86,11 @@ public class FestivalController {
 
                     festivalList = this.festivalRepository.findByEventstartdateAfterAndEventenddateBeforeOrderByEventstartdateAsc(meetStartDate, meetEndDate, pr).getContent();
                 } else  {
-                    startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0)); //어제 00:00:00
+                    startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)); //어제 00:00:00
+
                     meetStartDate = Date.from(startDatetime.toInstant(ZoneOffset.of("+9")));
 
-                    festivalList = this.festivalRepository.findByEventstartdateAfterOrderByEventstartdateAsc(meetStartDate, pr).getContent();
+                    festivalList = this.festivalRepository.findByEventenddateAfterOrderByEventstartdateAsc(meetStartDate, pr).getContent();
                 }
             }
         } else {
@@ -189,7 +192,71 @@ public class FestivalController {
                     httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
                     httpStatus = HttpStatus.OK;
 
+                    festivalMeetVo.setRegDt(new Date());
+
                     this.festivalMeetRepository.save(festivalMeetVo);
+                }
+            }
+        } else {
+            isError = true;
+            httpStatus = HttpStatus.UNAUTHORIZED;
+            httpResponseVo.setHttpResponse("This api key is wrong! please check your api key!", HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
+
+        if(isError) {
+            return ResponseEntity.status(httpStatus).body(httpResponseVo);
+        } else {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            return ResponseEntity.status(httpStatus).contentType(MediaType.APPLICATION_JSON_UTF8).body(gson.toJson(festivalVo));
+        }
+    }
+
+    @RequestMapping(value = {"/updateFileImgUrl", "/updateFileImgUrl/"}, method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity updateFileImgUrl (
+            HttpServletRequest request,
+            @RequestHeader(value = "apiKey", required = false)String apiKey,
+            @RequestBody(required = false)String body
+    ) throws IOException {
+
+        HttpResponseVo httpResponseVo = new HttpResponseVo();
+        httpResponseVo.setResponse("httpreponse");
+        httpResponseVo.setTimestamp(new Date().getTime());
+        httpResponseVo.setPath(request.getRequestURI());
+
+        HttpStatus httpStatus;
+        boolean isError = false;
+        FestivalVo festivalVo = new FestivalVo();
+
+//        apiKey = new Gson().fromJson(apiKey, String.class);
+
+        if(Auth.checkApiKey(apiKey)) {
+            if (ObjectUtils.isEmpty(body)) {
+                httpResponseVo.setHttpResponse("The request body must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                httpStatus = HttpStatus.BAD_REQUEST;
+                isError = true;
+            } else {
+
+                festivalVo = new Gson().fromJson(body, FestivalVo.class);
+
+                if(ObjectUtils.isEmpty(festivalVo.getContentid())) {
+                    httpResponseVo.setHttpResponse("The 'contentid' must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else if(ObjectUtils.isEmpty(festivalVo.getFirstimage())) {
+                    httpResponseVo.setHttpResponse("The 'firstimage'  must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else if(ObjectUtils.isEmpty(festivalVo.getFirstimage2())) {
+                    httpResponseVo.setHttpResponse("The 'firstimage2'(thumbnail) must not be null or empty", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+                    httpStatus = HttpStatus.BAD_REQUEST;
+                    isError = true;
+                } else {
+
+                    httpResponseVo.setHttpResponse("", HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+                    httpStatus = HttpStatus.OK;
+
+                    this.festivalRepository.save(festivalVo);
                 }
             }
         } else {

@@ -9,6 +9,6 @@ import java.util.Date;
 
 public interface FestivalRepository extends CrudRepository<FestivalVo, Long> {
     Page<FestivalVo> findByEventstartdateAfterAndEventenddateBeforeOrderByEventstartdateAsc(Date startDt, Date endDt, Pageable pageable);
-    Page<FestivalVo> findByEventstartdateAfterOrderByEventstartdateAsc(Date startDt, Pageable pageable);
+    Page<FestivalVo> findByEventenddateAfterOrderByEventstartdateAsc(Date endDt, Pageable pageable);
     FestivalVo findByContentid(String festivalId);
 }
