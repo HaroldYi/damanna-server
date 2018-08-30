@@ -23,3 +23,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Bootstrap dist ###
+!src/main/resources/static/Bootstrap/dist/
