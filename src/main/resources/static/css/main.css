@@ -1383,7 +1383,7 @@ Description: "HTML-template"
     width: 100%;
     text-align: center; }
   .top-header.top-header-favorit .top-header-author {
-    bottom: 0;
+    bottom: 0 !important;
     top: auto;
     position: absolute; }
   .top-header.top-header-favorit .profile-section .control-block-button {
@@ -1396,7 +1396,7 @@ Description: "HTML-template"
 
 @media (max-width: 799px) {
   .profile-menu {
-    margin-bottom: 30px; } }
+    margin-bottom: 0px; } }
 
 @media (max-width: 768px) {
   .header, .fixed-sidebar {
@@ -1456,7 +1456,7 @@ Description: "HTML-template"
     display: inline-block;
     float: right; }
   .profile-section {
-    padding: 30px 0;
+    padding: 10px 0;
     z-index: 5; }
   .header--standard-landing {
     position: absolute; }
@@ -1587,8 +1587,8 @@ Description: "HTML-template"
   .top-header.top-header-favorit .profile-menu {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column; }
+        -ms-flex-direction: row;
+            flex-direction: row; }
     .top-header.top-header-favorit .profile-menu li {
       margin-bottom: 5px; }
   .control-icon .mCustomScrollbar {
@@ -14962,3 +14962,7 @@ input[type=checkbox] {
 
 .swiper-container.auto-height .swiper-slide {
   height: auto !important; }
+
+iframe {
+     overflow: auto;
+}
