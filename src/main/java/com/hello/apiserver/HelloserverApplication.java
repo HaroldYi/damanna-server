@@ -45,8 +45,9 @@ public class HelloserverApplication extends SpringBootServletInitializer {
 
         return taskExecutor;
     }
+    
     @Bean
-    CharacterEncodingFilter characterEncodingFilter() {
+    public CharacterEncodingFilter characterEncodingFilter() {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
