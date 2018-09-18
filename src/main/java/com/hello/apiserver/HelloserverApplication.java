@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.io.IOException;
 
@@ -43,5 +44,12 @@ public class HelloserverApplication extends SpringBootServletInitializer {
         taskExecutor.setMaxPoolSize(20);
 
         return taskExecutor;
+    }
+    @Bean
+    CharacterEncodingFilter characterEncodingFilter() {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        return filter;
     }
 }
