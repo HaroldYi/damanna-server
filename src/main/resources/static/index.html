@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 
 	<title>제주메이트 | 제주도 동행| 제주도 여행| 제주도 할인쿠폰</title>
@@ -48,6 +48,40 @@
 
 </head>
 <body>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" id="downloadAppBtn" data-toggle="modal" data-backdrop="static" data-target="#downloadAppModal"
+ style="visibility:hidden; height:1px; display:none;">
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="downloadAppModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">제주메이트 다운로드</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        제주메이트 동행 등록 및 참여는 모바일 앱을 통해서만 서비스 됩니다.
+        아래 다운로드 버튼을 통해서 다운로드 해주세요!
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:downloadAndroid();" class="social-item" style="background-color: black;">
+							<i class="fab fa-google-play" aria-hidden="true"></i>
+							Google Play
+						</a>
+						<a href="javascript:downloadIOS();" class="social-item" style="background-color: black;">
+							<i class="fab fa-app-store" aria-hidden="true"></i>
+							App Store
+						</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ... end Responsive Header-BP -->
 <div class="header-spacer" style="height: 20px;"></div>
@@ -206,11 +240,11 @@
 					
 					<div class="widget w-socials">
 						<h6 class="title">앱 다운로드</h6>
-						<a href="https://play.google.com/store/apps/details?id=com.hello.jejumate" class="social-item" style="background-color: black;">
+						<a href="javascript:downloadAndroid();" class="social-item" style="background-color: black;">
 							<i class="fab fa-google-play" aria-hidden="true"></i>
 							Google Play
 						</a>
-						<a href="https://itunes.apple.com/kr/app/apple-store/id1400127774?mt=8" class="social-item" style="background-color: black;">
+						<a href="javascript:downloadIOS();" class="social-item" style="background-color: black;">
 							<i class="fab fa-app-store" aria-hidden="true"></i>
 							App Store
 						</a>
@@ -229,6 +263,7 @@
 	<img src="svg-icons/back-to-top.svg" alt="arrow" class="back-icon">
 </a>
 
+
 <!-- template -->
 
 <template id="meetTemplate">
@@ -236,7 +271,7 @@
 					
 		<article class="hentry post">
 
-			<div class="post__author author vcard inline-items">
+			<div class="post__author author vcard inline-items downloadAppFunc">
 				<img id='meetProfileImg' src="" alt="author">
 
 				<div class="author-date">
@@ -260,17 +295,17 @@
 
 			<div class="post-additional-info inline-items">
 
-			<a href="#" class="social-item" style="background-color: #00BFA5;">
+			<a href="javascript:downloadFunction()" class="social-item downloadAppFunc" style="background-color: #00BFA5;">
 				모임 참여하기
 			</a>
 
 			<div class="comments-shared">
-				<a href="#" class="post-add-icon inline-items">
+				<a href="javascript:downloadFunction()" class="post-add-icon inline-items">
 					<i class="fa fa-thumbs-up"></i>
 					<span id="meetLikeCnt">17</span>
 				</a>
 
-				<a href="#" class="post-add-icon inline-items">
+				<a href="javascript:downloadFunction()" class="post-add-icon inline-items">
 					<i class="fa fa-comment-alt"></i>
 					<span id="meetCommentCnt">24</span>
 				</a>
@@ -302,6 +337,7 @@
 		</a>
 	</li>
 </template>
+
 <!-- JS Scripts -->
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/jquery.appear.js"></script>
@@ -338,10 +374,18 @@
 
 <script type="text/javascript" charset="utf-8">
 	
-	// $( document ).ready(function() {
-	//
-	// });
-
+	function downloadFunction() {
+		$('#downloadAppBtn').click();
+	};
+	
+	function downloadAndroid(){
+		window.location.href = 'https://play.google.com/store/apps/details?id=com.hello.jejumate';
+	};
+	
+	function downloadIOS(){
+		window.location.href = "https://itunes.apple.com/kr/app/apple-store/id1400127774?mt=8";
+	};
+	
 	var meetIndex = 0;
 
     function moreMeet(){
@@ -358,13 +402,13 @@
 					alert('마지막 페이지 입니다.');
 				}
                 data.forEach(function(element) {
-
+					console.log(element.meetStartDt);
                     var clone = document.importNode(document.querySelector('#meetTemplate').content, true);
 
                     clone.querySelector('#meetProfileImg').src = element.profileUrl;
                     clone.querySelector('#meetMemberName').innerText = element.name;
-                    clone.querySelector('#meetDate').innerText = element.meetStartDt + " ~ " + element.meetEndDt;
-                    clone.querySelector('#meetPlace').innerText = element.place;
+                    clone.querySelector('#meetDate').innerText = element.meetStartDt.split( ' ', 1) + " ~ " + element.meetEndDt.split( ' ', 1);
+                    clone.querySelector('#meetPlace').innerText = "출발장소 : " + element.place;
                     clone.querySelector('#meetTitle').innerText = element.title;
                     clone.querySelector('#meetMessage').innerText = element.message;
 
